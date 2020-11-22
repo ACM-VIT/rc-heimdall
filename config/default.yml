@@ -1,0 +1,17 @@
+api:
+  name: Heimdall
+  description: Reverse Coding API Endpoint
+  version: 1.0
+  route: 'api'
+
+database:
+  type: 'postgres'
+  port: 5432
+  host: localhost
+  username: 'postgres'
+  password: 'postgres'
+  db_name: 'reverse_coding'
+  synchronize: true
+
+server:
+  port: 5000
