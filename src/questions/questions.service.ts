@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetQuestionDto } from './dto/filter-question.dto';
 import { QuestionRepository } from './questions.repository';
@@ -25,9 +29,16 @@ export class QuestionsService {
    * @async
    * @param filterDto object containing ID of question to check if it exists
    * @returns boolean true if question with given ID exists
+   * @throws NotFoundException when given question does not exist
    */
   async checkIfQuestionExist(filterDto: GetQuestionDto) {
-    return this.questionRepository.checkIfQuestionExist(filterDto);
+    const questionExists = await this.questionRepository.checkIfQuestionExist(
+      filterDto,
+    );
+    if (questionExists !== true) {
+      throw new NotFoundException(`No question with id:${filterDto.id} exists`);
+    }
+    return true;
   }
 
   /**
@@ -35,8 +46,13 @@ export class QuestionsService {
    * @async
    * @param Null
    * @returns boolean true if stored questions list is cleared
+   * @throws InternalServerErrorException when operation fails
    */
-  remove() {
-    return this.questionRepository.clearStorage();
+  async clearStoredQuestionList() {
+    const clearTaskStatus = await this.questionRepository.clearStorage();
+    if (clearTaskStatus !== true) {
+      throw new InternalServerErrorException(`Error while clearing data`);
+    }
+    return true;
   }
 }

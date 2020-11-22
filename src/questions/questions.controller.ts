@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 
 @Controller('questions')
@@ -11,7 +11,7 @@ export class QuestionsController {
   }
 
   @Get(':id')
-  checkIfQuestionExists(@Param('id') id: string): Promise<boolean> {
+  checkIfQuestionExists(@Param('id') id: string) {
     return this.questionsService.checkIfQuestionExist({ id });
   }
 }
