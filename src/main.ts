@@ -10,6 +10,12 @@ async function bootstrap() {
     .setTitle(config.get('api.name'))
     .setDescription(config.get('api.description'))
     .setVersion(config.get('api.version'))
+    .setContact(
+      'Yash Kumar Verma',
+      'https://yashkumarverma.github.io/',
+      'yk.verma2000@gmail.com',
+    )
+    .setLicense('MIT', 'https://opensource.org/licenses/MIT')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

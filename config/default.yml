@@ -15,3 +15,6 @@ database:
 
 server:
   port: 5000
+
+runner:
+  endpoint: http://localhost:8080/run
