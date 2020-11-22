@@ -5,6 +5,10 @@ import { QuestionsModule } from './questions/questions.module';
 import { RunnerModule } from './runner/runner.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), QuestionsModule, RunnerModule],
+  imports: [
+    TypeOrmModule.forRoot(typeOrmConfig),
+    QuestionsModule,
+    RunnerModule,
+  ],
 })
 export class AppModule {}
