@@ -16,23 +16,25 @@ import * as config from 'config';
 export class QuestionsService {
   constructor(
     private readonly http: HttpService,
-    private readonly endpoint: string,
+    private readonly seederEndpoint: string,
+    private readonly taskRunnerEndpoint: string,
 
     @InjectRepository(QuestionRepository)
     private questionRepository: QuestionRepository,
   ) {
-    this.endpoint = config.get('seeder.endpoint');
+    this.seederEndpoint = config.get('seeder.endpoint');
+    this.taskRunnerEndpoint = config.get('runner.endpoint');
   }
 
   /**
    * Method to seed data from firebase cloud bucket
    * @async
    * @param Null
-   * @returns Null
+   * @returns Array containing id and url of questions currently in storage
    */
   async fetchQuestionsFromFirebase() {
     try {
-      const reply = await this.http.get(this.endpoint).toPromise();
+      const reply = await this.http.get(this.seederEndpoint).toPromise();
       if (reply.status !== 200) {
         throw new ServiceUnavailableException(`Cannot connect to seeder`);
       }
@@ -47,6 +49,8 @@ export class QuestionsService {
         }),
       );
 
+      //   shoot and forget
+      this.pingTaskRunnerToUpdateStorages();
       return reply.data;
     } catch (error) {
       console.log(error);
@@ -69,5 +73,24 @@ export class QuestionsService {
       throw new NotFoundException(`No question with id:${filterDto.id} exists`);
     }
     return true;
+  }
+
+  /**
+   * Function to shoot a request to task-runner so that it updates it's arsenal of
+   * binaries to run code on.
+   * @description The reason that this is not an async function, and we do not care about
+   * the reply from the task-runner is that it is not the job of this service to ensure that
+   * task-runner does what it is expected to do. The download can take a few minutes which can
+   * cause a timeout on some connections. To avoid that, we rely on task-runner to download the
+   * files, and just to inform the user, we send a 202 to denote that the request is accepted.
+   * @returns boolean true if request was shot at task-runner
+   */
+  pingTaskRunnerToUpdateStorages() {
+    try {
+      this.http.get(this.taskRunnerEndpoint).toPromise();
+      return true;
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
   }
 }

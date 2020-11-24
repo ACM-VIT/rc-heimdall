@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 
 @Controller('questions')
@@ -6,6 +6,7 @@ export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
   @Get('/seed')
+  @HttpCode(202)
   fetchQuestionsFromFirebase() {
     return this.questionsService.fetchQuestionsFromFirebase();
   }
