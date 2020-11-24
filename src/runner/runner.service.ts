@@ -1,11 +1,4 @@
-import {
-  Dependencies,
-  HttpService,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  ServiceUnavailableException,
-} from '@nestjs/common';
+import { Dependencies, HttpService, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ExecuteCodeDto } from './dto/execute-code.dto';
 import * as config from 'config';
 
@@ -16,8 +9,11 @@ export class RunnerService {
   constructor(
     private readonly http: HttpService,
     private readonly endpoint: string,
+    private readonly logger = new Logger('runner'),
   ) {
     this.endpoint = config.get('runner.runEndpoint');
+    this.logger.verbose('service initialized');
+    this.logger.verbose(`runner endpoint: ${this.endpoint}`);
   }
 
   /**
@@ -39,9 +35,11 @@ export class RunnerService {
       };
 
       // fetch output from task-runner, if error, then return normal string.
+      this.logger.verbose(`Requesting runner with data: ${JSON.stringify(executeCode)}`);
       const reply = await this.http.post(this.endpoint, postBody).toPromise();
       return reply.data;
     } catch (err) {
+      this.logger.warn(`Question with id :${executeCode.id} not found`);
       throw new NotFoundException(`Question Not Found`);
     }
   }

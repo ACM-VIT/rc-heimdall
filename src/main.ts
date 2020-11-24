@@ -8,18 +8,16 @@ import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['log', 'error', 'warn', 'verbose'],
+  });
 
   /** configuring documentation builder */
   const options = new DocumentBuilder()
     .setTitle(config.get('api.name'))
     .setDescription(config.get('api.description'))
     .setVersion(config.get('api.version'))
-    .setContact(
-      'Yash Kumar Verma',
-      'https://yashkumarverma.github.io/',
-      'yk.verma2000@gmail.com',
-    )
+    .setContact('Yash Kumar Verma', 'https://yashkumarverma.github.io/', 'yk.verma2000@gmail.com')
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
     .build();
 
