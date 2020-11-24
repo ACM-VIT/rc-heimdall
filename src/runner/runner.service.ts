@@ -16,7 +16,7 @@ export class RunnerService {
     private readonly http: HttpService,
     private readonly endpoint: string,
   ) {
-    this.endpoint = config.get('runner.endpoint');
+    this.endpoint = config.get('runner.runEndpoint');
   }
 
   /**

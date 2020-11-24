@@ -17,7 +17,8 @@ server:
   port: 5000
 
 runner:
-  endpoint: http://localhost:8080/run
+  runEndpoint: http://localhost:8080/run
+  seedEndpoint: http://localhost:8080/seed
 
 seeder:
   endpoint: https://rc-broadcaster.vercel.app/api/app.js

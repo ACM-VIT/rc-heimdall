@@ -23,7 +23,7 @@ export class QuestionsService {
     private questionRepository: QuestionRepository,
   ) {
     this.seederEndpoint = config.get('seeder.endpoint');
-    this.taskRunnerEndpoint = config.get('runner.endpoint');
+    this.taskRunnerEndpoint = config.get('runner.seedEndpoint');
   }
 
   /**
