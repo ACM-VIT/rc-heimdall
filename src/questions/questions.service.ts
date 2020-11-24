@@ -1,18 +1,28 @@
 import {
+  Dependencies,
+  HttpService,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetQuestionDto } from './dto/filter-question.dto';
 import { QuestionRepository } from './questions.repository';
+import * as config from 'config';
 
 @Injectable()
+@Dependencies(HttpService)
 export class QuestionsService {
   constructor(
+    private readonly http: HttpService,
+    private readonly endpoint: string,
+
     @InjectRepository(QuestionRepository)
     private questionRepository: QuestionRepository,
-  ) {}
+  ) {
+    this.endpoint = config.get('seeder.endpoint');
+  }
 
   /**
    * Method to seed data from firebase cloud bucket
@@ -21,7 +31,27 @@ export class QuestionsService {
    * @returns Null
    */
   async fetchQuestionsFromFirebase() {
-    return 'This action adds a new question';
+    try {
+      const reply = await this.http.get(this.endpoint).toPromise();
+      if (reply.status !== 200) {
+        throw new ServiceUnavailableException(`Cannot connect to seeder`);
+      }
+      //   clear old question indexes
+      this.questionRepository.clearStorage();
+
+      //   generate list of all questions
+      const questionDetails = reply.data.payload;
+      this.questionRepository.seedQuestionList(
+        questionDetails.map(question => {
+          return question.id;
+        }),
+      );
+
+      return reply.data;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Error seeding');
+    }
   }
 
   /**
@@ -37,21 +67,6 @@ export class QuestionsService {
     );
     if (questionExists !== true) {
       throw new NotFoundException(`No question with id:${filterDto.id} exists`);
-    }
-    return true;
-  }
-
-  /**
-   * method to to clear local storage of programs
-   * @async
-   * @param Null
-   * @returns boolean true if stored questions list is cleared
-   * @throws InternalServerErrorException when operation fails
-   */
-  async clearStoredQuestionList() {
-    const clearTaskStatus = await this.questionRepository.clearStorage();
-    if (clearTaskStatus !== true) {
-      throw new InternalServerErrorException(`Error while clearing data`);
     }
     return true;
   }
