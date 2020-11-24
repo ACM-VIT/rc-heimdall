@@ -3,6 +3,7 @@ import {
   HttpService,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { ExecuteCodeDto } from './dto/execute-code.dto';
@@ -39,14 +40,9 @@ export class RunnerService {
 
       // fetch output from task-runner, if error, then return normal string.
       const reply = await this.http.post(this.endpoint, postBody).toPromise();
-      if (reply.status !== 200) {
-        throw new ServiceUnavailableException(`Task Runner busy`);
-      }
       return reply.data;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        `Error executing program with id:${executeCode.id}`,
-      );
+    } catch (err) {
+      throw new NotFoundException(`Question Not Found`);
     }
   }
 }
