@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GetQuestionDto } from './dto/filter-question.dto';
 import { QuestionRepository } from './questions.repository';
 import * as config from 'config';
+import { SeederObject } from './interface/seeder.interface';
 
 @Injectable()
 @Dependencies(HttpService)
@@ -52,11 +53,7 @@ export class QuestionsService {
       /** transform object into array */
       const questionDetails = reply.data.payload;
       this.logger.verbose(`Seeding questions into memory storage: ${questionDetails.length} total`);
-      this.questionRepository.seedQuestionList(
-        questionDetails.map(question => {
-          return question.id;
-        }),
-      );
+      this.questionRepository.seedQuestionList(questionDetails);
       this.logger.verbose(`Seeding questions complete`);
 
       //   shoot and forget
@@ -64,7 +61,7 @@ export class QuestionsService {
       this.pingTaskRunnerToUpdateStorages();
       return reply.data;
     } catch (error) {
-      this.logger.error('seeding questions into memory, throwing 500', error);
+      this.logger.error('seeding questions into memory, throwing 500');
       throw new InternalServerErrorException('Error seeding');
     }
   }
@@ -78,13 +75,14 @@ export class QuestionsService {
    */
   async checkIfQuestionExist(filterDto: GetQuestionDto) {
     this.logger.verbose(`checking if question with id:${filterDto.id} exists`);
-    const questionExists = await this.questionRepository.checkIfQuestionExist(filterDto);
-    if (questionExists !== true) {
+    const questionExists: SeederObject = await this.questionRepository.checkIfQuestionExist(filterDto);
+    if (!questionExists) {
       this.logger.verbose(`Question with id:${filterDto.id} does not exist`);
       throw new NotFoundException(`No question with id:${filterDto.id} exists`);
     }
-    this.logger.verbose(`question with id:${filterDto.id} exists`);
-    return true;
+
+    this.logger.verbose(`question with id:${filterDto.id} exists, sending info`);
+    return questionExists;
   }
 
   /**
@@ -97,14 +95,14 @@ export class QuestionsService {
    * files, and just to inform the user, we send a 202 to denote that the request is accepted.
    * @returns boolean true if request was shot at task-runner
    */
-  pingTaskRunnerToUpdateStorages() {
+  async pingTaskRunnerToUpdateStorages() {
     try {
       this.logger.verbose(`Pinging task-runner on ${this.taskRunnerEndpoint}`);
-      this.http.get(this.taskRunnerEndpoint).toPromise();
-      return true;
-    } catch (e) {
-      this.logger.error(`Pinging task-runner`);
-      throw new InternalServerErrorException();
+      const response = await this.http.get(this.taskRunnerEndpoint).toPromise();
+      return [200, 201].includes(response.status);
+    } catch (error) {
+      this.logger.error('Problem connecting task-runner');
+      return new InternalServerErrorException();
     }
   }
 }
