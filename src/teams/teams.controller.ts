@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, ValidationPipe, UsePipes } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
-import { UpdateTeamDto } from './dto/update-team.dto';
+import { Team } from './team.entity';
 
 @Controller('teams')
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
   @Post()
-  create(@Body() createTeamDto: CreateTeamDto) {
+  @UsePipes(ValidationPipe)
+  create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
     return this.teamsService.create(createTeamDto);
   }
 
@@ -20,11 +21,6 @@ export class TeamsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.teamsService.findOne(+id);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
-    return this.teamsService.update(+id, updateTeamDto);
   }
 
   @Delete(':id')

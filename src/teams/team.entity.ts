@@ -14,10 +14,6 @@ export class Team extends BaseEntity {
   @Column({ type: 'int', default: 0 })
   points: number;
 
-  @OneToOne(() => Participant)
-  @JoinColumn()
-  admin: Participant;
-
   @OneToMany(
     () => Participant,
     participant => participant.team,
