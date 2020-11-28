@@ -19,8 +19,12 @@ export class TeamsService {
     return this.teamRepository.find();
   }
 
-  findOne(id: number) {
-    return this.teamRepository.find({ id });
+  async findOne(name: string) {
+    const response = await this.teamRepository.find({ name });
+    if (response.length === 0) {
+      return undefined;
+    }
+    return response[0];
   }
 
   remove(id: number) {

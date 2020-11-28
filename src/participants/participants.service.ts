@@ -16,15 +16,16 @@ export class ParticipantsService {
   ) {}
 
   async create(createParticipantDto: CreateParticipantDto) {
-    const participantTeam = await this.teamService.findOne(createParticipantDto.teamID);
+    const participantTeam = await this.teamService.findOne(createParticipantDto.teamName);
+    console.log(participantTeam);
     /** create team before creating participant */
-    if (participantTeam === undefined || participantTeam.length === 0) {
+    if (participantTeam === undefined) {
       const newTeam = await this.teamService.create({
         name: createParticipantDto.teamName,
       });
       return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, newTeam);
     }
-    return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, participantTeam[0]);
+    return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, participantTeam);
   }
 
   findAll() {

@@ -6,7 +6,6 @@ export class CreateParticipantDto {
   @ApiProperty({ description: 'Google Auth ID of the participant' })
   googleID: string;
 
-  @IsAlpha()
   @IsNotEmpty()
   @ApiProperty({ description: 'Name of the Participant' })
   name: string;

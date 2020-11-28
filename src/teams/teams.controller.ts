@@ -20,7 +20,7 @@ export class TeamsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.teamsService.findOne(+id);
+    return this.teamsService.findOne(id);
   }
 
   @Delete(':id')
