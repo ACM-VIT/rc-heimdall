@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Participant } from './participant.entity';
 import { ParticipantsService } from './participants.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
-import { UpdateParticipantDto } from './dto/update-participant.dto';
 
 @Controller('participants')
 export class ParticipantsController {
   constructor(private readonly participantsService: ParticipantsService) {}
 
   @Post()
-  create(@Body() createParticipantDto: CreateParticipantDto) {
+  @UsePipes(ValidationPipe)
+  create(@Body() createParticipantDto: CreateParticipantDto): Promise<Participant> {
     return this.participantsService.create(createParticipantDto);
   }
 
@@ -20,11 +21,6 @@ export class ParticipantsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.participantsService.findOne(+id);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateParticipantDto: UpdateParticipantDto) {
-    return this.participantsService.update(+id, updateParticipantDto);
   }
 
   @Delete(':id')

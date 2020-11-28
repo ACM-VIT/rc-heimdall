@@ -19,6 +19,9 @@ export class Participant extends BaseEntity {
   registrationNumber: string;
 
   @Column()
+  isAdmin: boolean;
+
+  @Column()
   phoneNumber: string;
 
   @ManyToOne(

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsAlpha, IsNotEmpty, IsEmail } from 'class-validator';
+import { IsAlpha, IsNotEmpty, IsEmail, IsBoolean } from 'class-validator';
 
 export class CreateParticipantDto {
   @IsAlpha()
@@ -24,4 +24,12 @@ export class CreateParticipantDto {
   @IsNotEmpty()
   @ApiProperty({ description: 'Phone number of participant' })
   phoneNumber: string;
+
+  @IsNotEmpty()
+  @ApiProperty({ description: 'ID of the team to join' })
+  teamName: string;
+
+  @IsBoolean()
+  @ApiProperty({ description: 'if participant is admin of the team' })
+  isAdmin: boolean;
 }

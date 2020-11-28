@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateParticipantDto } from './dto/create-participant.dto';
-import { UpdateParticipantDto } from './dto/update-participant.dto';
+import { ParticipantRepository } from './participants.repository';
 
 @Injectable()
 export class ParticipantsService {
+  /** injecting repository for persistence */
+  constructor(
+    @InjectRepository(ParticipantRepository)
+    private participantRepository: ParticipantRepository,
+  ) {}
+
   create(createParticipantDto: CreateParticipantDto) {
-    return 'This action adds a new participant';
+    return this.participantRepository.createWithJoins(createParticipantDto);
   }
 
   findAll() {
-    return `This action returns all participants`;
+    return this.participantRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} participant`;
-  }
-
-  update(id: number, updateParticipantDto: UpdateParticipantDto) {
-    return `This action updates a #${id} participant`;
+    return this.participantRepository.find({ id });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} participant`;
+    return this.participantRepository.delete({ id });
   }
 }
