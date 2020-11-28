@@ -1,10 +1,11 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { GetQuestionDto } from './dto/filter-question.dto';
+import { SeederObject } from './interface/seeder.interface';
 import { QuestionEntity } from './question.entity';
 
 @EntityRepository(QuestionEntity)
 export class QuestionRepository extends Repository<QuestionEntity> {
-  constructor(private questionStorage: Array<string>) {
+  constructor(private questionStorage: Array<SeederObject>) {
     super();
     this.questionStorage = [];
   }
@@ -25,7 +26,7 @@ export class QuestionRepository extends Repository<QuestionEntity> {
    * @param questionList array of strings containing ids of questions downloaded by controller
    * @returns boolean true if seeding is successful
    */
-  seedQuestionList(questionList: Array<string>): boolean {
+  seedQuestionList(questionList: Array<SeederObject>): boolean {
     this.questionStorage = [...questionList];
     return true;
   }
@@ -35,7 +36,12 @@ export class QuestionRepository extends Repository<QuestionEntity> {
    * @param filterDto {id} object containing the ID of the question to check if it exists
    * @returns boolean true if given question with id exists
    */
-  checkIfQuestionExist(filterDto: GetQuestionDto): boolean {
-    return this.questionStorage.includes(filterDto.id);
+  checkIfQuestionExist(filterDto: GetQuestionDto): SeederObject {
+    this.questionStorage.forEach(question => {
+      if (question.id === filterDto.id) {
+        return question;
+      }
+    });
+    return undefined;
   }
 }
