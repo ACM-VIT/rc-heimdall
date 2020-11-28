@@ -8,6 +8,7 @@ import { RunnerController } from './runner/runner.controller';
 import { RunnerModule } from './runner/runner.module';
 import { TeamsModule } from './teams/teams.module';
 import { ParticipantsModule } from './participants/participants.module';
+import { JudgeModule } from './judge/judge.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ParticipantsModule } from './participants/participants.module';
     RunnerModule,
     TeamsModule,
     ParticipantsModule,
+    JudgeModule,
   ],
 })
 export class AppModule implements NestModule {

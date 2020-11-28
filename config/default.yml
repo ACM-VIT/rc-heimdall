@@ -22,3 +22,6 @@ runner:
 
 seeder:
   endpoint: https://rc-broadcaster.vercel.app/api/app.js
+
+judge:
+  endpoint: http://40.76.50.156
