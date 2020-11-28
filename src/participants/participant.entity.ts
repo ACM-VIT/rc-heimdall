@@ -18,7 +18,9 @@ export class Participant extends BaseEntity {
   @Column()
   registrationNumber: string;
 
-  @Column()
+  @Column({
+    default: false,
+  })
   isAdmin: boolean;
 
   @Column()
