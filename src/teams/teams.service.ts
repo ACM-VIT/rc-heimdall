@@ -20,7 +20,7 @@ export class TeamsService {
   }
 
   findOne(id: number) {
-    return this.teamRepository.findOne({ id });
+    return this.teamRepository.find({ id });
   }
 
   remove(id: number) {
