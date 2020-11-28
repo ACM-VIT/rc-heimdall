@@ -9,6 +9,7 @@ import { RunnerModule } from './runner/runner.module';
 import { TeamsModule } from './teams/teams.module';
 import { ParticipantsModule } from './participants/participants.module';
 import { JudgeModule } from './judge/judge.module';
+import { ProblemsModule } from './problems/problems.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { JudgeModule } from './judge/judge.module';
     TeamsModule,
     ParticipantsModule,
     JudgeModule,
+    ProblemsModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -3,7 +3,7 @@ import { Team } from '../teams/team.entity';
 import { CodeStates } from './enum/codeStates.enum';
 
 @Entity()
-export class Participant extends BaseEntity {
+export class JudgeSubmissions extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
