@@ -6,12 +6,16 @@ import { QuestionsController } from './questions/questions.controller';
 import { QuestionsModule } from './questions/questions.module';
 import { RunnerController } from './runner/runner.controller';
 import { RunnerModule } from './runner/runner.module';
+import { TeamsModule } from './teams/teams.module';
+import { ParticipantsModule } from './participants/participants.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
     QuestionsModule,
     RunnerModule,
+    TeamsModule,
+    ParticipantsModule,
   ],
 })
 export class AppModule implements NestModule {
