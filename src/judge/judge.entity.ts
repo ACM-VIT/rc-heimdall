@@ -1,5 +1,6 @@
+import { Team } from 'src/teams/team.entity';
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Team } from '../teams/team.entity';
+import { Problems } from '../problems/problem.entity';
 import { CodeStates } from './enum/codeStates.enum';
 
 @Entity()
@@ -9,13 +10,16 @@ export class JudgeSubmissions extends BaseEntity {
 
   /** attach team to each submission for reference */
   @ManyToOne(
-    () => Team,
-    team => team.participants,
+    () => Problems,
+    problem => problem.submissions,
   )
-  team: Team;
+  problem: Problems;
 
-  @Column()
-  problemID: number;
+  @ManyToOne(
+    () => Team,
+    team => team.id,
+  )
+  teamID: number;
 
   @Column({
     type: 'int',
