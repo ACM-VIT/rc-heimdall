@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProblemDto } from './dto/create-problem.dto';
-import { UpdateProblemDto } from './dto/update-problem.dto';
 import { ProblemRepository } from './problems.repository';
 
 @Injectable()
@@ -19,15 +18,11 @@ export class ProblemsService {
     return this.problemRepository.find();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.problemRepository.findOne({ id });
   }
 
-  update(id: number, updateProblemDto: UpdateProblemDto) {
-    return `This action updates a #${id} problem`;
-  }
-
-  remove(id: number) {
+  remove(id: string) {
     return this.problemRepository.delete({ id });
   }
 }

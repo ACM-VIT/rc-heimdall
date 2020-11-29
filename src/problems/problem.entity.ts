@@ -1,20 +1,23 @@
 import { JudgeSubmissions } from 'src/judge/judge.entity';
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Problem extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Problems extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   /** allow storing all details of question via id only */
   @OneToMany(
     () => JudgeSubmissions,
-    submission => submission.problemID,
+    submission => submission.problem,
     {
       eager: true,
     },
   )
   submissions: JudgeSubmissions[];
+
+  @Column()
+  name: string;
 
   @Column({
     default: 100,
@@ -28,5 +31,8 @@ export class Problem extends BaseEntity {
   outputFileLocation: string;
 
   @Column()
-  binaryFileLocation: string;
+  exeFileURL: string;
+
+  @Column()
+  oFileURL: string;
 }
