@@ -25,3 +25,4 @@ seeder:
 
 judge:
   endpoint: http://40.76.50.156
+  callback: http://localhost:8080/judge/callback
