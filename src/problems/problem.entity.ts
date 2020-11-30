@@ -35,4 +35,10 @@ export class Problems extends BaseEntity {
 
   @Column()
   oFileURL: string;
+
+  @Column()
+  judgeInput: string;
+
+  @Column()
+  judgeOutput: string;
 }

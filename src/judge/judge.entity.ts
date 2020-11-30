@@ -17,9 +17,9 @@ export class JudgeSubmissions extends BaseEntity {
 
   @ManyToOne(
     () => Team,
-    team => team.id,
+    team => team.judgeSubmissions,
   )
-  teamID: number;
+  team: Team;
 
   @Column({
     type: 'int',
@@ -40,5 +40,8 @@ export class JudgeSubmissions extends BaseEntity {
   points: number;
 
   @Column()
-  submissionId: string;
+  judge0ID: string;
+
+  @Column()
+  code: string;
 }

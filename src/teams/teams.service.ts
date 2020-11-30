@@ -27,6 +27,10 @@ export class TeamsService {
     return response[0];
   }
 
+  async findOneById(id: number) {
+    return this.teamRepository.findOne(id);
+  }
+
   remove(id: number) {
     return this.teamRepository.delete({ id });
   }

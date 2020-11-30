@@ -18,14 +18,14 @@ import { ProblemsModule } from './problems/problems.module';
     RunnerModule,
     TeamsModule,
     ParticipantsModule,
-    JudgeModule,
     ProblemsModule,
+    JudgeModule,
   ],
 })
+// ProblemsModule,
+// JudgeModule,
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes(QuestionsController, RunnerController);
+    consumer.apply(LoggerMiddleware).forRoutes(QuestionsController, RunnerController);
   }
 }
