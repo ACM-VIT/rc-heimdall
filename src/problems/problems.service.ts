@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThanOrEqual } from 'typeorm';
 import { CreateProblemDto } from './dto/create-problem.dto';
@@ -19,8 +19,13 @@ export class ProblemsService {
     return this.problemRepository.find();
   }
 
-  findOne(id: string) {
-    return this.problemRepository.findOne({ id });
+  async findOne(id: string) {
+    try {
+      const problem = await this.problemRepository.findAndFilter(id);
+      return problem;
+    } catch (e) {
+      throw new NotFoundException(`Invalid QuestionID :${id}`);
+    }
   }
 
   remove(id: string) {
