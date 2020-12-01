@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Put, Param, Delete, UsePipes, ValidationPi
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Judge')
 @Controller('judge')
 export class JudgeController {
   constructor(private readonly judgeService: JudgeService) {}

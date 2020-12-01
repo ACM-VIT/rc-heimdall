@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Put, Param, Delete, UsePipes, ValidationPi
 import { Participant } from './participant.entity';
 import { ParticipantsService } from './participants.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Participants')
 @Controller('participants')
 export class ParticipantsController {
   constructor(private readonly participantsService: ParticipantsService) {}

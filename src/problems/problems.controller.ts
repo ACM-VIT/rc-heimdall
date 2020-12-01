@@ -1,11 +1,13 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { ProblemsService } from './problems.service';
 import { CreateProblemDto } from './dto/create-problem.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 /**
  * Problems Controller
  * @description: Entry point of problems routes
  */
+@ApiTags('Problems')
 @Controller('problems')
 export class ProblemsController {
   /**

@@ -2,11 +2,12 @@ import { Controller, Get, HttpCode } from '@nestjs/common';
 import {
   ApiAcceptedResponse,
   ApiInternalServerErrorResponse,
-  ApiOkResponse,
   ApiServiceUnavailableResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { SyncService } from './sync.service';
 
+@ApiTags('Data Synchronization')
 @Controller('sync')
 export class SyncController {
   constructor(private readonly syncService: SyncService) {}
