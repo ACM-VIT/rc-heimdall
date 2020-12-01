@@ -10,6 +10,7 @@ import { TeamsModule } from './teams/teams.module';
 import { ParticipantsModule } from './participants/participants.module';
 import { JudgeModule } from './judge/judge.module';
 import { ProblemsModule } from './problems/problems.module';
+import { SyncModule } from './sync/sync.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProblemsModule } from './problems/problems.module';
     ParticipantsModule,
     ProblemsModule,
     JudgeModule,
+    SyncModule,
   ],
 })
 // ProblemsModule,

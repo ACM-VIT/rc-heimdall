@@ -58,8 +58,8 @@ export class JudgeService {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callback,
-      expected_output: problem.judgeOutput,
-      stdin: problem.judgeInput,
+      expected_output: problem.outputText,
+      stdin: problem.inputText,
     };
 
     const judge0Response = await this.http.post(this.endpoint, postBody);

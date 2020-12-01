@@ -11,23 +11,27 @@ export class CreateProblemDto {
   })
   maxPoints: number;
 
-  @ApiProperty({
-    description: 'Location of file where test-cases are stored',
-  })
-  inputFileLocation: string;
+  @ApiProperty({ description: 'URL to download input file' })
+  inputFileURL: string;
 
-  @ApiProperty({
-    description: 'Location of file where outputs for test-cases are stored',
-  })
-  outputFileLocation: string;
+  @ApiProperty({ description: 'URL to download output file ' })
+  outputFileURL: string;
 
-  @ApiProperty({
-    description: 'Google Storage bucket link to download .exe file',
-  })
-  exeFileURL: string;
+  @ApiProperty({ description: 'URL to download windows(.exe) file' })
+  windowsFileURL: string;
 
-  @ApiProperty({
-    description: 'Google Storage bucket link to download .o file',
-  })
-  oFileURL: string;
+  @ApiProperty({ description: 'URL to download object(.o) file' })
+  objectFileURL: string;
+
+  @ApiProperty({ description: 'URL to download code instructions' })
+  instructionsFileURL: string;
+
+  @ApiProperty({ description: 'Actual text representation of input text' })
+  inputText: string;
+
+  @ApiProperty({ description: 'Actual text representation of code output' })
+  outputText: string;
+
+  @ApiProperty({ description: 'Actual text representation of instructions' })
+  instructionsText: string;
 }
