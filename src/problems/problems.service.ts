@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MoreThanOrEqual } from 'typeorm';
 import { CreateProblemDto } from './dto/create-problem.dto';
 import { ProblemRepository } from './problems.repository';
 
@@ -24,5 +25,10 @@ export class ProblemsService {
 
   remove(id: string) {
     return this.problemRepository.delete({ id });
+  }
+
+  /** delete all standard questions */
+  clear() {
+    return this.problemRepository.delete({ maxPoints: MoreThanOrEqual(0) });
   }
 }

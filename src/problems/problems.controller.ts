@@ -2,8 +2,17 @@ import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common'
 import { ProblemsService } from './problems.service';
 import { CreateProblemDto } from './dto/create-problem.dto';
 
+/**
+ * Problems Controller
+ * @description: Entry point of problems routes
+ */
 @Controller('problems')
 export class ProblemsController {
+  /**
+   * @constructor
+   * @description: Load business logic to be used for controller methods
+   * @param problemsService Instance of ProblemsService to perform business logic related to problems
+   */
   constructor(private readonly problemsService: ProblemsService) {}
 
   @Post()

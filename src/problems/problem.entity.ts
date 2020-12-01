@@ -1,6 +1,10 @@
 import { JudgeSubmissions } from 'src/judge/judge.entity';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+/**
+ * Problems Entity
+ * @description: structure of the schema to store all details about problems loaded into portal
+ */
 @Entity()
 export class Problems extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -9,7 +13,7 @@ export class Problems extends BaseEntity {
   /** allow storing all details of question via id only */
   @OneToMany(
     () => JudgeSubmissions,
-    submission => submission.problem,
+    (submission) => submission.problem,
     {
       eager: true,
     },
@@ -25,20 +29,26 @@ export class Problems extends BaseEntity {
   maxPoints: number;
 
   @Column()
-  inputFileLocation: string;
+  inputFileURL: string;
 
   @Column()
-  outputFileLocation: string;
+  outputFileURL: string;
 
   @Column()
-  exeFileURL: string;
+  instructionsFileURL: string;
 
   @Column()
-  oFileURL: string;
+  windowsFileURL: string;
 
   @Column()
-  judgeInput: string;
+  objectFileURL: string;
 
   @Column()
-  judgeOutput: string;
+  inputText: string;
+
+  @Column()
+  outputText: string;
+
+  @Column()
+  instructionsText: string;
 }
