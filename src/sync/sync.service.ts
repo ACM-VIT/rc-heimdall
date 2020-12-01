@@ -53,7 +53,7 @@ export class SyncService {
 
       /** clear old storage */
       const clearOperation = await this.problemsService.clear();
-      this.logger.verbose(`Cleared ${clearOperation} from problem storage`);
+      this.logger.verbose(`Cleared ${clearOperation.affected} from problem storage`);
 
       parsedData.map((problem) => {
         this.problemsService.create({
@@ -72,12 +72,12 @@ export class SyncService {
 
       this.logger.verbose(`Seeded ${parsedData.length} problems into storage`);
 
-      //   this.pingTaskRunnerToUpdateStorages();
+      //   const taskRunnerStatus = await this.pingTaskRunnerToUpdateStorages();
       this.logger.verbose('Pinging task-runner to update storages');
-      return reply.data;
+
+      return parsedData;
     } catch (error) {
       this.logger.error(error);
-      console.log(error);
       throw new InternalServerErrorException('Error seeding', error);
     }
   }
