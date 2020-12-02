@@ -17,7 +17,7 @@ export class Team extends BaseEntity {
 
   @OneToMany(
     () => Participant,
-    participant => participant.team,
+    (participant) => participant.team,
     {
       eager: true,
     },
@@ -26,7 +26,7 @@ export class Team extends BaseEntity {
 
   @OneToMany(
     () => JudgeSubmissions,
-    judgeSubmissions => judgeSubmissions.team,
+    (judgeSubmissions) => judgeSubmissions.team,
   )
   judgeSubmissions: JudgeSubmissions[];
 }
