@@ -4,12 +4,12 @@ import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { CallbackJudgeDto } from './dto/callback-judge.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { CODE_STATES, DILUTE } from './enum/codeStates.enum';
+import { DILUTE } from './enum/codeStates.enum';
 
 @ApiTags('Judge')
 @Controller('judge')
 export class JudgeController {
-  private readonly logger = new Logger('judge controller');
+  private readonly logger = new Logger('judge');
   constructor(private readonly judgeService: JudgeService) {}
 
   @Post()
@@ -31,7 +31,7 @@ export class JudgeController {
   @Put('callback')
   @UsePipes(ValidationPipe)
   callbackHandler(@Body() callbackJudgeDto: CallbackJudgeDto) {
-    this.logger.verbose(`Received callback for ${callbackJudgeDto.token} :: ${DILUTE[callbackJudgeDto.status.id]}`);
+    this.logger.verbose(`> ${callbackJudgeDto.token} :: ${DILUTE[callbackJudgeDto.status.id]}`);
     return this.judgeService.handleCallback(callbackJudgeDto);
   }
 

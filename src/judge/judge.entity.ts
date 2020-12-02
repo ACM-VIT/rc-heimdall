@@ -1,7 +1,8 @@
-import { Team } from 'src/teams/team.entity';
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Problems } from '../problems/problem.entity';
+
 import { CodeStates } from './enum/codeStates.enum';
+import { Problems } from '../problems/problem.entity';
+import { Team } from 'src/teams/team.entity';
 
 @Entity()
 export class JudgeSubmissions extends BaseEntity {
@@ -12,6 +13,7 @@ export class JudgeSubmissions extends BaseEntity {
   @ManyToOne(
     () => Problems,
     (problem) => problem.submissions,
+    { eager: true },
   )
   problem: Problems;
 
@@ -44,4 +46,9 @@ export class JudgeSubmissions extends BaseEntity {
 
   @Column()
   code: string;
+
+  @Column({
+    default: false,
+  })
+  best: boolean;
 }
