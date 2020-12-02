@@ -9,7 +9,8 @@ import { mapLanguageStringToObject } from './minions/language';
 import { JudgeOSubmissionRequest } from './interface/judge0.interfaces';
 import { ProblemsService } from 'src/problems/problems.service';
 import { TeamsService } from 'src/teams/teams.service';
-import { CodeStates } from './enum/codeStates.enum';
+import { CodeStates, CODE_STATES } from './enum/codeStates.enum';
+import { CallbackJudgeDto } from './dto/callback-judge.dto';
 
 @Injectable()
 @Dependencies(HttpService)
@@ -78,6 +79,16 @@ export class JudgeService {
     });
 
     return judge0Submission;
+  }
+
+  async handleCallback(callbackJudgeDto: CallbackJudgeDto) {
+    const { status, stdout, token } = callbackJudgeDto;
+
+    /** update state of submission in database */
+    const submission = await this.judgeRepository.fetchDetailsByJudge0Token(token);
+    submission.state = CODE_STATES[status.id - 1];
+    await submission.save;
+    return { updated: true };
   }
 
   findAll() {
