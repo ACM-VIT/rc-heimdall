@@ -18,4 +18,21 @@ export class ProblemRepository extends Repository<Problems> {
 
     return query;
   }
+
+  async findOneForJudge(id: string) {
+    const query = this.createQueryBuilder()
+      .select([
+        'problems.id',
+        'problems.inputText',
+        'problems.outputText',
+        'problems.instructionsText',
+        'problems.name',
+        'problems.maxPoints',
+      ])
+      .from(Problems, 'problems')
+      .andWhere('problems.id = :id', { id })
+      .getOne();
+
+    return query;
+  }
 }

@@ -9,6 +9,7 @@ import { mapLanguageStringToObject } from './minions/language';
 import { JudgeOSubmissionRequest } from './interface/judge0.interfaces';
 import { ProblemsService } from 'src/problems/problems.service';
 import { TeamsService } from 'src/teams/teams.service';
+import { CodeStates } from './enum/codeStates.enum';
 
 @Injectable()
 @Dependencies(HttpService)
@@ -16,7 +17,7 @@ export class JudgeService {
   constructor(
     private readonly http: HttpService,
     private readonly endpoint: string,
-    private readonly callback: string,
+    private readonly callbackURL: string,
     private readonly logger = new Logger('judge'),
 
     @InjectRepository(JudgeRepository)
@@ -29,7 +30,7 @@ export class JudgeService {
     private readonly teamService: TeamsService,
   ) {
     this.logger.verbose('service initialized');
-    this.callback = config.get('judge.callback');
+    this.callbackURL = config.get('judge.callback');
     this.endpoint = `${config.get('judge.endpoint')}/submissions`;
   }
 
@@ -43,13 +44,13 @@ export class JudgeService {
     }
 
     /** fetch question details about question */
-    const problem = await this.problemService.findOne(problemID);
+    const problem = await this.problemService.findOneForJudge(problemID);
     if (problem === undefined) {
       throw new BadRequestException(`No problem with id:${problemID}`);
     }
 
     /** fetch team details to ensure that it's not a random submission */
-    const team = this.teamService.findOneById(teamID);
+    const team = await this.teamService.findOneById(teamID);
     if (team === undefined) {
       throw new BadRequestException(`No team with id:${teamID}`);
     }
@@ -57,23 +58,34 @@ export class JudgeService {
     const postBody: JudgeOSubmissionRequest = {
       source_code: code,
       language_id: codeLanguage.id,
-      callback_url: this.callback,
+      callback_url: this.callbackURL,
       expected_output: problem.outputText,
       stdin: problem.inputText,
     };
 
-    const judge0Response = await this.http.post(this.endpoint, postBody);
-    console.log(judge0Response);
+    const { data } = await this.http.post(this.endpoint, postBody).toPromise();
+    const judge0ID = data.token;
 
-    return postBody;
+    /** save the submission into database */
+    const judge0Submission = this.judgeRepository.save({
+      problem,
+      team,
+      language: codeLanguage.id,
+      state: CodeStates.IN_QUEUE,
+      points: 0,
+      judge0ID,
+      code,
+    });
+
+    return judge0Submission;
   }
 
   findAll() {
-    return `This action returns all judge`;
+    return this.judgeRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} judge`;
+    return this.judgeRepository.findOne(id);
   }
 
   update(id: number, updateJudgeDto: UpdateJudgeDto) {

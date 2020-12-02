@@ -11,13 +11,13 @@ export class JudgeSubmissions extends BaseEntity {
   /** attach team to each submission for reference */
   @ManyToOne(
     () => Problems,
-    problem => problem.submissions,
+    (problem) => problem.submissions,
   )
   problem: Problems;
 
   @ManyToOne(
     () => Team,
-    team => team.judgeSubmissions,
+    (team) => team.judgeSubmissions,
   )
   team: Team;
 

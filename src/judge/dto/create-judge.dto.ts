@@ -10,9 +10,9 @@ export class CreateJudgeDto {
   @ApiProperty({ description: 'ID of the team making the submission', example: 2 })
   teamID: number;
 
-  @IsNumber()
+  @IsNotEmpty()
   @ApiProperty({
-    description: 'short representation of the language of code like c, cpp, go, java, py, js, kt',
+    description: 'short representation of the language of code like c, c_plus_plus, go, java, py, js, kt',
     example: 'cpp',
   })
   language: string;
@@ -20,7 +20,7 @@ export class CreateJudgeDto {
   @IsNotEmpty()
   @ApiProperty({
     description: 'code to run in judge',
-    example: '#include<stdio.h>\nusing namespace std;\nint main(){\ncout<<1;\n return 0; \n } \n',
+    example: '#include<iostream>\nusing namespace std;\nint main(){\ncout<<1;\n return 0; \n } \n',
   })
   code: string;
 }
