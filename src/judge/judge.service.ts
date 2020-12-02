@@ -1,16 +1,18 @@
 import * as config from 'config';
-import { BadRequestException, Dependencies, HttpService, Inject, Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CreateJudgeDto } from './dto/create-judge.dto';
-import { UpdateJudgeDto } from './dto/update-judge.dto';
-import { JudgeRepository } from './judge.repository';
-import { LanguageStruct } from './interface/enums.interface';
-import { mapLanguageStringToObject } from './minions/language';
-import { JudgeOSubmissionRequest } from './interface/judge0.interfaces';
 import { ProblemsService } from 'src/problems/problems.service';
 import { TeamsService } from 'src/teams/teams.service';
-import { CodeStates, CODE_STATES } from './enum/codeStates.enum';
+
+import { BadRequestException, Dependencies, HttpService, Inject, Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
 import { CallbackJudgeDto } from './dto/callback-judge.dto';
+import { CreateJudgeDto } from './dto/create-judge.dto';
+import { UpdateJudgeDto } from './dto/update-judge.dto';
+import { CODE_STATES, CodeStates } from './enum/codeStates.enum';
+import { LanguageStruct } from './interface/enums.interface';
+import { JudgeOSubmissionRequest } from './interface/judge0.interfaces';
+import { JudgeRepository } from './judge.repository';
+import { mapLanguageStringToObject } from './minions/language';
 
 @Injectable()
 @Dependencies(HttpService)
@@ -32,7 +34,7 @@ export class JudgeService {
   ) {
     this.logger.verbose('service initialized');
     this.callbackURL = config.get('judge.callback');
-    this.endpoint = `${config.get('judge.endpoint')}/submissions`;
+    this.endpoint = `${config.get('judge.endpoint')}/submissions?base64_encoded=true`;
   }
 
   async create(createJudgeDto: CreateJudgeDto) {
@@ -60,9 +62,10 @@ export class JudgeService {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
-      expected_output: problem.outputText,
-      stdin: problem.inputText,
+      expected_output: Buffer.from(problem.outputText).toString('base64'),
+      stdin: Buffer.from(problem.inputText).toString('base64'),
     };
+    console.log(postBody);
 
     const { data } = await this.http.post(this.endpoint, postBody).toPromise();
     const judge0ID = data.token;
@@ -99,10 +102,12 @@ export class JudgeService {
     return this.judgeRepository.findOne(id);
   }
 
+  /** not exposed to api, provisioned for internal use only */
   update(id: number, updateJudgeDto: UpdateJudgeDto) {
     return `This action updates a #${id} judge`;
   }
 
+  /** not exposed to api, provisioned for internal use only */
   remove(id: number) {
     return `This action removes a #${id} judge`;
   }

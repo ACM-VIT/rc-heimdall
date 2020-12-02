@@ -1,9 +1,10 @@
+import { IsBase64, IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
+
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
 
 export class CreateJudgeDto {
   @IsUUID()
-  @ApiProperty({ description: 'uuid of the problem', example: 'b3131232-a8fc-416f-8417-3305c917217e' })
+  @ApiProperty({ description: 'uuid of the problem', example: '4b7e09cb-90a5-4d9a-92d9-28662489f851' })
   problemID: string;
 
   @IsNumber()
@@ -12,15 +13,16 @@ export class CreateJudgeDto {
 
   @IsNotEmpty()
   @ApiProperty({
-    description: 'short representation of the language of code like c, c_plus_plus, go, java, py, js, kt',
+    description: 'extension of the language of code like c,cpp, go, java, py, js, kt',
     example: 'cpp',
   })
   language: string;
 
   @IsNotEmpty()
+  @IsBase64()
   @ApiProperty({
     description: 'code to run in judge',
-    example: '#include<iostream>\nusing namespace std;\nint main(){\ncout<<1;\n return 0; \n } \n',
+    example: 'I2luY2x1ZGU8aW9zdHJlYW0+CnVzaW5nIG5hbWVzcGFjZSBzdGQ7CmludCBtYWluKCl7CmNvdXQ8PDE7CiByZXR1cm4gMDsgCiB9IAo=',
   })
   code: string;
 }

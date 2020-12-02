@@ -59,9 +59,9 @@ export class SyncService {
         this.problemsService.create({
           name: problem.id,
           maxPoints: 100,
-          inputText: problem.inputText,
-          outputText: problem.outputText,
-          instructionsText: problem.instructionsText,
+          inputText: problem.inputText.replace(/\n/g, ' '),
+          outputText: problem.outputText.replace(/\n/g, ' '),
+          instructionsText: problem.instructionsText.replace(/\n/g, ' '),
           inputFileURL: problem.input,
           outputFileURL: problem.output,
           instructionsFileURL: problem.instructions,
