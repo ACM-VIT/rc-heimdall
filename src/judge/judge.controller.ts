@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Put, Param, Delete, UsePipes, ValidationPi
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
+import { CallbackJudgeDto } from './dto/callback-judge.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Judge')
@@ -23,6 +24,13 @@ export class JudgeController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.judgeService.findOne(+id);
+  }
+
+  @Put('callback')
+  @UsePipes(ValidationPipe)
+  callbackHandler(@Body() callbackJudgeDto: CallbackJudgeDto) {
+    console.log('checking');
+    return this.judgeService.handleCallback(callbackJudgeDto);
   }
 
   @Put(':id')
