@@ -109,13 +109,27 @@ export class JudgeService {
       submission.problem.maxPoints,
     );
 
-    /** directly save this submission async, don't wait for response */
+    /** save the current submission into database */
     submission.points = refereeEvaluation.points;
-    submission.save();
     this.logger.verbose(`> ${token} :: awarded ${refereeEvaluation.points} points`);
 
-    /** trigger team service to update best submissions */
-    this.teamService.selectBestSubmissionsForTeam(submission.team);
+    /** get the highest points for submission of same problem by same team */
+    const bestSubmissionTillNow = await this.judgeRepository.getHighestPointsFor(
+      submission.problem.id,
+      submission.team.id,
+    );
+    await submission.save();
+
+    /** handle changes regarding team points */
+    const team = await this.teamService.findOneById(submission.team.id);
+    if (bestSubmissionTillNow === undefined) {
+      team.points += submission.points;
+      this.logger.verbose(`Old record not found, adding ${submission.points}`);
+    } else if (bestSubmissionTillNow.points < submission.points) {
+      team.points += Math.abs(submission.points - bestSubmissionTillNow.points);
+      this.logger.verbose(`Updating record by ${bestSubmissionTillNow.points} <= ${submission.points}`);
+    }
+    await team.save();
 
     return;
   }

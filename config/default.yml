@@ -25,7 +25,7 @@ seeder:
 
 judge:
   endpoint: http://40.76.50.156
-  callback: http://983bf1c0deb1.ngrok.io/judge/callback
+  callback:  http://2b793765d590.ngrok.io/judge/callback
   # callback: https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203
 
 code_response:

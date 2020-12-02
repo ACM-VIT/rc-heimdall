@@ -21,8 +21,8 @@ export class TeamsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.teamsService.findOne(id);
+  findOne(@Param('id') id: number) {
+    return this.teamsService.findOneById(id);
   }
 
   @Delete(':id')
