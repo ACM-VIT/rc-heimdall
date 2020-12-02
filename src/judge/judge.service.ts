@@ -96,26 +96,3 @@ export class JudgeService {
     return `This action removes a #${id} judge`;
   }
 }
-
-// import { BadRequestException, Injectable } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { CreateJudgeDto } from './dto/create-judge.dto';
-// import { UpdateJudgeDto } from './dto/update-judge.dto';
-// import { JudgeRepository } from './judge.repository';
-// import { JudgeOSubmissionRequest } from './interface/judge0.interfaces';
-// import { LanguageStruct } from './interface/enums.interface';
-// import { mapLanguageStringToObject } from './minions/language';
-// import * as config from 'config';
-
-// //   constructor(
-//     private readonly endpoint: string,
-//     private readonly callback: string,
-
-//     @InjectRepository(JudgeRepository)
-//     private readonly judgeRepository: JudgeRepository,
-//   ) {
-//     this.callback = config.get('judge.callback');
-//     this.endpoint = `${config.get('judge.endpoint')}/submissions`;
-//   }
-
-//
