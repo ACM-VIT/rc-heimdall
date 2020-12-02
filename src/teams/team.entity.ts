@@ -1,5 +1,6 @@
-import { JudgeSubmissions } from 'src/judge/judge.entity';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { JudgeSubmissions } from 'src/judge/judge.entity';
 import { Participant } from '../participants/participant.entity';
 
 @Entity()
@@ -27,6 +28,7 @@ export class Team extends BaseEntity {
   @OneToMany(
     () => JudgeSubmissions,
     (judgeSubmissions) => judgeSubmissions.team,
+    { eager: true },
   )
   judgeSubmissions: JudgeSubmissions[];
 }

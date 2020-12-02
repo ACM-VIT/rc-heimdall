@@ -13,6 +13,7 @@ import { LanguageStruct } from './interface/enums.interface';
 import { JudgeOSubmissionRequest } from './interface/judge0.interfaces';
 import { JudgeRepository } from './judge.repository';
 import { mapLanguageStringToObject } from './minions/language';
+import { referee } from './minions/referee';
 
 @Injectable()
 @Dependencies(HttpService)
@@ -65,7 +66,6 @@ export class JudgeService {
       expected_output: Buffer.from(problem.outputText).toString('base64'),
       stdin: Buffer.from(problem.inputText).toString('base64'),
     };
-    console.log(postBody);
 
     const { data } = await this.http.post(this.endpoint, postBody).toPromise();
     const judge0ID = data.token;
@@ -84,14 +84,40 @@ export class JudgeService {
     return judge0Submission;
   }
 
+  /**
+   * Service to handle automatic update of scores after evaluation
+   */
   async handleCallback(callbackJudgeDto: CallbackJudgeDto) {
     const { status, stdout, token } = callbackJudgeDto;
 
     /** update state of submission in database */
     const submission = await this.judgeRepository.fetchDetailsByJudge0Token(token);
-    submission.state = CODE_STATES[status.id - 1];
-    await submission.save;
-    return { updated: true };
+    if (submission === undefined) {
+      throw new BadRequestException(`submission with token ${token} not found`);
+    }
+
+    /** map submission status into enum */
+    const codeStatus = CODE_STATES[status.id];
+    if (codeStatus !== CodeStates.WRONG && codeStatus !== CodeStates.ACCEPTED) {
+      return { error: false };
+    }
+
+    /** assign points only to CodeStates.{ACCEPTED | WRONG} responses  */
+    const refereeEvaluation = referee(
+      Buffer.from(stdout, 'base64').toString(),
+      submission.problem.outputText,
+      submission.problem.maxPoints,
+    );
+
+    /** directly save this submission async, don't wait for response */
+    submission.points = refereeEvaluation.points;
+    submission.save();
+    this.logger.verbose(`> ${token} :: awarded ${refereeEvaluation.points} points`);
+
+    /** trigger team service to update best submissions */
+    this.teamService.selectBestSubmissionsForTeam(submission.team);
+
+    return;
   }
 
   findAll() {
@@ -104,7 +130,7 @@ export class JudgeService {
 
   /** not exposed to api, provisioned for internal use only */
   update(id: number, updateJudgeDto: UpdateJudgeDto) {
-    return `This action updates a #${id} judge`;
+    return updateJudgeDto;
   }
 
   /** not exposed to api, provisioned for internal use only */

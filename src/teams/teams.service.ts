@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { Team } from './team.entity';
@@ -6,10 +6,14 @@ import { TeamRepository } from './teams.repository';
 
 @Injectable()
 export class TeamsService {
+  private readonly logger = new Logger('teams');
+
   constructor(
     @InjectRepository(TeamRepository)
     private teamRepository: TeamRepository,
-  ) {}
+  ) {
+    this.logger.verbose('service initialized');
+  }
 
   create(createTeamDto: CreateTeamDto): Promise<Team> {
     return this.teamRepository.createWithJoins(createTeamDto);
@@ -33,5 +37,10 @@ export class TeamsService {
 
   remove(id: number) {
     return this.teamRepository.delete({ id });
+  }
+
+  /** service to select only top submissions from a team */
+  async selectBestSubmissionsForTeam(team: Team) {
+    this.logger.verbose(`selecting best for ${team.name}`);
   }
 }

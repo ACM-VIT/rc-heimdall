@@ -1,5 +1,6 @@
-import { JudgeSubmissions } from 'src/judge/judge.entity';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { JudgeSubmissions } from 'src/judge/judge.entity';
 
 /**
  * Problems Entity
@@ -14,9 +15,6 @@ export class Problems extends BaseEntity {
   @OneToMany(
     () => JudgeSubmissions,
     (submission) => submission.problem,
-    {
-      eager: true,
-    },
   )
   submissions: JudgeSubmissions[];
 
