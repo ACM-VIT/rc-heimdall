@@ -39,8 +39,8 @@ export class TeamsService {
     return this.teamRepository.delete({ id });
   }
 
-  /** service to select only top submissions from a team */
-  async selectBestSubmissionsForTeam(team: Team) {
-    this.logger.verbose(`selecting best for ${team.name}`);
+  /** serivce to generate and return leaderboard */
+  async getLeaderBoard() {
+    return this.teamRepository.getLoaderBoard();
   }
 }
