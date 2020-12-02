@@ -20,6 +20,11 @@ export class TeamsController {
     return this.teamsService.findAll();
   }
 
+  @Get('/leader')
+  leaderBoard() {
+    return this.teamsService.getLeaderBoard();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.teamsService.findOneById(id);

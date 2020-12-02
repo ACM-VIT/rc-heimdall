@@ -12,4 +12,13 @@ export class TeamRepository extends Repository<Team> {
     await team.save();
     return team;
   }
+
+  async getLoaderBoard() {
+    const query = await this.createQueryBuilder('team')
+      .select('team.name')
+      .addSelect('team.points')
+      .orderBy('team.points', 'DESC')
+      .getMany();
+    return query;
+  }
 }
