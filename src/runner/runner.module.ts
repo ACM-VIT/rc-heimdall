@@ -4,7 +4,11 @@ import { RunnerController } from './runner.controller';
 import { RunnerService } from './runner.service';
 
 /**
- * @category Module
+ * **Runner Module**
+ *
+ * Module to handle all operations related to task execution / code runner.
+ *
+ * @category Runner
  */
 @Module({
   imports: [HttpModule],
