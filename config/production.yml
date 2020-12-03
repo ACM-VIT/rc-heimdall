@@ -1,2 +1,40 @@
+api:
+  name: Heimdall
+  description: Reverse Coding API Endpoint to handle question execution, interact with other micro-services, and provide API for internal operations.
+  version: 1.0.0
+  route: 'api'
+
 database:
-  synchronize: false
+  type: 'postgres'
+  port: 5432
+  host: reverse-coding.postgres.database.azure.com
+  username: 'reverse_coding@reverse-coding'
+  password: 'Mr.yashkumarverma.'
+  db_name: 'postgres'
+  synchronize: true
+
+server:
+  port: 6969
+
+runner:
+  runEndpoint: http://localhost:8080/run
+  seedEndpoint: http://localhost:8080/sync
+
+seeder:
+  endpoint: https://rc-broadcaster.vercel.app/api/app.js
+
+judge:
+  endpoint: http://40.76.50.156
+  callback:  http://2b793765d590.ngrok.io/judge/callback
+  # callback: https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203
+
+code_response:
+  in_queue: submission queued
+  processing: submission is being evaluated
+  accepted:  submission is accepted
+  wrong: submission returned wrong answer
+  tle: time limit exceeded
+  compilation_error: code could not compile. check for syntax errors
+  runtime_error: runtime error in code
+  internal_error: internal server error
+  code_error: undefined error encountered

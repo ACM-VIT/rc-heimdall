@@ -6,6 +6,8 @@ import { TeamsModule } from 'src/teams/teams.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 /**
+ * **Participants Module**
+ *
  * Module to handle all operations related to Participant Entity
  *
  * @category Participants
