@@ -1,7 +1,8 @@
 import * as config from 'config';
 
 /**
- * @enum
+ * @enum {number}
+ * @readonly
  * @description This is the exhaustive list of all responses that the server can give.
  * The expected use of this is only as a syntactic sugar, to avoid wiring ids manually
  */
@@ -22,7 +23,7 @@ export enum CodeStates {
  * @description This maps all responses that Judge0 returns to possible CodeStates.
  * This is added to convert to map responses from Judge0 into the enum format being used
  * in the application
- *
+ * @readonly
  * @tutorial Await has been added as indexing for Judge0 responses start from 1
  */
 export const CODE_STATES: Array<CodeStates> = [
@@ -46,7 +47,7 @@ export const CODE_STATES: Array<CodeStates> = [
 /**
  * This array can be used to convert the above given enum values to custom error messages.
  * All responses sent by the application are sent from here.
- *
+ * @readonly
  * @tutorial repetitions : the repetitions towards the end of the array are to club multiple
  * types of responses into one so that end user does not come across internals of the service.
  */

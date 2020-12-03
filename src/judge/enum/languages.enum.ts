@@ -1,3 +1,8 @@
+/**
+ * @enum
+ * @readonly
+ * @description Object containing id and extension for languages supported by Judge
+ */
 export const LANGUAGE = {
   C: {
     id: 50,
