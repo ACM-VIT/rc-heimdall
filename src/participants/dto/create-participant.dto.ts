@@ -1,6 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsAlpha, IsNotEmpty, IsEmail, IsBoolean, IsNumber } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty } from 'class-validator';
 
+import { ApiProperty } from '@nestjs/swagger';
+
+/**
+ * **Create Participant DTO**
+ *
+ * CreateParticipantDto is responsible for handling input and validating the same
+ * while creating a new participant.
+ *
+ * @category Participants
+ */
 export class CreateParticipantDto {
   @IsNotEmpty()
   @ApiProperty({ description: 'Google Auth ID of the participant', example: 'google_id_1' })

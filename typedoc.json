@@ -1,0 +1,7 @@
+{
+  "inputFiles": ["./src"],
+  "mode": "file",
+  "out": "typedoc",
+  "name": "Heimdall",
+  "exclude": "**/*+(.spec|.e2e).ts"
+}

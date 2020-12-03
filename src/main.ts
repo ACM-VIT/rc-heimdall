@@ -1,18 +1,23 @@
-import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app.module';
 import * as config from 'config';
+import * as helmet from 'helmet';
 import * as rateLimit from 'express-rate-limit';
 
-/** importing middlewares */
-import * as helmet from 'helmet';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core';
+
+/**
+ * Bootstrap application by attaching middleware and initializing auxillary services
+ * @internal
+ */
 async function bootstrap() {
+  /** set the logging levels */
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn', 'verbose'],
   });
 
-  /** configuring documentation builder */
+  /** configuring swaggerUI */
   const options = new DocumentBuilder()
     .setTitle(config.get('api.name'))
     .setDescription(config.get('api.description'))
@@ -44,4 +49,6 @@ async function bootstrap() {
   /** binding port to service */
   await app.listen(config.get('server.port'));
 }
+
+/** launch the application */
 bootstrap();
