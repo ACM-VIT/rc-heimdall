@@ -1,7 +1,11 @@
 import { HttpModule, Module } from '@nestjs/common';
-import { RunnerService } from './runner.service';
-import { RunnerController } from './runner.controller';
 
+import { RunnerController } from './runner.controller';
+import { RunnerService } from './runner.service';
+
+/**
+ * @category Module
+ */
 @Module({
   imports: [HttpModule],
   controllers: [RunnerController],

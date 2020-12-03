@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
-import { ParticipantsService } from './participants.service';
-import { ParticipantsController } from './participants.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ParticipantRepository } from './participants.repository';
+import { ParticipantsController } from './participants.controller';
+import { ParticipantsService } from './participants.service';
 import { TeamsModule } from 'src/teams/teams.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
+/**
+ * Module to handle all operations related to Participant Entity
+ *
+ * @category Participants
+ */
 @Module({
   imports: [TypeOrmModule.forFeature([ParticipantRepository]), TeamsModule],
   controllers: [ParticipantsController],

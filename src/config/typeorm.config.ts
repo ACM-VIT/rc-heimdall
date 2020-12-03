@@ -5,7 +5,8 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 const dbConfig = config.get('database');
 
 /**
- * Initialize typeORM configurations to link all entities and establish connections
+ * initialize database connection based on config file(s)
+ * @internal
  */
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: dbConfig.type,

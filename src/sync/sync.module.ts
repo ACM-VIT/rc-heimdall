@@ -1,8 +1,12 @@
 import { HttpModule, Module } from '@nestjs/common';
-import { SyncService } from './sync.service';
-import { SyncController } from './sync.controller';
-import { ProblemsModule } from 'src/problems/problems.module';
 
+import { ProblemsModule } from 'src/problems/problems.module';
+import { SyncController } from './sync.controller';
+import { SyncService } from './sync.service';
+
+/**
+ * @category Module Sync
+ */
 @Module({
   imports: [ProblemsModule, HttpModule],
   controllers: [SyncController],

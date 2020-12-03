@@ -3,42 +3,46 @@ import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 't
 import { Team } from '../teams/team.entity';
 
 /**
- * Object to represent Participant Entity
- * @typedef {Object} Participant
- * @property {number} id - id of the participant
- * @property {string} googleID - google OAuth id of user, based on email
- * @property {string} name - name of the participant
- * @property {string} email - email of the participant
- * @property {string} registrationNumber - university registration number of participant
- * @property {boolean} isAdmin - whether participant is admin of the team
- * @property {string} phoneNumber - contact number of participant
- * @property {Team} team - details about the team the participant is a member of.
+ * Participant Entity represents data related to participants and its relationships
+ * with other entities.
+ *
+ * Read-up about typeORM entities to get more insights about decorators used.
+ *
+ * @category Participants
  */
 @Entity()
 export class Participant extends BaseEntity {
+  /** unique id of the participant, auto-generated */
   @PrimaryGeneratedColumn()
   id: number;
 
+  /** googleID obtained after OAuth */
   @Column()
   googleID: string;
 
+  /** name of the participant */
   @Column()
   name: string;
 
+  /** email using which OAuth was performed */
   @Column()
   email: string;
 
+  /** college registration number */
   @Column()
   registrationNumber: string;
 
+  /** whether participant is admin of his/her team */
   @Column({
     default: false,
   })
   isAdmin: boolean;
 
+  /** contact number of participant, optional */
   @Column()
   phoneNumber: string;
 
+  /** entity representing team which the participant is a member of */
   @ManyToOne(
     () => Team,
     (team) => team.participants,
