@@ -1,17 +1,32 @@
-import { Controller, Get, HttpCode } from '@nestjs/common';
 import {
   ApiAcceptedResponse,
   ApiInternalServerErrorResponse,
   ApiServiceUnavailableResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Controller, Get, HttpCode } from '@nestjs/common';
+
 import { SyncService } from './sync.service';
 
-@ApiTags('Data Synchronization')
+/**
+ * **Sync Controller**
+ *
+ * All routes related to data synchronization are declared here, and the decorators represent the type of request
+ * they respond to. Use ValidationPipe to validate client requests.
+ *
+ * The controller calls [[SyncService]] for all operations.
+ *
+ * @category Problems
+ */ @ApiTags('Data Synchronization')
 @Controller('sync')
 export class SyncController {
   constructor(private readonly syncService: SyncService) {}
 
+  /**
+   * Responds to: _GET(`/problems`)_
+   *
+   * To fetch and update database with problem details fetched from storage lambda
+   */
   @ApiAcceptedResponse({
     status: 202,
     description: 'The request has been accepted and all services will update their references.',
@@ -29,9 +44,4 @@ export class SyncController {
   seedProblems() {
     return this.syncService.syncWithCloudStorage();
   }
-
-  //   @Get(':id')
-  //   checkIfQuestionExists(@Param('id') id: string) {
-  //     return this.questionsService.checkIfQuestionExist({ id });
-  //   }
 }

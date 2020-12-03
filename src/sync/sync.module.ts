@@ -5,7 +5,11 @@ import { SyncController } from './sync.controller';
 import { SyncService } from './sync.service';
 
 /**
- * @category Module Sync
+ * **Sync Module**
+ *
+ * Module to handle all operations related to data synchronization
+ *
+ * @category Sync
  */
 @Module({
   imports: [ProblemsModule, HttpModule],
