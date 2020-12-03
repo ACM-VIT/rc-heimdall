@@ -11,31 +11,38 @@ import { ApiProperty } from '@nestjs/swagger';
  * @category Participants
  */
 export class CreateParticipantDto {
+  /** GoogleID obtained after OAuth */
   @IsNotEmpty()
   @ApiProperty({ description: 'Google Auth ID of the participant', example: 'google_id_1' })
   googleID: string;
 
+  /** Name of the participant */
   @IsNotEmpty()
   @ApiProperty({ description: 'Name of the Participant', example: 'Yash Kumar Verma' })
   name: string;
 
+  /** Email of the participant */
   @IsEmail()
   @IsNotEmpty()
   @ApiProperty({ description: 'Email of the participant', example: 'yashkumar.verma2019@vitstudent.ac.in' })
   email: string;
 
+  /** College registration number of participant */
   @IsNotEmpty()
   @ApiProperty({ description: 'Registration Number of participant', example: '19BCE2669' })
   registrationNumber: string;
 
+  /** phone number of participant */
   @IsNotEmpty()
   @ApiProperty({ description: 'Phone number of participant', example: '8864813176' })
   phoneNumber: string;
 
+  /** team name of participant, references [[Team]] by [[Team.name]] */
   @IsNotEmpty()
   @ApiProperty({ description: 'Team Name of participant', example: 'team_1' })
   teamName: string;
 
+  /** whether participant is admin of his/her team */
   @IsBoolean()
   @ApiProperty({ description: 'if participant is admin of the team', example: false })
   isAdmin: boolean;

@@ -15,6 +15,7 @@ import { ProblemRepository } from './problems.repository';
  */
 @Injectable()
 export class ProblemsService {
+  /** injecting imported modules and services into problem service */
   constructor(
     /** injecting [[ProblemRepository]] as a persistence layer */
     @InjectRepository(ProblemRepository)

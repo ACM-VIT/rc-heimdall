@@ -13,6 +13,7 @@ import { ApiProperty } from '@nestjs/swagger';
  * @category Teams
  */
 export class CreateTeamDto {
+  /** name of the team  */
   @IsAlpha()
   @IsNotEmpty()
   @MinLength(6)
