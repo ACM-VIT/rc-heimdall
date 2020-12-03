@@ -5,6 +5,8 @@
 .vscode
 typedoc
 
+config/production.yml
+
 # Logs
 logs
 *.log
