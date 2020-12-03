@@ -2,7 +2,15 @@ import * as config from 'config';
 import { ProblemsService } from 'src/problems/problems.service';
 import { TeamsService } from 'src/teams/teams.service';
 
-import { BadRequestException, Dependencies, HttpService, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Dependencies,
+  HttpService,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { CallbackJudgeDto } from './dto/callback-judge.dto';
@@ -138,8 +146,13 @@ export class JudgeService {
     return this.judgeRepository.find();
   }
 
-  findOne(id: number) {
-    return this.judgeRepository.findOne(id);
+  async findOne(id: string) {
+    const query = await this.judgeRepository.findOneForClientByJudge0Token(id);
+    if (query === undefined) {
+      throw new NotFoundException(`No submission for token ${id}`);
+    }
+
+    return query;
   }
 
   /** not exposed to api, provisioned for internal use only */

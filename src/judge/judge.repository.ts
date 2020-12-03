@@ -23,4 +23,17 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
 
     return query;
   }
+
+  async findOneForClientByJudge0Token(token: string) {
+    const query = await this.createQueryBuilder('submission')
+      .select('submission.id')
+      .addSelect('submission.language')
+      .addSelect('submission.state')
+      .addSelect('submission.points')
+      .addSelect('submission.judge0ID')
+      .andWhere('submission.judge0ID = :token', { token })
+      .getOne();
+
+    return query;
+  }
 }

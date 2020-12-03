@@ -2,6 +2,14 @@ import { IsBase64, IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
 
 import { ApiProperty } from '@nestjs/swagger';
 
+/**
+ * **Create Judge Submission DTO**
+ *
+ * [[CreateJudgeDto]] is responsible for handling input and validating the same
+ * while creating a new submission for a problem
+ *
+ * @category Judge
+ */
 export class CreateJudgeDto {
   @IsUUID()
   @ApiProperty({ description: 'uuid of the problem', example: '4b7e09cb-90a5-4d9a-92d9-28662489f851' })
