@@ -3,7 +3,7 @@ import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { CallbackJudgeDto } from './dto/callback-judge.dto';
-import { ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { DILUTE } from './enum/codeStates.enum';
 
 /**

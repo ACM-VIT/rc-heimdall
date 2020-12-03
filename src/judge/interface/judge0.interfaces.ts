@@ -33,12 +33,12 @@ interface Judge0Status {
  * @category Judge
  */
 export interface Judge0Callback {
-  stdout: string | null;
-  time: string;
-  memory: number;
-  stderr: string | null;
+  stdout: string;
   token: string;
-  compile_output: string | null;
-  message: string | null;
   status: Judge0Status;
+  compile_output?: string;
+  message?: string;
+  time?: string;
+  memory?: number;
+  stderr?: string;
 }
