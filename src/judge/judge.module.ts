@@ -8,7 +8,11 @@ import { TeamsModule } from 'src/teams/teams.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 /**
- * @category Module
+ * **Judge Module**
+ *
+ * Module to handle all operations related to Judge Entity
+ *
+ * @category Judge
  */
 @Module({
   imports: [TypeOrmModule.forFeature([JudgeRepository]), HttpModule, ProblemsModule, TeamsModule],
