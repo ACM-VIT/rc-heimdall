@@ -12,9 +12,11 @@ import { Type } from 'class-transformer';
  * @category Judge
  */
 class CallbackStatusObject {
+  /** ID of the submission status, check Judge0 docs*/
   @IsNumber()
   id: number;
 
+  /** test summary of submission status */
   @IsString()
   @IsNotEmpty()
   description: string;
@@ -29,6 +31,7 @@ class CallbackStatusObject {
  * @category Judge
  */
 export class CallbackJudgeDto {
+  /** response from program STDOUT */
   @ApiProperty({
     name: 'stdout',
     description: 'Base64 encoded program output',
@@ -38,6 +41,7 @@ export class CallbackJudgeDto {
   @IsNotEmpty()
   stdout: string;
 
+  /** Judge0 uuid token to fetch results */
   @ApiProperty({
     name: 'token',
     description: 'Judge0 Identification token',
@@ -47,6 +51,7 @@ export class CallbackJudgeDto {
   @IsNotEmpty()
   token: string;
 
+  /** status object */
   @ApiProperty({
     name: 'status',
     description: 'Object containing status id and description',

@@ -11,14 +11,17 @@ import { ApiProperty } from '@nestjs/swagger';
  * @category Judge
  */
 export class CreateJudgeDto {
+  /** uuid representing [[Problems.id]] */
   @IsUUID()
   @ApiProperty({ description: 'uuid of the problem', example: '4b7e09cb-90a5-4d9a-92d9-28662489f851' })
   problemID: string;
 
+  /** TeamID who made the submission, references [[Team]] via [[Team.id]] */
   @IsNumber()
   @ApiProperty({ description: 'ID of the team making the submission', example: 2 })
   teamID: number;
 
+  /** Language in which the submission is made */
   @IsNotEmpty()
   @ApiProperty({
     description: 'extension of the language of code like c,cpp, go, java, py, js, kt',
@@ -26,6 +29,7 @@ export class CreateJudgeDto {
   })
   language: string;
 
+  /** Base64 encoded code for submission */
   @IsNotEmpty()
   @IsBase64()
   @ApiProperty({

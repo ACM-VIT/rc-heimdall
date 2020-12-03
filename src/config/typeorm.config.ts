@@ -2,11 +2,11 @@ import * as config from 'config';
 
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
+/** load database configurations */
 const dbConfig = config.get('database');
 
 /**
  * initialize database connection based on config file(s)
- * @internal
  */
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: dbConfig.type,
