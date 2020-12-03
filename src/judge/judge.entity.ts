@@ -53,9 +53,4 @@ export class JudgeSubmissions extends BaseEntity {
 
   @Column()
   code: string;
-
-  @Column({
-    default: false,
-  })
-  best: boolean;
 }
