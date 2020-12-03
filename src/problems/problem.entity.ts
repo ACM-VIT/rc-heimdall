@@ -3,8 +3,10 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 't
 import { JudgeSubmissions } from 'src/judge/judge.entity';
 
 /**
- * Problems Entity represents data related to participants and its relationships
- * with other problems.
+ * **Problems Entity**
+ *
+ * Problems Entity represents data related to problems and its relationships
+ * with other entities.
  *
  * Read-up about typeORM entities to get more insights about decorators used.
  *

@@ -2,6 +2,8 @@ import { LANGUAGE } from '../enum/languages.enum';
 import { LanguageStruct } from '../interface/enums.interface';
 
 /**
+ * **Language :: String to Object Mapper**
+ *
  * This function maps the given extension to the various languages stored in
  * [[LanguageStruct]] and returns the details.
  *
