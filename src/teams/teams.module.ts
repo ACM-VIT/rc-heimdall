@@ -5,7 +5,11 @@ import { TeamsService } from './teams.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 /**
- * @category Module Teams
+ * **Team Module**
+ *
+ * Module to handle all operations related to [[Team]] Entity
+ *
+ * @category Teams
  */
 @Module({
   imports: [TypeOrmModule.forFeature([TeamRepository])],
