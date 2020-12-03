@@ -11,15 +11,29 @@ import * as config from 'config';
 import { ProblemsService } from 'src/problems/problems.service';
 import { ProblemMetadata } from './interface/problem.interface';
 
+/**
+ * **Sync  Service**
+ *
+ * Sync Service contains all logic related to ensure that all micro services share the
+ * data and therefore can interact with each other hassle-free.
+ *
+ * @category Sync
+ */
 @Injectable()
 @Dependencies(HttpService)
 export class SyncService {
   constructor(
+    /** [[HttpService]] to make HTTP calls to storage lambda endpoint */
     private readonly http: HttpService,
+
+    /** endpoints for API Calls */
     private readonly seeder: string,
     private readonly taskRunner: string,
+
+    /** initialize logger with context:seeder */
     private readonly logger = new Logger('seeder'),
 
+    /** inject [[ProblemsService]] to seed data into [[ProblemRepository]]  */
     @Inject(ProblemsService)
     private readonly problemsService: ProblemsService,
   ) {
@@ -30,9 +44,7 @@ export class SyncService {
   }
 
   /**
-   * @async
-   * @description: To sync database entries with problems uploaded on cloud storage
-   * @returns null
+   * To sync database entries with problems uploaded on cloud storage
    */
   async syncWithCloudStorage() {
     try {
@@ -85,12 +97,13 @@ export class SyncService {
   /**
    * Function to shoot a request to task-runner so that it updates it's arsenal of
    * binaries to run code on.
-   * @description The reason that this is not an async function, and we do not care about
+   *
+   * The reason that this is not an async function, and we do not care about
    * the reply from the task-runner is that it is not the job of this service to ensure that
    * task-runner does what it is expected to do. The download can take a few minutes which can
    * cause a timeout on some connections. To avoid that, we rely on task-runner to download the
    * files, and just to inform the user, we send a 202 to denote that the request is accepted.
-   * @returns boolean true if request was shot at task-runner
+   *
    */
   async pingTaskRunnerToUpdateStorages(): Promise<boolean> {
     try {
@@ -103,7 +116,12 @@ export class SyncService {
     }
   }
 
-  /** private members for auxillary tasks */
+  /**
+   * **Save Locally**
+   *
+   * This method is responsible for making API Calls to the storage lambda, fetch
+   * input, output and instruction as plain text.
+   */
   private async saveLocally(problems: Array<ProblemMetadata>): Promise<Array<ProblemMetadata>> {
     const tasks: Array<ProblemMetadata> = [];
     for (let i = 0; i < problems.length; i += 1) {
