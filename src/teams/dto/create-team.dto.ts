@@ -3,9 +3,14 @@ import { IsAlpha, IsNotEmpty, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
- * @class
- * @typedef {Object} CreateTeamDto
- * @property {string} name : name of the team
+ * **Create Team DTO**
+ *
+ * CreateTeamDto is responsible for handling input and validating the same
+ * while creating a new teams. This data is unlikely to be off-structure but
+ * to double check and ensure that the system is reliable and consistent, it's
+ * also validated.
+ *
+ * @category Teams
  */
 export class CreateTeamDto {
   @IsAlpha()

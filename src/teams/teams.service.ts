@@ -5,18 +5,21 @@ import { Team } from './team.entity';
 import { TeamRepository } from './teams.repository';
 
 /**
- * Teams Service
+ * **Teams Service**
+ *
+ * teams Service contains all business logic related to teams, and is designed to be
+ * imported and re-used in other modules. Therefore it is to ensure that all methods of the service
+ * are self-contained and fit to be used directly as per use-case.
+ *
+ * @category Teams
  */
 @Injectable()
 export class TeamsService {
+  /** initialize logger with context:teams */
   private readonly logger = new Logger('teams');
 
-  /**
-   * @constructs
-   * @description Initialize teams repository
-   * @param teamRepository TeamsRepository object to act as persistence layer
-   */
   constructor(
+    /** inject [[TeamRepository]] as persistence layer */
     @InjectRepository(TeamRepository)
     private teamRepository: TeamRepository,
   ) {
@@ -24,23 +27,21 @@ export class TeamsService {
   }
 
   /**
-   * To Create a new team
-   * @param {CreateTeamDto} createTeamDto - Team details required while creating a new team
+   * To Create a new team using [[CreateTeamDto]]
    */
   create(createTeamDto: CreateTeamDto): Promise<Team> {
     return this.teamRepository.createWithJoins(createTeamDto);
   }
 
   /**
-   *
+   * To list details of all [[Team]]
    */
   findAll() {
     return this.teamRepository.find();
   }
 
   /**
-   *
-   * @param name
+   * To fetch details of [[Team]] by [[Team.name]]
    */
   async findOne(name: string) {
     const response = await this.teamRepository.find({ name });
@@ -51,23 +52,21 @@ export class TeamsService {
   }
 
   /**
-   *
-   * @param id
+   * To fetch details of [[Team]] by [[Team.id]]
    */
   async findOneById(id: number) {
     return this.teamRepository.findOne(id);
   }
 
   /**
-   *
-   * @param id
+   * To delete a [[Team]] by [[Team.id]]
    */
   remove(id: number) {
     return this.teamRepository.delete({ id });
   }
 
   /**
-   *
+   * To get leaderBoard of [[Team]] based on [[Team.points]]
    */
   async getLeaderBoard() {
     return this.teamRepository.getLoaderBoard();

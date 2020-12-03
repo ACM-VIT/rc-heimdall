@@ -5,21 +5,26 @@ import { Team } from './team.entity';
 import { ApiTags } from '@nestjs/swagger';
 
 /**
- * Teams Controller
+ * **Teams Controller**
+ *
+ * All routes related to teams are declared here, and the decorators represent the type of request
+ * they respond to. Use ValidationPipe to validate client requests, and the rules for validation are
+ * defined in [[CreateTeamDto]].
+ *
+ * The controller calls [[TeamsService]] for all operations.
+ *
+ * @category Problems
  */
 @ApiTags('Teams')
 @Controller('teams')
-/**
- * @class
- */
 export class TeamsController {
   /** initiate controller  */
   constructor(private readonly teamsService: TeamsService) {}
 
   /**
-   * To Create a new team
-   * @param {CreateTeamDto} createTeamDto - details of team
-   * @returns {Team} team - created team details
+   * Responds to: _POST(`/`)_
+   *
+   * To Create a new team based on [[CreateTeamDto]]
    */
   @Post()
   @UsePipes(ValidationPipe)
@@ -28,8 +33,9 @@ export class TeamsController {
   }
 
   /**
-   * Get list of all teams along-with their problem submissions.
-   * @returns {Team[]} - Details of all the teams
+   * Responds to: _GET(`/`)_
+   *
+   * Get list of all [[Team]] along-with their [[JudgeSubmissions]].
    */
   @Get()
   findAll() {
@@ -37,7 +43,9 @@ export class TeamsController {
   }
 
   /**
-   * Get leaderBoard with team id, name and points.
+   * Responds to: _GET(`/leader`)_
+   *
+   * Get leaderBoard with team id, name and points of [[Team]]
    */
   @Get('/leader')
   leaderBoard() {
@@ -45,8 +53,9 @@ export class TeamsController {
   }
 
   /**
-   * Get details of team by id
-   * @param id TeamID to get details of individual team
+   * Responds to: _GET(`/:id`)_
+   *
+   * Get details of [[Team]] by ID
    */
   @Get(':id')
   findOne(@Param('id') id: number) {
@@ -54,8 +63,9 @@ export class TeamsController {
   }
 
   /**
+   * Responds to: _DELETE(`/:id`)_
+   *
    * Delete a team by id
-   * @param id TeamID to delete a team
    */
   @Delete(':id')
   remove(@Param('id') id: string) {
