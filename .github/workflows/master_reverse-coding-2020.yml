@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Deploy pipeline for Reverse Coding 2020
+name: Deploy documentations
 
 on:
   push:
@@ -9,29 +6,42 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  build-docker:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@master
 
-    - name: Set up Node.js version
-      uses: actions/setup-node@v1
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
       with:
-        node-version: '12.x'
+        node-version: '12'
 
     - name: npm install, build
       run: |
         npm install
-        npm run build --if-present
+        npm run build
+        npm i -g typedoc
+    
+    - name: Building documentation
+      run: |
+        typedoc
+        npm run docs:compodoc
+    
+    - name: deploy compodoc
+      uses: dswistowski/surge-sh-action@v1
+        with:
+          domain: 'rc-heimdall.compodoc.ykv.surge.sh'
+          project: 'documentation'
+          login: ${{ secrets.surge_login }}
+          token: ${{ secrets.surge_token }}
 
-    - name: injecting production config
-      run: echo $PRODUCTION_CONFIG > config/production.yml
-      
-    - name: 'Deploy to Azure Web App'
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'reverse-coding-2020'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_d6df4b3434b048d3933ba9fb7bb33449 }}
-        package: .
+    - name: deploy typedoc
+      run: dswistowski/surge-sh-action@v1
+        with:
+          domain: 'rc-heimdall.typedoc.ykv.surge.sh'
+          project: 'typedoc'
+          login: ${{ secrets.surge_login }}
+          token: ${{ secrets.surge_token }}
+
+ 
