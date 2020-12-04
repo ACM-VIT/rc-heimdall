@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - reverse-coding-2020
+name: Deploy pipeline for Reverse Coding 2020
 
 on:
   push:
@@ -20,12 +20,14 @@ jobs:
       with:
         node-version: '12.x'
 
-    - name: npm install, build, and test
+    - name: npm install, build
       run: |
         npm install
         npm run build --if-present
-        npm run test --if-present
 
+    - name: injecting production config
+      run: echo $PRODUCTION_CONFIG > config/production.yml
+      
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
