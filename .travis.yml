@@ -7,18 +7,15 @@ node_js:
   - 12
 
 install:
-  - npm install -g typedoc
   - npm install -g surge
   - npm install
 
 script:
   - npm run build
   - npm run docs:compodoc
-  - typedoc
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t yashkumarverma/rc-heimdall .
   - docker push yashkumarverma/rc-heimdall
   - surge --project ./documentation --domain rc-heimdall.compodoc.surge.sh
-  - surge --project ./typedoc --domain rc-heimdall.typedoc.surge.sh
