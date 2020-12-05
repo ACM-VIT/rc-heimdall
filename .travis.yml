@@ -13,7 +13,6 @@ install:
 script:
   - npm run build
   - npm run docs:compodoc
-  - ${PRODUCTION_CONFIG}
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin

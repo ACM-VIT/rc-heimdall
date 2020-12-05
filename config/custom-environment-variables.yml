@@ -1,3 +1,12 @@
 runner:
   runEndpoint: RUNNER_ENDPOINT_EXEC
   seedEndpoint: RUNNER_ENDPOINT_SEED
+
+database:
+  host: DB_HOST
+  username: DB_USERNAME
+  password: DB_PASSWORD
+  db_name: DB_NAME
+
+judge:
+  callback: JUDGE_CALLBACK

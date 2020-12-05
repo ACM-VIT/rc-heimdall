@@ -1,8 +1,13 @@
 FROM node:15.3.0-alpine3.10
 
 ENV NODE_ENV='production'
+ENV DB_HOST='localhost'
+ENV DB_USERNAME='postgres'
+ENV DB_PASSWORD='postgres'
+ENV DB_NAME='reverse_coding'
 ENV RUNNER_ENDPOINT_EXEC='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203' 
 ENV RUNNER_ENDPOINT_SEED='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203'
+ENV JUDGE_CALLBACK='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203'
 
 # Create Directory for the Container
 WORKDIR /usr/src/app
