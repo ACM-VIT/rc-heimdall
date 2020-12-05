@@ -7,6 +7,7 @@ services:
       - "80:80"
     restart: always
     environment:
+      - PORT=80
       - NODE_ENV='production'
       - DB_HOST='secret'
       - DB_USERNAME='secret'

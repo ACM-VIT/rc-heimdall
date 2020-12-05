@@ -1,5 +1,6 @@
 FROM node:15.3.0-alpine3.10
 
+ENV PORT=80
 ENV NODE_ENV='production'
 ENV DB_HOST='localhost'
 ENV DB_USERNAME='postgres'

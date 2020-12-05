@@ -2,6 +2,9 @@ runner:
   runEndpoint: RUNNER_ENDPOINT_EXEC
   seedEndpoint: RUNNER_ENDPOINT_SEED
 
+server:
+  port: PORT
+
 database:
   host: DB_HOST
   username: DB_USERNAME
