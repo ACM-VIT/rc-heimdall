@@ -1,12 +1,3 @@
-server:
-  port: PORT
-
-judge:
-  callback:  JUDGE_CALLBACK
-
 runner:
   runEndpoint: RUNNER_ENDPOINT_EXEC
   seedEndpoint: RUNNER_ENDPOINT_SEED
-
-database:
-  host: DATABASE_HOST

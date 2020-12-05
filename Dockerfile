@@ -1,7 +1,8 @@
 FROM node:15.3.0-alpine3.10
 
-ENV PORT=80
-ENV NODE_ENV=production
+ENV NODE_ENV='production'
+ENV RUNNER_ENDPOINT_EXEC='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203' 
+ENV RUNNER_ENDPOINT_SEED='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203'
 
 # Create Directory for the Container
 WORKDIR /usr/src/app
