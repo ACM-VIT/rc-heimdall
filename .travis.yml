@@ -15,7 +15,8 @@ script:
   - npm run docs:compodoc
 
 after_success:
+  - PACKAGE_VERSION=$(node -p "require('./package.json').version")
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t yashkumarverma/rc-heimdall:${TRAVIS_COMMIT} .
+  - docker build -t yashkumarverma/rc-heimdall:${PACKAGE_VERSION} -t yashkumarverma/rc-heimdall:latest .
   - docker push yashkumarverma/rc-heimdall:${TRAVIS_COMMIT}
   - surge --project ./documentation --domain rc-heimdall.compodoc.surge.sh
