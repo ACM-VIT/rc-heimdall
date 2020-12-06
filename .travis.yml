@@ -18,5 +18,6 @@ after_success:
   - PACKAGE_VERSION=$(node -p "require('./package.json').version")
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t yashkumarverma/rc-heimdall:${PACKAGE_VERSION} -t yashkumarverma/rc-heimdall:latest .
-  - docker push yashkumarverma/rc-heimdall:${TRAVIS_COMMIT}
+  - docker push yashkumarverma/rc-heimdall:${PACKAGE_VERSION}
+  - docker push yashkumarverma/rc-heimdall:latest
   - surge --project ./documentation --domain rc-heimdall.compodoc.surge.sh
