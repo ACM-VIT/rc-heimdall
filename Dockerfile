@@ -1,5 +1,9 @@
 FROM node:15.3.0-alpine3.10
 
+# Labls
+LABEL maintainer="Yash Kumar Verma yk.verma2000@gmail.com"
+
+# Document environment configurations
 ENV PORT=80
 ENV NODE_ENV='production'
 ENV DB_HOST='localhost'
