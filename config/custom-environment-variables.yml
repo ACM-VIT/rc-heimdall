@@ -12,4 +12,5 @@ database:
   db_name: DB_NAME
 
 judge:
+  endpoint: JUDGE_ENDPOINT
   callback: JUDGE_CALLBACK
