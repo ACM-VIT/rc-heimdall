@@ -37,3 +37,6 @@ code_response:
   runtime_error: runtime error in code
   internal_error: internal server error
   code_error: undefined error encountered
+
+application:
+  assignProblemToTeams: true

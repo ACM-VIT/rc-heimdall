@@ -1,6 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 
 import { CreateTeamDto } from './dto/create-team.dto';
+import { Problems } from 'src/problems/problem.entity';
 import { Team } from './team.entity';
 
 /**
@@ -28,6 +29,15 @@ export class TeamRepository extends Repository<Team> {
       .addSelect('team.points')
       .orderBy('team.points', 'DESC')
       .getMany();
+    return query;
+  }
+
+  async getAssignedProblems(id: number): Promise<Team> {
+    const query = await this.createQueryBuilder('team')
+      .andWhere('team.ID = :id', { id })
+      .leftJoinAndSelect('team.problems', 'problem')
+      .getOne();
+
     return query;
   }
 }

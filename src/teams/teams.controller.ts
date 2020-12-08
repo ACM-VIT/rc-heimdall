@@ -3,6 +3,8 @@ import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { Team } from './team.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { AssignProblemDTO } from './dto/assign-problem.dto';
+import { Problems } from 'src/problems/problem.entity';
 
 /**
  * **Teams Controller**
@@ -50,6 +52,27 @@ export class TeamsController {
   @Get('/leader')
   leaderBoard() {
     return this.teamsService.getLeaderBoard();
+  }
+
+  /**
+   * Responds to: _GET(`/problems`)_
+   *
+   * Get details of problems assigned to [[Team]]
+   */
+  @Get('/:id/problems')
+  getProblems(@Param('id') id: number) {
+    return this.teamsService.getAssignedProblems(id);
+  }
+
+  /**
+   * Responds to: _POST(`/problems`)_
+   *
+   * Assign a problem to team
+   */
+  @Post('/problems')
+  @UsePipes(ValidationPipe)
+  assignProblem(@Body() assignProblemDTO: AssignProblemDTO): Promise<Problems[]> {
+    return this.teamsService.assignProblem(assignProblemDTO);
   }
 
   /**

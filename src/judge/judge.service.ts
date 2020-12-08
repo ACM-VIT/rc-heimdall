@@ -5,6 +5,7 @@ import { TeamsService } from 'src/teams/teams.service';
 import {
   BadRequestException,
   Dependencies,
+  ForbiddenException,
   HttpService,
   Inject,
   Injectable,
@@ -99,6 +100,12 @@ export class JudgeService {
     const team = await this.teamService.findOneById(teamID);
     if (team === undefined) {
       throw new BadRequestException(`No team with id:${teamID}`);
+    }
+
+    /** only allow assigned teams to run problems */
+    const isAssigned = await this.teamService.isProblemAssignedTo(team, problem);
+    if (isAssigned === false) {
+      throw new ForbiddenException(`Everything comes at a cost, you need to buy the problem`);
     }
 
     /** prepare postBody to send to Judge0  */

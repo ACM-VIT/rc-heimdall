@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 't
 
 import { JudgeSubmissions } from 'src/judge/judge.entity';
 import { Participant } from '../participants/participant.entity';
+import { Problems } from 'src/problems/problem.entity';
 
 /**
  * **Team Entity**
@@ -47,4 +48,12 @@ export class Team extends BaseEntity {
     { eager: true },
   )
   judgeSubmissions: JudgeSubmissions[];
+
+  /** store question details of problems assigned to participant */
+  @OneToMany(
+    () => Problems,
+    (problem) => problem.team,
+    { eager: true },
+  )
+  problems: Problems[];
 }

@@ -14,3 +14,6 @@ database:
 judge:
   endpoint: JUDGE_ENDPOINT
   callback: JUDGE_CALLBACK
+
+application:
+  assignProblemToTeams: ASSIGN_PROBLEM_TO_TEAM
