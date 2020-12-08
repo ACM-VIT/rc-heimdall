@@ -1,5 +1,6 @@
 import { HttpModule, Module } from '@nestjs/common';
 
+import { ProblemsModule } from 'src/problems/problems.module';
 import { RunnerController } from './runner.controller';
 import { RunnerService } from './runner.service';
 
@@ -11,7 +12,7 @@ import { RunnerService } from './runner.service';
  * @category Runner
  */
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, ProblemsModule],
   controllers: [RunnerController],
   providers: [RunnerService],
 })

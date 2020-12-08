@@ -46,6 +46,19 @@ export class ProblemsService {
   }
 
   /**
+   * to fetch human readable name of a given problem by given uuid. This is used while calling the
+   * task runner as the client operates on uuid and task-runner operates on readable names.
+   */
+  async getNameFromId(id: string): Promise<string> {
+    try {
+      const problem = await this.problemRepository.findOne(id);
+      return problem.name;
+    } catch (e) {
+      throw new NotFoundException(`No Problems found with given id ${id}`);
+    }
+  }
+
+  /**
    * to fetch details of a particular problem to judge the submission. This is different from
    * [[findAndFilter]] as this returns inputText and outputText as well, and does not include
    * download links.

@@ -1,8 +1,10 @@
 import * as config from 'config';
 
-import { Dependencies, HttpService, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Dependencies, HttpService, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import { ExecuteCodeDto } from './dto/execute-code.dto';
+import { ProblemsService } from 'src/problems/problems.service';
+import { exec } from 'child_process';
 
 /**
  * **Runner Service**
@@ -26,6 +28,9 @@ export class RunnerService {
 
     /** initiate logger with context:`runner` */
     private readonly logger = new Logger('runner'),
+
+    @Inject(ProblemsService)
+    private readonly problemService: ProblemsService,
   ) {
     this.endpoint = config.get('runner.runEndpoint');
     this.logger.verbose('service initialized');
@@ -44,15 +49,24 @@ export class RunnerService {
    */
   async execute(executeCode: ExecuteCodeDto): Promise<string> {
     try {
-      const postBody = {
-        id: executeCode.id,
-        input: executeCode.input,
-      };
-
       // fetch output from task-runner, if error, then return normal string.
       this.logger.verbose(`Requesting runner with data: ${JSON.stringify(executeCode)}`);
+
+      // fetch question name by uuid
+      const problemName = await this.problemService.getNameFromId(executeCode.id);
+      if (problemName === undefined) {
+        throw new NotFoundException(`Question ID Not found`);
+      }
+
+      /** generate name in format accepted by task-runner */
+      const postBody = {
+        id: `${problemName}.out`,
+        input: executeCode.input,
+      };
+      this.logger.verbose(`Query task runner with ${JSON.stringify(postBody)}`);
+
       const reply = await this.http.post(this.endpoint, postBody).toPromise();
-      return reply.data;
+      return reply.data.output;
     } catch (err) {
       this.logger.warn(`Question with id :${executeCode.id} not found`);
       throw new NotFoundException(`Question Not Found`);
