@@ -23,10 +23,11 @@ import { RefereeResponse } from '../interface/referee.interface';
 export const referee = (userOutput: string, actualOutput: string, maxPoints: number): RefereeResponse => {
   const userSequence = userOutput
     .replace(/\n/g, ' ')
+    .replace(/\r/g, ' ')
     .trim()
     .split(' ');
   const actualSequence = actualOutput
-    .replace(/\n/g, ' ')
+    .replace(/\r/g, ' ')
     .trim()
     .split(' ');
 
