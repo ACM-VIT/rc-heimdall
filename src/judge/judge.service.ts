@@ -81,24 +81,27 @@ export class JudgeService {
    */
   async create(createJudgeDto: CreateJudgeDto) {
     const { code, language, problemID, teamID } = createJudgeDto;
-
+    this.logger.setContext(`judge.create.team.${teamID}`);
     /**
      * Map string representing submission to object which contains strict representation of language
      */
     const codeLanguage: LanguageStruct = mapLanguageStringToObject(language);
     if (codeLanguage.id === -1) {
+      this.logger.verbose(`sent code in unacceptable language`);
       throw new BadRequestException('Code language not accepted');
     }
 
     /** fetch question details about question for which the submission is made */
     const problem = await this.problemService.findOneForJudge(problemID);
     if (problem === undefined) {
+      this.logger.verbose(`sent invalid problem id ${problemID}`);
       throw new BadRequestException(`No problem with id:${problemID}`);
     }
 
     /** fetch details of the team who made the submission */
     const team = await this.teamService.findOneById(teamID);
     if (team === undefined) {
+      this.logger.verbose(`is an invalid team ID`);
       throw new BadRequestException(`No team with id:${teamID}`);
     }
 
@@ -116,13 +119,15 @@ export class JudgeService {
       expected_output: Buffer.from(problem.outputText).toString('base64'),
       stdin: Buffer.from(problem.inputText).toString('base64'),
     };
+    this.logger.verbose(`sending to judge0 ${JSON.stringify(postBody)}`);
 
     /** make http request and receive response.data. Judge0 returns a uuid for the submission made */
     const { data } = await this.http.post(this.endpoint, postBody).toPromise();
     const judge0ID = data.token;
+    this.logger.verbose(`made submission, judge0 token ${judge0ID}`);
 
     /** persist the submission details */
-    const judge0Submission = this.judgeRepository.save({
+    await this.judgeRepository.save({
       problem,
       team,
       language: codeLanguage.id,
@@ -131,9 +136,10 @@ export class JudgeService {
       judge0ID,
       code,
     });
+    this.logger.verbose(` submission saved into database`);
 
     /** return submission details back to client with Judge0 token to ping for results */
-    return judge0Submission;
+    return 'submission made';
   }
 
   /**
@@ -151,16 +157,19 @@ export class JudgeService {
    */
   async handleCallback(callbackJudgeDto: CallbackJudgeDto) {
     const { status, stdout, token }: Judge0Callback = callbackJudgeDto;
+    this.logger.setContext('judge.callback');
 
     /** update state of submission in database */
     const submission = await this.judgeRepository.fetchDetailsByJudge0Token(token);
     if (submission === undefined) {
+      this.logger.verbose(`Invalid token received ${token}`);
       throw new BadRequestException(`submission with token ${token} not found`);
     }
 
     /** map submission status into enum */
     const codeStatus = CODE_STATES[status.id];
     if (codeStatus !== CodeStates.WRONG && codeStatus !== CodeStates.ACCEPTED) {
+      this.logger.verbose(`received response ${status.id} not expected`);
       return { error: false };
     }
 
@@ -170,6 +179,7 @@ export class JudgeService {
       submission.problem.outputText,
       submission.problem.maxPoints,
     );
+    this.logger.verbose(`${submission.judge0ID} got ${JSON.stringify(refereeEvaluation)}`);
 
     /** save the current submission into database */
     submission.points = refereeEvaluation.points;
