@@ -1,75 +1,86 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+  <img src="https://user-images.githubusercontent.com/14032427/101737680-383a4300-3aeb-11eb-8135-1ecd85f6e8a2.png" alt="Reverse Coding : Heimdall" /></a>
 </p>
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+[![Build Status](https://travis-ci.com/YashKumarVerma/rc-heimdall.svg?token=bdYdpM7ki4qrmdCwJmGf&branch=master)](https://travis-ci.com/YashKumarVerma/rc-heimdall)
+![Requires.io](https://img.shields.io/requires/github/yashkumarverma/rc-heimdall)
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/yashkumarverma/rc-heimdall/latest)
+![Lines of code](https://img.shields.io/tokei/lines/github/yashkumarverma/rc-heimdall)
+![GitHub repo size](https://img.shields.io/github/repo-size/yashkumarverma/rc-heimdall)
+![Docker Pulls](https://img.shields.io/docker/pulls/yashkumarverma/rc-heimdall)
+![GitHub](https://img.shields.io/github/license/yashkumarverma/rc-heimdall)
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/yashkumarverma/rc-heimdall)
+![GitHub contributors](https://img.shields.io/github/contributors/yashkumarverma/rc-heimdall)
+![GitHub last commit](https://img.shields.io/github/last-commit/yashkumarverma/rc-heimdall)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/yashkumarverma/rc-heimdall)
+![Documentation Coverage](http://rc-heimdall.ykv.surge.sh/images/coverage-badge-documentation.svg)
+
+  <p align="center">
+  Heimdall is the main micro-service that is responsible for user-management, ingestion of problems from endpoints, providing API endpoints for main user interface, interaction with task-runners, code submission and evaluation. Since this service basically handles all requests from the client, it's named Heimdall.   
+  </p>
+
 
 ## Description
+- Code Documentation: [Compodocs](http://rc-heimdall.compodoc.surge.sh/)
+- API Documentation: [Swagger](https://app.swaggerhub.com/apis-docs/YashKumarVerma/heimdall/1.0.0)
+- API Playground to export client stubs : [Swagger](https://app.swaggerhub.com/apis/YashKumarVerma/heimdall/1.0.0)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## **Other Services**
+- [Task Runner](https://github.com/YashKumarVerma/rc-task-runner)
+- [Broadcaster](https://github.com/YashKumarVerma/rc-broadcaster)
 
-```bash
-$ npm install
-```
+## Architecture
+![https://rc-atlan-preview.vercel.app/assets/rc-arch.png](https://rc-atlan-preview.vercel.app/assets/rc-arch.png)
 
 ## Running the app
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
+There are two methods to run the application. First is by building the package locally and second is using the official docker image. 
 
 ```bash
-# unit tests
-$ npm run test
+# clone the repository
+git clone https://github.com/YashKumarVerma/rc-heimdall
+cd rc-heimdall
 
-# e2e tests
-$ npm run test:e2e
+# install dependencies
+yarn install
 
-# test coverage
-$ npm run test:cov
+# start development server
+yarn start:dev
+```
+Running from docker requires a hosted postgres instance (you can use a docker container for the same, just configure the network accordingly). Also note that heimdall depends on [judge0](https://github.com/judge0/judge0) and task-runner for it's operation. While testing, use something like [webhook.site](https://webhook.site/) to listen for outgoing requests.
+```bash
+
+# fetch the latest published image
+docker pull yashkumarverma/rc-heimdall
+
+# launch a container in production mode 
+docker run -d \
+    -p 80:80 \
+    --name heimdall \
+    -e NODE_ENV='production' \
+    -e DB_HOST='some-domain.postgres.database.azure.com' \
+    -e DB_USERNAME='username@xyz' \
+    -e DB_PASSWORD='secure-password' \
+    -e DB_NAME='postgres'\
+    -e JUDGE_ENDPOINT='http://127.0.0.1:1974' \
+    -e JUDGE_CALLBACK='http://52.171.196.193/judge/callback'\
+    -e RUNNER_ENDPOINT_EXEC='http://127.0.0.1:8000/run' \
+    -e RUNNER_ENDPOINT_SEED='http://127.0.0.1::8000/sync' \
+    yashkumarverma/rc-heimdall:latest
 ```
 
-## Support
+## Open Source and Collaboration
+Heimdall is (part of) a [MIT licensed](LICENSE) open source project. If there's a feature that you'd like to add to be added, please open a [issue/feature request](https://github.com/YashKumarVerma/rc-heimdall/issues/new/choose) for the same. We'd be happy to ship more features as needed.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Events
+If you are interested in organizing an event like Reverse Coding for your community / club / college / audience, feel free to reach out the author. To support events like these, we'd love to host the services free of cost for our fellow colleges. 
+
+
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).
+- [Yash Kumar Verma](https://github.com/yashkumarverma/)
+  - Twitter: [@yash_kr_verma](https://twitter.com/yash_kr_verma)
+  - Email: [yk.verma2000@gmail.com](mailto:yk.verma2000@gmail.com)
+  - Stack Overflow: [yash-kumar-verma](https://stackoverflow.com/users/5131640/yash-kumar-verma)
