@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/14032427/101737680-383a4300-3aeb-11eb-8135-1ecd85f6e8a2.png" alt="Reverse Coding : Heimdall" /></a>
+  <img width="100%"  src="https://user-images.githubusercontent.com/14032427/101737680-383a4300-3aeb-11eb-8135-1ecd85f6e8a2.png" alt="Reverse Coding : Heimdall" /></a>
 </p>
 
 [![Build Status](https://travis-ci.com/YashKumarVerma/rc-heimdall.svg?token=bdYdpM7ki4qrmdCwJmGf&branch=master)](https://travis-ci.com/YashKumarVerma/rc-heimdall)
