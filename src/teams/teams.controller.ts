@@ -4,7 +4,7 @@ import { CreateTeamDto } from './dto/create-team.dto';
 import { Team } from './team.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { AssignProblemDTO } from './dto/assign-problem.dto';
-import { Problems } from 'src/problems/problem.entity';
+import { Problems } from '../problems/problem.entity';
 
 /**
  * **Teams Controller**

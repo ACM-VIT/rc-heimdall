@@ -3,7 +3,7 @@ import * as config from 'config';
 import { Dependencies, HttpService, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import { ExecuteCodeDto } from './dto/execute-code.dto';
-import { ProblemsService } from 'src/problems/problems.service';
+import { ProblemsService } from '../problems/problems.service';
 import { exec } from 'child_process';
 
 /**

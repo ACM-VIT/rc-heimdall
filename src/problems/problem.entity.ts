@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { JudgeSubmissions } from 'src/judge/judge.entity';
-import { Team } from 'src/teams/team.entity';
+import { JudgeSubmissions } from '../judge/judge.entity';
+import { Team } from '../teams/team.entity';
 
 /**
  * **Problems Entity**

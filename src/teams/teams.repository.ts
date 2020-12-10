@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 
 import { CreateTeamDto } from './dto/create-team.dto';
-import { Problems } from 'src/problems/problem.entity';
+import { Problems } from '../problems/problem.entity';
 import { Team } from './team.entity';
 
 /**

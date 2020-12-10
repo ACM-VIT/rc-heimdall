@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 't
 
 import { CodeStates } from './enum/codeStates.enum';
 import { Problems } from '../problems/problem.entity';
-import { Team } from 'src/teams/team.entity';
+import { Team } from '../teams/team.entity';
 
 /**
  * **Judge Entity**

@@ -5,8 +5,8 @@ import { AssignProblemDTO } from './dto/assign-problem.dto';
 import { Team } from './team.entity';
 import { TeamRepository } from './teams.repository';
 import * as config from 'config';
-import { ProblemsService } from 'src/problems/problems.service';
-import { Problems } from 'src/problems/problem.entity';
+import { ProblemsService } from '../problems/problems.service';
+import { Problems } from '../problems/problem.entity';
 
 /**
  * **Teams Service**
