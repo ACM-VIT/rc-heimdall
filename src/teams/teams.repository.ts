@@ -26,6 +26,7 @@ export class TeamRepository extends Repository<Team> {
   async getLoaderBoard() {
     const query = await this.createQueryBuilder('team')
       .select('team.name')
+      .select('team.id')
       .addSelect('team.points')
       .orderBy('team.points', 'DESC')
       .getMany();

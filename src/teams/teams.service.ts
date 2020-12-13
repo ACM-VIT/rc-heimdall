@@ -7,6 +7,7 @@ import { TeamRepository } from './teams.repository';
 import * as config from 'config';
 import { ProblemsService } from '../problems/problems.service';
 import { Problems } from '../problems/problem.entity';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 /**
  * **Teams Service**
@@ -63,7 +64,18 @@ export class TeamsService {
    * To fetch details of [[Team]] by [[Team.id]]
    */
   async findOneById(id: number) {
-    return this.teamRepository.findOne(id);
+    const teamData = await this.teamRepository.findOne(id);
+    return teamData;
+  }
+  /**
+   * To fetch details of [[Team]] by [[Team.id]]
+   */
+  async findOneByIdWithRank(id: number) {
+    const teamData = await this.teamRepository.findOne(id);
+    const allRanks = await this.teamRepository.getLoaderBoard();
+    const teamRank = allRanks.findIndex((team) => team.id == id) + 1;
+
+    return { ...teamData, rank: teamRank };
   }
 
   /**
