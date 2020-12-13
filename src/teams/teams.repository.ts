@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 
 import { CreateTeamDto } from './dto/create-team.dto';
-import { Problems } from 'src/problems/problem.entity';
+import { Problems } from '../problems/problem.entity';
 import { Team } from './team.entity';
 
 /**
@@ -26,6 +26,7 @@ export class TeamRepository extends Repository<Team> {
   async getLoaderBoard() {
     const query = await this.createQueryBuilder('team')
       .select('team.name')
+      .select('team.id')
       .addSelect('team.points')
       .orderBy('team.points', 'DESC')
       .getMany();

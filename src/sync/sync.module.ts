@@ -1,6 +1,6 @@
 import { HttpModule, Module } from '@nestjs/common';
 
-import { ProblemsModule } from 'src/problems/problems.module';
+import { ProblemsModule } from '../problems/problems.module';
 import { SyncController } from './sync.controller';
 import { SyncService } from './sync.service';
 

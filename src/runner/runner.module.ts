@@ -1,6 +1,6 @@
 import { HttpModule, Module } from '@nestjs/common';
 
-import { ProblemsModule } from 'src/problems/problems.module';
+import { ProblemsModule } from '../problems/problems.module';
 import { RunnerController } from './runner.controller';
 import { RunnerService } from './runner.service';
 

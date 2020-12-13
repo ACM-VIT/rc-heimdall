@@ -3,8 +3,8 @@ import { HttpModule, Module } from '@nestjs/common';
 import { JudgeController } from './judge.controller';
 import { JudgeRepository } from './judge.repository';
 import { JudgeService } from './judge.service';
-import { ProblemsModule } from 'src/problems/problems.module';
-import { TeamsModule } from 'src/teams/teams.module';
+import { ProblemsModule } from '../problems/problems.module';
+import { TeamsModule } from '../teams/teams.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 /**

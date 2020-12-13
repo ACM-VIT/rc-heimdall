@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TeamsService } from 'src/teams/teams.service';
+import { TeamsService } from '../teams/teams.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
 import { ParticipantRepository } from './participants.repository';
 

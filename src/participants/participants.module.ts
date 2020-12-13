@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ParticipantRepository } from './participants.repository';
 import { ParticipantsController } from './participants.controller';
 import { ParticipantsService } from './participants.service';
-import { TeamsModule } from 'src/teams/teams.module';
+import { TeamsModule } from '../teams/teams.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 /**

@@ -8,7 +8,7 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import * as config from 'config';
-import { ProblemsService } from 'src/problems/problems.service';
+import { ProblemsService } from '../problems/problems.service';
 import { ProblemMetadata } from './interface/problem.interface';
 
 /**

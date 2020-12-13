@@ -2,7 +2,7 @@ import { EntityRepository, Repository } from 'typeorm';
 
 import { CreateParticipantDto } from './dto/create-participant.dto';
 import { Participant } from './participant.entity';
-import { Team } from 'src/teams/team.entity';
+import { Team } from '../teams/team.entity';
 
 /**
  * **Participants Repository**

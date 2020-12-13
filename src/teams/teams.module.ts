@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ProblemsModule } from 'src/problems/problems.module';
+import { ProblemsModule } from '../problems/problems.module';
 import { TeamRepository } from './teams.repository';
 import { TeamsController } from './teams.controller';
 import { TeamsService } from './teams.service';

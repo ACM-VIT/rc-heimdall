@@ -1,6 +1,6 @@
 import * as config from 'config';
-import { ProblemsService } from 'src/problems/problems.service';
-import { TeamsService } from 'src/teams/teams.service';
+import { ProblemsService } from '../problems/problems.service';
+import { TeamsService } from '../teams/teams.service';
 
 import {
   BadRequestException,
