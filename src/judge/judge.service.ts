@@ -166,6 +166,10 @@ export class JudgeService {
       throw new BadRequestException(`submission with token ${token} not found`);
     }
 
+    /** update code state in database */
+    submission.state = status.id;
+    await submission.save();
+
     /** map submission status into enum */
     const codeStatus = CODE_STATES[status.id];
     if (codeStatus !== CodeStates.WRONG && codeStatus !== CodeStates.ACCEPTED) {

@@ -5,6 +5,8 @@ import { Team } from './team.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { AssignProblemDTO } from './dto/assign-problem.dto';
 import { Problems } from '../problems/problem.entity';
+import { DILUTE } from '../judge/enum/codeStates.enum';
+import { mapLanguageIdToObject } from '../judge/minions/language';
 
 /**
  * **Teams Controller**
@@ -82,7 +84,10 @@ export class TeamsController {
    */
   @Get(':id')
   async findOne(@Param('id') id: number) {
+    /** fetch all team details to display */
     const teamDetails = await this.teamsService.findOneByIdWithRank(id);
+
+    /** show only selected details from problems object */
     const problems = teamDetails.problems.map((problem) => {
       return {
         id: problem.id,
@@ -94,7 +99,64 @@ export class TeamsController {
       };
     });
 
-    return { ...teamDetails, problems };
+    /** show only selected items from submissions object, nested problems */
+    const judgeSubmissions = teamDetails.judgeSubmissions.map((submission) => {
+      return {
+        id: submission.id,
+        language: mapLanguageIdToObject(submission.language).extension,
+        state: DILUTE[submission.state],
+        points: submission.points,
+        judge0ID: submission.judge0ID,
+        code: submission.code,
+        problem: {
+          id: submission.problem.id,
+          name: submission.problem.name,
+          maxPoints: submission.problem.maxPoints,
+        },
+      };
+    });
+
+    /** if problems array is empty (case when problems are not being assigned, assign unique problem IDs) */
+    let problemsList = [];
+    if (problems.length === 0) {
+      problemsList = judgeSubmissions
+        .map((submission) => submission.problem.id)
+        .filter((value, index, self) => self.indexOf(value) === index)
+        .map((id) => {
+          return { id };
+        });
+    }
+
+    /** get best of each problem */
+    const bestOfEachProblem = [];
+
+    /** iterate and generate list of unique and maximum valued submissions */
+    for (
+      let i = 0, maxPoints: number, localMax: number;
+      i < (problems.length === 0 ? problemsList.length : problems.length);
+      i += 1
+    ) {
+      maxPoints = -1;
+      localMax = -1;
+      const { id } = problems.length === 0 ? problemsList[i] : problems[i];
+
+      for (let j = 0; j < judgeSubmissions.length; j += 1) {
+        if (judgeSubmissions[j].problem.id === id && judgeSubmissions[j].points >= maxPoints) {
+          maxPoints = judgeSubmissions[j].points;
+          localMax = judgeSubmissions[j].id;
+        }
+      }
+
+      /** store in array for client response */
+      bestOfEachProblem.push({
+        problemID: id,
+        submissionID: localMax,
+        points: maxPoints,
+      });
+    }
+
+    /** using spread operator to override the [[Team]] properties. */
+    return { ...teamDetails, problems, judgeSubmissions, bestOfEachProblem };
   }
 
   /**
