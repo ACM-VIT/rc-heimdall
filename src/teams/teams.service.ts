@@ -125,15 +125,19 @@ export class TeamsService {
       /**
        * @todo : shift this logic to repository
        */
-      const { problems } = await this.teamRepository.getAssignedProblems(id);
-      const filteredResult = problems.map((problem) => {
-        return {
-          id: problem.id,
-          maxPoints: problem.maxPoints,
-          instructionsText: problem.instructionsText,
-        };
-      });
-      return filteredResult;
+      try {
+        const { problems } = await this.teamRepository.getAssignedProblems(id);
+        const filteredResult = problems.map((problem) => {
+          return {
+            id: problem.id,
+            maxPoints: problem.maxPoints,
+            instructionsText: problem.instructionsText,
+          };
+        });
+        return filteredResult;
+      } catch (e) {
+        throw new NotFoundException(`Not found `);
+      }
     } else {
       return [];
     }
