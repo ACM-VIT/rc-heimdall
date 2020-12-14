@@ -55,8 +55,8 @@ export class ProblemsController {
    *
    * To delete a problem by ID
    */
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.problemsService.remove(id);
-  }
+  //   @Delete(':id')
+  //   remove(@Param('id') id: string) {
+  //     return this.problemsService.remove(id);
+  //   }
 }

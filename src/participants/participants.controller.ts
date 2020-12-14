@@ -57,8 +57,8 @@ export class ParticipantsController {
    * To delete a participant
    *
    */
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.participantsService.remove(+id);
-  }
+  //   @Delete(':id')
+  //   remove(@Param('id') id: number) {
+  //     return this.participantsService.remove(+id);
+  //   }
 }
