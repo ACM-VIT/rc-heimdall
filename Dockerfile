@@ -14,6 +14,7 @@ ENV RUNNER_ENDPOINT_EXEC='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e
 ENV RUNNER_ENDPOINT_SEED='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203'
 ENV JUDGE_CALLBACK='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203'
 ENV JUDGE_ENDPOINT='127.0.0.1'
+ENV ASSIGN_PROBLEM_TO_TEAM=false
 
 # Create Directory for the Container
 WORKDIR /usr/src/app
