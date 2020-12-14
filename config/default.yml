@@ -39,4 +39,4 @@ code_response:
   code_error: undefined error encountered
 
 application:
-  assignProblemToTeams: true
+  assignProblemToTeams: false

@@ -139,7 +139,7 @@ export class JudgeService {
     this.logger.verbose(` submission saved into database`);
 
     /** return submission details back to client with Judge0 token to ping for results */
-    return 'submission made';
+    return { submissionToken: judge0ID };
   }
 
   /**
