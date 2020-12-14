@@ -28,8 +28,18 @@ export class ProblemsService {
   }
 
   /** to return list of all problems */
-  findAll() {
-    return this.problemRepository.find();
+  async findAll() {
+    const problems = await this.problemRepository.find();
+    return problems.map((problem) => {
+      return {
+        id: problem.id,
+        name: problem.name,
+        maxPoints: problem.maxPoints,
+        windowsFileURL: problem.windowsFileURL,
+        objectFileURL: problem.objectFileURL,
+        instructionsText: problem.instructionsText,
+      };
+    });
   }
 
   /**
