@@ -38,7 +38,6 @@ export class CallbackJudgeDto {
     example: 'MQ==\n',
   })
   @IsString()
-  @IsNotEmpty()
   stdout: string;
 
   /** Judge0 uuid token to fetch results */
