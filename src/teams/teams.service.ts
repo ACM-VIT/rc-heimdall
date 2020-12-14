@@ -96,7 +96,7 @@ export class TeamsService {
    * To assign a [[Problem]] to [[Team]]
    */
   async assignProblem(assignProblemDto: AssignProblemDTO): Promise<Array<Problems>> {
-    const { problemID, teamID } = assignProblemDto;
+    const { problemID, teamID, points } = assignProblemDto;
 
     /** fetch problem by problem ID */
     const problem = await this.problemService.findOne(problemID);
@@ -110,8 +110,9 @@ export class TeamsService {
       throw new NotFoundException(`Team with ID: ${teamID} does not exist`);
     }
 
-    /** attach problem into team */
+    /** attach problem into team, operate on points */
     team.problems.push(problem);
+    team.points += points;
     await team.save();
 
     return team.problems;
