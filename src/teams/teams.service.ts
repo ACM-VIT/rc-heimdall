@@ -7,7 +7,6 @@ import { TeamRepository } from './teams.repository';
 import * as config from 'config';
 import { ProblemsService } from '../problems/problems.service';
 import { Problems } from '../problems/problem.entity';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 /**
  * **Teams Service**
@@ -72,7 +71,7 @@ export class TeamsService {
    */
   async findOneByIdWithRank(id: number) {
     const teamData = await this.teamRepository.findOne(id);
-    const allRanks = await this.teamRepository.getLoaderBoard();
+    const allRanks = await this.teamRepository.getLeaderBoard();
     const teamRank = allRanks.findIndex((team) => team.id == id) + 1;
 
     return { ...teamData, rank: teamRank };
@@ -89,7 +88,7 @@ export class TeamsService {
    * To get leaderBoard of [[Team]] based on [[Team.points]]
    */
   async getLeaderBoard() {
-    return this.teamRepository.getLoaderBoard();
+    return this.teamRepository.getLeaderBoard();
   }
 
   /**

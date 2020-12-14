@@ -23,10 +23,10 @@ export class TeamRepository extends Repository<Team> {
   }
 
   /** to generate the [[Team]] leaderBoard based on [[Team.points]] */
-  async getLoaderBoard() {
+  async getLeaderBoard() {
     const query = await this.createQueryBuilder('team')
       .select('team.name')
-      .select('team.id')
+      .addSelect('team.id')
       .addSelect('team.points')
       .orderBy('team.points', 'DESC')
       .getMany();
