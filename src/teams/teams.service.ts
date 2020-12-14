@@ -7,7 +7,6 @@ import { TeamRepository } from './teams.repository';
 import * as config from 'config';
 import { ProblemsService } from '../problems/problems.service';
 import { Problems } from '../problems/problem.entity';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 /**
  * **Teams Service**
@@ -72,7 +71,7 @@ export class TeamsService {
    */
   async findOneByIdWithRank(id: number) {
     const teamData = await this.teamRepository.findOne(id);
-    const allRanks = await this.teamRepository.getLoaderBoard();
+    const allRanks = await this.teamRepository.getLeaderBoard();
     const teamRank = allRanks.findIndex((team) => team.id == id) + 1;
 
     return { ...teamData, rank: teamRank };
@@ -89,14 +88,14 @@ export class TeamsService {
    * To get leaderBoard of [[Team]] based on [[Team.points]]
    */
   async getLeaderBoard() {
-    return this.teamRepository.getLoaderBoard();
+    return this.teamRepository.getLeaderBoard();
   }
 
   /**
    * To assign a [[Problem]] to [[Team]]
    */
   async assignProblem(assignProblemDto: AssignProblemDTO): Promise<Array<Problems>> {
-    const { problemID, teamID } = assignProblemDto;
+    const { problemID, teamID, points } = assignProblemDto;
 
     /** fetch problem by problem ID */
     const problem = await this.problemService.findOne(problemID);
@@ -110,8 +109,9 @@ export class TeamsService {
       throw new NotFoundException(`Team with ID: ${teamID} does not exist`);
     }
 
-    /** attach problem into team */
+    /** attach problem into team, operate on points */
     team.problems.push(problem);
+    team.points += points;
     await team.save();
 
     return team.problems;
@@ -125,15 +125,19 @@ export class TeamsService {
       /**
        * @todo : shift this logic to repository
        */
-      const { problems } = await this.teamRepository.getAssignedProblems(id);
-      const filteredResult = problems.map((problem) => {
-        return {
-          id: problem.id,
-          maxPoints: problem.maxPoints,
-          instructionsText: problem.instructionsText,
-        };
-      });
-      return filteredResult;
+      try {
+        const { problems } = await this.teamRepository.getAssignedProblems(id);
+        const filteredResult = problems.map((problem) => {
+          return {
+            id: problem.id,
+            maxPoints: problem.maxPoints,
+            instructionsText: problem.instructionsText,
+          };
+        });
+        return filteredResult;
+      } catch (e) {
+        throw new NotFoundException(`Not found `);
+      }
     } else {
       return [];
     }

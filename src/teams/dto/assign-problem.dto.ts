@@ -26,4 +26,14 @@ export class AssignProblemDTO {
   @IsNotEmpty()
   @IsUUID()
   problemID: string;
+
+  /** points to be deducted in exchange of assigned problem */
+  @ApiProperty({
+    name: 'points',
+    description: 'Points arithmetic related to problem assignment',
+    example: -20,
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  points: number;
 }

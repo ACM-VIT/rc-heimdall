@@ -21,6 +21,7 @@ export class ProblemRepository extends Repository<Problems> {
     const query = this.createQueryBuilder()
       .select([
         'problems.id',
+        'problems.name',
         'problems.maxPoints',
         'problems.windowsFileURL',
         'problems.objectFileURL',

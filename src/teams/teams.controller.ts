@@ -81,8 +81,20 @@ export class TeamsController {
    * Get details of [[Team]] by ID
    */
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.teamsService.findOneByIdWithRank(id);
+  async findOne(@Param('id') id: number) {
+    const teamDetails = await this.teamsService.findOneByIdWithRank(id);
+    const problems = teamDetails.problems.map((problem) => {
+      return {
+        id: problem.id,
+        name: problem.name,
+        maxPoints: problem.maxPoints,
+        windowsFileURL: problem.windowsFileURL,
+        objectFileURL: problem.objectFileURL,
+        instructionsText: problem.instructionsText,
+      };
+    });
+
+    return { ...teamDetails, problems };
   }
 
   /**
@@ -90,8 +102,8 @@ export class TeamsController {
    *
    * Delete a team by id
    */
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.teamsService.remove(+id);
-  }
+  //   @Delete(':id')
+  //   remove(@Param('id') id: string) {
+  //     return this.teamsService.remove(+id);
+  //   }
 }
