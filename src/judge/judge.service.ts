@@ -139,7 +139,7 @@ export class JudgeService {
     this.logger.verbose(` submission saved into database`);
 
     /** return submission details back to client with Judge0 token to ping for results */
-    return 'submission made';
+    return { submissionToken: judge0ID };
   }
 
   /**
@@ -165,6 +165,10 @@ export class JudgeService {
       this.logger.verbose(`Invalid token received ${token}`);
       throw new BadRequestException(`submission with token ${token} not found`);
     }
+
+    /** update code state in database */
+    submission.state = status.id;
+    await submission.save();
 
     /** map submission status into enum */
     const codeStatus = CODE_STATES[status.id];
