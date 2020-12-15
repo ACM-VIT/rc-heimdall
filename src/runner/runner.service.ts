@@ -4,7 +4,6 @@ import { Dependencies, HttpService, Inject, Injectable, Logger, NotFoundExceptio
 
 import { ExecuteCodeDto } from './dto/execute-code.dto';
 import { ProblemsService } from '../problems/problems.service';
-import { exec } from 'child_process';
 
 /**
  * **Runner Service**

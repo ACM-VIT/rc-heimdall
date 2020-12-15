@@ -16,6 +16,7 @@
 ![Documentation Coverage](http://rc-heimdall.ykv.surge.sh/images/coverage-badge-documentation.svg)
 
 [![CodeFactor](https://www.codefactor.io/repository/github/yashkumarverma/rc-heimdall/badge?s=eabdf8d1d657fd0cfdb8988fad909011e443633a)](https://www.codefactor.io/repository/github/yashkumarverma/rc-heimdall)
+[![DeepScan grade](https://deepscan.io/api/teams/12071/projects/15026/branches/293453/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=12071&pid=15026&bid=293453)
 
   <p align="center">
   Heimdall is the main micro-service that is responsible for user-management, ingestion of problems from endpoints, providing API endpoints for main user interface, interaction with task-runners, code submission and evaluation. Since this service basically handles all requests from the client, it's named Heimdall.   

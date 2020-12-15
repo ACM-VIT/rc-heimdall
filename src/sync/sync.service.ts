@@ -67,7 +67,7 @@ export class SyncService {
       const clearOperation = await this.problemsService.clear();
       this.logger.verbose(`Cleared ${clearOperation.affected} from problem storage`);
 
-      parsedData.map((problem) => {
+      parsedData.forEach((problem) => {
         this.problemsService.create({
           name: problem.id,
           maxPoints: 100,
