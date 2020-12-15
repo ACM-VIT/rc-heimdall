@@ -14,5 +14,5 @@ services:
       - DB_PASSWORD='secret'
       - DB_NAME='secret'
       - JUDGE_CALLBACK='secret'
-      - RUNNER_ENDPOINT_EXEC='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203' 
+      - RUNNER_ENDPOINT_EXEC='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203'
       - RUNNER_ENDPOINT_SEED='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203'
