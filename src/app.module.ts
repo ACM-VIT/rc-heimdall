@@ -6,6 +6,7 @@
  */
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
+import { AppController } from './app.controller';
 import { JudgeModule } from './judge/judge.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { ParticipantsModule } from './participants/participants.module';
@@ -31,6 +32,7 @@ import { typeOrmConfig } from './config/typeorm.config';
     JudgeModule,
     SyncModule,
   ],
+  controllers: [AppController],
 })
 
 /** Attach custom middleware here */
