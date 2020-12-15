@@ -6,10 +6,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
+import { version } from '../package.json';
 
 /**
  * Bootstrap application by attaching middleware and initializing auxillary services
- * @internal
+ * @internal`
  */
 async function bootstrap() {
   /** set the logging levels */
@@ -21,9 +22,11 @@ async function bootstrap() {
   const options = new DocumentBuilder()
     .setTitle(config.get('api.name'))
     .setDescription(config.get('api.description'))
-    .setVersion(config.get('api.version'))
+    .setVersion(version)
     .setContact('Yash Kumar Verma', 'https://yashkumarverma.github.io/', 'yk.verma2000@gmail.com')
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
+    .addServer('http://localhost:5000', 'Localhost')
+    .addServer('http://52.171.196.193', 'Azure VM Deployment')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
@@ -42,7 +45,7 @@ async function bootstrap() {
   app.use(
     rateLimit({
       windowMs: 1000 * 1,
-      max: 1,
+      max: 5,
     }),
   );
 

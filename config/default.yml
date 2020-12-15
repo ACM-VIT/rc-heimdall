@@ -1,7 +1,6 @@
 api:
   name: Heimdall
   description: Reverse Coding API Endpoint to handle question execution, interact with other micro-services, and provide API for internal operations.
-  version: 1.0.0
   route: 'api'
 
 database:

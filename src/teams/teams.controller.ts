@@ -88,16 +88,19 @@ export class TeamsController {
     const teamDetails = await this.teamsService.findOneByIdWithRank(id);
 
     /** show only selected details from problems object */
-    const problems = teamDetails.problems.map((problem) => {
-      return {
-        id: problem.id,
-        name: problem.name,
-        maxPoints: problem.maxPoints,
-        windowsFileURL: problem.windowsFileURL,
-        objectFileURL: problem.objectFileURL,
-        instructionsText: problem.instructionsText,
-      };
-    });
+    const problems =
+      teamDetails.problems != undefined
+        ? teamDetails.problems.map((problem) => {
+            return {
+              id: problem.id,
+              name: problem.name,
+              maxPoints: problem.maxPoints,
+              windowsFileURL: problem.windowsFileURL,
+              objectFileURL: problem.objectFileURL,
+              instructionsText: problem.instructionsText,
+            };
+          })
+        : [];
 
     /** show only selected items from submissions object, nested problems */
     const judgeSubmissions = teamDetails.judgeSubmissions.map((submission) => {
