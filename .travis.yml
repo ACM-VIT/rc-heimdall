@@ -22,3 +22,4 @@ after_success:
   - docker push yashkumarverma/rc-heimdall:${PACKAGE_VERSION}
   - docker push yashkumarverma/rc-heimdall:latest
   - surge --project ./documentation --domain rc-heimdall.compodoc.surge.sh
+  - curl ${DEPLOYMENT_PIPELINE}
