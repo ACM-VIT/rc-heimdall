@@ -142,11 +142,15 @@ export class TeamsController {
       maxPoints = -1;
       localMax = -1;
       const { id } = problems.length === 0 ? problemsList[i] : problems[i];
+      let problemName;
+      let maxProblemPoints;
 
       for (let j = 0; j < judgeSubmissions.length; j += 1) {
         if (judgeSubmissions[j].problem.id === id && judgeSubmissions[j].points >= maxPoints) {
           maxPoints = judgeSubmissions[j].points;
           localMax = judgeSubmissions[j].id;
+          problemName = judgeSubmissions[j].problem.name;
+          maxProblemPoints = judgeSubmissions[j].problem.maxPoints;
         }
       }
 
@@ -155,6 +159,8 @@ export class TeamsController {
         problemID: id,
         submissionID: localMax,
         points: maxPoints,
+        problemName,
+        maxProblemPoints,
       });
     }
 
