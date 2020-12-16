@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/common';
 import { ProblemsService } from './problems.service';
 import { CreateProblemDto } from './dto/create-problem.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 /**
  * **Problems Controller**
@@ -35,7 +36,9 @@ export class ProblemsController {
    * To return list of all problems. This is for internal use only.
    */
   @Get()
-  findAll() {
+  @UseGuards(JwtAuthGuard)
+  findAll(@Request() req) {
+    console.log(req.user);
     return this.problemsService.findAll();
   }
 

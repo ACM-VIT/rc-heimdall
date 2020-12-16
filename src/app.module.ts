@@ -16,6 +16,7 @@ import { SyncModule } from './sync/sync.module';
 import { TeamsModule } from './teams/teams.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
+import { AuthModule } from './auth/auth.module';
 
 /**
  * Main Application Module
@@ -30,6 +31,7 @@ import { typeOrmConfig } from './config/typeorm.config';
     ProblemsModule,
     JudgeModule,
     SyncModule,
+    AuthModule,
   ],
 })
 

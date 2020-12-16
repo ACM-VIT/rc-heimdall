@@ -73,7 +73,7 @@ export class TeamsController {
    */
   @Post('/problems')
   @UsePipes(ValidationPipe)
-  assignProblem(@Body() assignProblemDTO: AssignProblemDTO): Promise<Problems[]> {
+  assignProblem(@Body() assignProblemDTO: AssignProblemDTO) {
     return this.teamsService.assignProblem(assignProblemDTO);
   }
 

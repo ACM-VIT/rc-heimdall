@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UsePipes, ValidationPipe, Delete } from '@nestjs/common';
 import { Participant } from './participant.entity';
 import { ParticipantsService } from './participants.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
@@ -57,8 +57,8 @@ export class ParticipantsController {
    * To delete a participant
    *
    */
-  //   @Delete(':id')
-  //   remove(@Param('id') id: number) {
-  //     return this.participantsService.remove(+id);
-  //   }
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    return this.participantsService.remove(+id);
+  }
 }
