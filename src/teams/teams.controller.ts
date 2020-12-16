@@ -1,12 +1,12 @@
-import { Controller, Get, Post, Body, Param, ValidationPipe, UsePipes } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, ValidationPipe, UsePipes, UseGuards } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { Team } from './team.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AssignProblemDTO } from './dto/assign-problem.dto';
-import { Problems } from '../problems/problem.entity';
 import { DILUTE } from '../judge/enum/codeStates.enum';
 import { mapLanguageIdToObject } from '../judge/minions/language';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 /**
  * **Teams Controller**
@@ -20,6 +20,8 @@ import { mapLanguageIdToObject } from '../judge/minions/language';
  * @category Problems
  */
 @ApiTags('Teams')
+@ApiBearerAuth('access-token')
+@UseGuards(JwtAuthGuard)
 @Controller('teams')
 export class TeamsController {
   /** initiate controller  */

@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param, UsePipes, ValidationPipe, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UsePipes, ValidationPipe, Delete, UseGuards } from '@nestjs/common';
 import { Participant } from './participant.entity';
 import { ParticipantsService } from './participants.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 /**
  * **Participants Controller**
@@ -16,6 +17,7 @@ import { ApiTags } from '@nestjs/swagger';
  * @category Participants
  */
 @ApiTags('Participants')
+@ApiBearerAuth('access-token')
 @Controller('participants')
 export class ParticipantsController {
   constructor(private readonly participantsService: ParticipantsService) {}
@@ -25,6 +27,7 @@ export class ParticipantsController {
    *
    * To create a new participant using [[CreateParticipantDto]]
    */
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UsePipes(ValidationPipe)
   create(@Body() createParticipantDto: CreateParticipantDto): Promise<Participant> {
@@ -36,6 +39,7 @@ export class ParticipantsController {
    *
    * To list all the participants
    */
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.participantsService.findAll();
@@ -46,6 +50,7 @@ export class ParticipantsController {
    *
    * To display all details of particular participant
    */
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.participantsService.findOne(+id);
@@ -57,6 +62,7 @@ export class ParticipantsController {
    * To delete a participant
    *
    */
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.participantsService.remove(+id);

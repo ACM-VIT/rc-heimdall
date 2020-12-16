@@ -1,10 +1,23 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UsePipes, ValidationPipe, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+  Logger,
+  UseGuards,
+} from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { CallbackJudgeDto } from './dto/callback-judge.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DILUTE } from './enum/codeStates.enum';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 /**
  * **Judge Controller**
@@ -18,6 +31,7 @@ import { DILUTE } from './enum/codeStates.enum';
  * @category Judge
  */
 @ApiTags('Judge')
+@ApiBearerAuth('access-token')
 @Controller('judge')
 export class JudgeController {
   /** initialize the logger with judge context */
@@ -30,6 +44,7 @@ export class JudgeController {
    * Creates a new submission based on data from [[CreateJudgeDto]].
    */
   @Post()
+  @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
   create(@Body() createJudgeDto: CreateJudgeDto) {
     return this.judgeService.create(createJudgeDto);
@@ -41,6 +56,7 @@ export class JudgeController {
    * Returns list of all submissions
    */
   @Get()
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.judgeService.findAll();
   }
@@ -51,6 +67,7 @@ export class JudgeController {
    * returns details of particular submission
    */
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.judgeService.findOne(id);
   }
@@ -84,6 +101,7 @@ export class JudgeController {
    * To delete a submission by id
    */
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.judgeService.remove(+id);
   }
