@@ -40,3 +40,8 @@ code_response:
 
 application:
   assignProblemToTeams: false
+
+jwt:
+  secret: superSecretToken
+  issuer: hephaestus
+  expires: 1d
