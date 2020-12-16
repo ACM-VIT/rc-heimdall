@@ -6,3 +6,15 @@ export interface AuthToken {
   iat: number;
   exp: number;
 }
+
+export interface JwtToken {
+  team: {
+    id: string;
+    name: string;
+  };
+  participant: {
+    googleID: string;
+    name: string;
+    isAdmin: boolean;
+  };
+}

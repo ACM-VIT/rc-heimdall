@@ -6,6 +6,7 @@ import {
   Put,
   Param,
   Delete,
+  Request,
   UsePipes,
   ValidationPipe,
   Logger,
@@ -18,6 +19,7 @@ import { CallbackJudgeDto } from './dto/callback-judge.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DILUTE } from './enum/codeStates.enum';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { JwtToken } from 'src/auth/interface/auth.token.interface';
 
 /**
  * **Judge Controller**
@@ -46,7 +48,9 @@ export class JudgeController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
-  create(@Body() createJudgeDto: CreateJudgeDto) {
+  create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
+    const user: JwtToken = req.user;
+    console.log(user.team);
     return this.judgeService.create(createJudgeDto);
   }
 
@@ -68,7 +72,9 @@ export class JudgeController {
    */
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  findOne(@Param('id') id: string) {
+  findOne(@Request() req, @Param('id') id: string) {
+    const user: JwtToken = req.user;
+    console.log(user.team);
     return this.judgeService.findOne(id);
   }
 
@@ -79,7 +85,7 @@ export class JudgeController {
    */
   @Put('callback')
   @UsePipes(ValidationPipe)
-  callbackHandler(@Body() callbackJudgeDto: CallbackJudgeDto) {
+  callbackHandler(@Request() req, @Body() callbackJudgeDto: CallbackJudgeDto) {
     this.logger.verbose(`> ${callbackJudgeDto.token} :: ${DILUTE[callbackJudgeDto.status.id]}`);
     return this.judgeService.handleCallback(callbackJudgeDto);
   }
@@ -91,7 +97,7 @@ export class JudgeController {
    */
   @Put(':id')
   @UsePipes(ValidationPipe)
-  update(@Param('id') id: string, @Body() updateJudgeDto: UpdateJudgeDto) {
+  update(@Request() req, @Param('id') id: string, @Body() updateJudgeDto: UpdateJudgeDto) {
     return this.judgeService.update(+id, updateJudgeDto);
   }
 
@@ -102,7 +108,7 @@ export class JudgeController {
    */
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string) {
+  remove(@Request() req, @Param('id') id: string) {
     return this.judgeService.remove(+id);
   }
 }
