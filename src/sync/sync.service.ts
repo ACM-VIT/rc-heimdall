@@ -8,6 +8,8 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import * as config from 'config';
+import { JudgeService } from 'src/judge/judge.service';
+import { ParticipantsService } from 'src/participants/participants.service';
 import { ProblemsService } from '../problems/problems.service';
 import { ProblemMetadata } from './interface/problem.interface';
 
@@ -29,6 +31,7 @@ export class SyncService {
     /** endpoints for API Calls */
     private readonly seeder: string,
     private readonly taskRunner: string,
+    private readonly registrationEndpoint: string,
 
     /** initialize logger with context:seeder */
     private readonly logger = new Logger('seeder'),
@@ -36,10 +39,16 @@ export class SyncService {
     /** inject [[ProblemsService]] to seed data into [[ProblemRepository]]  */
     @Inject(ProblemsService)
     private readonly problemsService: ProblemsService,
+
+    @Inject(ParticipantsService)
+    private readonly participantService: ParticipantsService,
+
+    @Inject(JudgeService)
+    private readonly judgeService: JudgeService,
   ) {
     this.seeder = config.get('seeder.endpoint');
     this.taskRunner = config.get('runner.seedEndpoint');
-
+    this.registrationEndpoint = config.get('registration.endpoint');
     this.logger.verbose('Sync initialized');
   }
 
@@ -91,6 +100,37 @@ export class SyncService {
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException('Error seeding', error);
+    }
+  }
+
+  async syncWithParticipants() {
+    try {
+      this.logger.verbose(`Updating participant storages`);
+      await this.judgeService.clear();
+      this.logger.verbose(`cleared judge submissions`);
+      await this.participantService.clear();
+      this.logger.verbose(`cleared participants list`);
+
+      const { data } = await this.http.get(this.registrationEndpoint).toPromise();
+      data.forEach(async (item) => {
+        this.logger.verbose(`adding ${item.name} with ${item.googleId}`);
+        try {
+          await this.participantService.create({
+            email: item.email,
+            googleID: item.googleId,
+            isAdmin: item.isAdmin,
+            name: item.name,
+            phoneNumber: '9870000000',
+            registrationNumber: '19BCE0000',
+            teamName: item.teamName,
+          });
+        } catch (e) {
+          this.logger.error(`Error adding ${item.name} / ${item.teamName} / ${item.googleId}`);
+        }
+      });
+      console.log(data.length);
+    } catch (e) {
+      this.logger.error('Error seeding participants');
     }
   }
 

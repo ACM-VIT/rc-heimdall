@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MoreThanOrEqual } from 'typeorm';
 import { TeamsService } from '../teams/teams.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
 import { ParticipantRepository } from './participants.repository';
@@ -68,5 +69,12 @@ export class ParticipantsService {
    */
   remove(id: number) {
     return this.participantRepository.delete({ id });
+  }
+
+  /**
+   * clear the participant storages
+   */
+  clear() {
+    return this.participantRepository.delete({ id: MoreThanOrEqual(0) });
   }
 }

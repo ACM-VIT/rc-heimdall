@@ -27,6 +27,9 @@ judge:
   endpoint: http://52.171.196.193:1974
   callback:  https://webhook.site/4ff8e637-81c0-48b1-93a1-abc1769db1c0
 
+registration:
+  endpoint: https://reverse-coding-2020.herokuapp.com/user/roundonedata
+
 code_response:
   in_queue: submission queued
   processing: submission is being evaluated
