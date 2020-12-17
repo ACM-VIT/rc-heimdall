@@ -1,8 +1,3 @@
-import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
-
-import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-
 /**
  * **Judge0 Callback Status**
  *
@@ -13,12 +8,9 @@ import { Type } from 'class-transformer';
  */
 class CallbackStatusObject {
   /** ID of the submission status, check Judge0 docs*/
-  @IsNumber()
   id: number;
 
   /** test summary of submission status */
-  @IsString()
-  @IsNotEmpty()
   description: string;
 }
 
@@ -32,33 +24,8 @@ class CallbackStatusObject {
  */
 export class CallbackJudgeDto {
   /** response from program STDOUT */
-  @ApiProperty({
-    name: 'stdout',
-    description: 'Base64 encoded program output',
-    example: 'MQ==\n',
-  })
-  @IsString()
-  stdout: string;
-
-  /** Judge0 uuid token to fetch results */
-  @ApiProperty({
-    name: 'token',
-    description: 'Judge0 Identification token',
-    example: '9bf5b6fe-358b-4915-ad74-fe8a4cbb2c3c',
-  })
-  @IsUUID()
-  @IsNotEmpty()
   token: string;
 
   /** status object */
-  @ApiProperty({
-    name: 'status',
-    description: 'Object containing status id and description',
-    example: {
-      id: 4,
-      description: 'Wrong Answer',
-    },
-  })
-  @Type(() => CallbackStatusObject)
   status: CallbackStatusObject;
 }

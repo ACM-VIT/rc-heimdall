@@ -155,7 +155,7 @@ export class JudgeService {
    * - Fetch highest points for the same problem scored by team, increment the difference of current submission
    * points and last highest submission
    */
-  async handleCallback(callbackJudgeDto: CallbackJudgeDto) {
+  async handleCallback(callbackJudgeDto: Judge0Callback) {
     const { status, stdout, token }: Judge0Callback = callbackJudgeDto;
     this.logger.setContext('judge.callback');
 

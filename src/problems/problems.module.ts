@@ -11,6 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
  *
  * @category Problems
  */
+
 @Module({
   imports: [TypeOrmModule.forFeature([ProblemRepository])],
   controllers: [ProblemsController],

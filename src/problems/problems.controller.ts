@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/common';
 import { ProblemsService } from './problems.service';
 import { CreateProblemDto } from './dto/create-problem.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 /**
  * **Problems Controller**
@@ -15,6 +16,7 @@ import { ApiTags } from '@nestjs/swagger';
  * @category Problems
  */
 @ApiTags('Problems')
+@ApiBearerAuth('access-token')
 @Controller('problems')
 export class ProblemsController {
   constructor(private readonly problemsService: ProblemsService) {}
@@ -24,6 +26,7 @@ export class ProblemsController {
    *
    * To create a new problem using [[CreateProblemDto]]
    */
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createProblemDto: CreateProblemDto) {
     return this.problemsService.create(createProblemDto);
@@ -34,8 +37,10 @@ export class ProblemsController {
    *
    * To return list of all problems. This is for internal use only.
    */
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
+  findAll(@Request() req) {
+    console.log(req.user);
     return this.problemsService.findAll();
   }
 
@@ -45,6 +50,7 @@ export class ProblemsController {
    * To return details of a particular problem. This does not expose sensitive details
    * like inputText or outputText, but only download links and problem details
    */
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.problemsService.findOne(id);

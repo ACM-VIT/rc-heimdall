@@ -1,10 +1,25 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UsePipes, ValidationPipe, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  Request,
+  UsePipes,
+  ValidationPipe,
+  Logger,
+  UseGuards,
+} from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
-import { CallbackJudgeDto } from './dto/callback-judge.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DILUTE } from './enum/codeStates.enum';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { JwtToken } from 'src/auth/interface/auth.token.interface';
+import { Judge0Callback } from './interface/judge0.interfaces';
 
 /**
  * **Judge Controller**
@@ -18,6 +33,7 @@ import { DILUTE } from './enum/codeStates.enum';
  * @category Judge
  */
 @ApiTags('Judge')
+@ApiBearerAuth('access-token')
 @Controller('judge')
 export class JudgeController {
   /** initialize the logger with judge context */
@@ -30,8 +46,12 @@ export class JudgeController {
    * Creates a new submission based on data from [[CreateJudgeDto]].
    */
   @Post()
+  @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
-  create(@Body() createJudgeDto: CreateJudgeDto) {
+  create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
+    const user: JwtToken = req.user;
+    createJudgeDto.teamID = user.team.id;
+    this.logger.verbose(`New submission from ${createJudgeDto.teamID}`);
     return this.judgeService.create(createJudgeDto);
   }
 
@@ -41,6 +61,7 @@ export class JudgeController {
    * Returns list of all submissions
    */
   @Get()
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.judgeService.findAll();
   }
@@ -51,7 +72,9 @@ export class JudgeController {
    * returns details of particular submission
    */
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  @UseGuards(JwtAuthGuard)
+  findOne(@Request() req, @Param('id') id: string) {
+    const user: JwtToken = req.user;
     return this.judgeService.findOne(id);
   }
 
@@ -61,10 +84,9 @@ export class JudgeController {
    * To receive callback from judge0 and initiate points tally
    */
   @Put('callback')
-  @UsePipes(ValidationPipe)
-  callbackHandler(@Body() callbackJudgeDto: CallbackJudgeDto) {
-    this.logger.verbose(`> ${callbackJudgeDto.token} :: ${DILUTE[callbackJudgeDto.status.id]}`);
-    return this.judgeService.handleCallback(callbackJudgeDto);
+  callbackHandler(@Body() judge0Callback: Judge0Callback) {
+    this.logger.verbose(`> ${judge0Callback.token} :: ${DILUTE[judge0Callback.status.id]}`);
+    return this.judgeService.handleCallback(judge0Callback);
   }
 
   /**
@@ -74,7 +96,7 @@ export class JudgeController {
    */
   @Put(':id')
   @UsePipes(ValidationPipe)
-  update(@Param('id') id: string, @Body() updateJudgeDto: UpdateJudgeDto) {
+  update(@Request() req, @Param('id') id: string, @Body() updateJudgeDto: UpdateJudgeDto) {
     return this.judgeService.update(+id, updateJudgeDto);
   }
 
@@ -84,7 +106,8 @@ export class JudgeController {
    * To delete a submission by id
    */
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @UseGuards(JwtAuthGuard)
+  remove(@Request() req, @Param('id') id: string) {
     return this.judgeService.remove(+id);
   }
 }

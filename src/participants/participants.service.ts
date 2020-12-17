@@ -57,6 +57,13 @@ export class ParticipantsService {
   }
 
   /**
+   * To return details of particular participant by email
+   */
+  async findOneByEmailAndID(email: string, googleID: string) {
+    return this.participantRepository.findOneByEmailAndGoogleID(email, googleID);
+  }
+
+  /**
    * To Delete a participant by ID
    */
   remove(id: number) {

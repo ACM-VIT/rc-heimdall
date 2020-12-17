@@ -1,11 +1,13 @@
 import {
   ApiAcceptedResponse,
+  ApiBearerAuth,
   ApiInternalServerErrorResponse,
   ApiServiceUnavailableResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Controller, Get, HttpCode } from '@nestjs/common';
+import { Controller, Get, HttpCode, UseGuards } from '@nestjs/common';
 
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { SyncService } from './sync.service';
 
 /**
@@ -17,7 +19,10 @@ import { SyncService } from './sync.service';
  * The controller calls [[SyncService]] for all operations.
  *
  * @category Problems
- */ @ApiTags('Data Synchronization')
+ */
+
+@ApiTags('Data Synchronization')
+@ApiBearerAuth('access-token')
 @Controller('sync')
 export class SyncController {
   constructor(private readonly syncService: SyncService) {}
@@ -39,6 +44,7 @@ export class SyncController {
     status: 503,
     description: 'The service responsible to provide details about problems cannot be connected',
   })
+  @UseGuards(JwtAuthGuard)
   @Get('/problems')
   @HttpCode(202)
   seedProblems() {

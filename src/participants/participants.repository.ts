@@ -34,4 +34,13 @@ export class ParticipantRepository extends Repository<Participant> {
     await participant.save();
     return participant;
   }
+
+  async findOneByEmailAndGoogleID(email: string, googleID: string) {
+    const query = await this.createQueryBuilder('participant')
+      .andWhere('participant.googleID = :token', { token: googleID })
+      .leftJoinAndSelect('participant.team', 'problems')
+      .getOne();
+
+    return query;
+  }
 }

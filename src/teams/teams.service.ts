@@ -94,7 +94,7 @@ export class TeamsService {
   /**
    * To assign a [[Problem]] to [[Team]]
    */
-  async assignProblem(assignProblemDto: AssignProblemDTO): Promise<Array<Problems>> {
+  async assignProblem(assignProblemDto: AssignProblemDTO): Promise<{ problems: Array<Problems>; points: number }> {
     const { problemID, teamID, points } = assignProblemDto;
 
     /** fetch problem by problem ID */
@@ -114,7 +114,7 @@ export class TeamsService {
     team.points += points;
     await team.save();
 
-    return team.problems;
+    return { problems: team.problems, points: team.points };
   }
 
   /**

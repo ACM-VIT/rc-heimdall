@@ -1,12 +1,26 @@
-import { Controller, Get, Post, Body, Param, ValidationPipe, UsePipes } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Request,
+  Body,
+  Param,
+  ValidationPipe,
+  UsePipes,
+  UseGuards,
+  NotFoundException,
+  UnauthorizedException,
+  Req,
+} from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { Team } from './team.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AssignProblemDTO } from './dto/assign-problem.dto';
-import { Problems } from '../problems/problem.entity';
 import { DILUTE } from '../judge/enum/codeStates.enum';
 import { mapLanguageIdToObject } from '../judge/minions/language';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { JwtToken } from 'src/auth/interface/auth.token.interface';
 
 /**
  * **Teams Controller**
@@ -20,6 +34,8 @@ import { mapLanguageIdToObject } from '../judge/minions/language';
  * @category Problems
  */
 @ApiTags('Teams')
+@ApiBearerAuth('access-token')
+@UseGuards(JwtAuthGuard)
 @Controller('teams')
 export class TeamsController {
   /** initiate controller  */
@@ -62,7 +78,11 @@ export class TeamsController {
    * Get details of problems assigned to [[Team]]
    */
   @Get('/:id/problems')
-  getProblems(@Param('id') id: number) {
+  getProblems(@Request() request, @Param('id') id: number) {
+    const user: JwtToken = request.user;
+    if (user.team.id != id) {
+      throw new UnauthorizedException(`not your team`);
+    }
     return this.teamsService.getAssignedProblems(id);
   }
 
@@ -73,7 +93,7 @@ export class TeamsController {
    */
   @Post('/problems')
   @UsePipes(ValidationPipe)
-  assignProblem(@Body() assignProblemDTO: AssignProblemDTO): Promise<Problems[]> {
+  assignProblem(@Body() assignProblemDTO: AssignProblemDTO) {
     return this.teamsService.assignProblem(assignProblemDTO);
   }
 
@@ -83,7 +103,11 @@ export class TeamsController {
    * Get details of [[Team]] by ID
    */
   @Get(':id')
-  async findOne(@Param('id') id: number) {
+  async findOne(@Request() request, @Param('id') id: number) {
+    const user: JwtToken = request.user;
+    if (user.team.id != id) {
+      throw new UnauthorizedException(`Not your team`);
+    }
     /** fetch all team details to display */
     const teamDetails = await this.teamsService.findOneByIdWithRank(id);
 

@@ -5,6 +5,7 @@ import * as rateLimit from 'express-rate-limit';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { JwtAuthGuard } from './auth/guards/jwt.guard';
 import { NestFactory } from '@nestjs/core';
 
 /**
@@ -24,6 +25,7 @@ async function bootstrap() {
     .setVersion(config.get('api.version'))
     .setContact('Yash Kumar Verma', 'https://yashkumarverma.github.io/', 'yk.verma2000@gmail.com')
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'access-token')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
