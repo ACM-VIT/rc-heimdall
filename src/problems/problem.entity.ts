@@ -75,6 +75,13 @@ export class Problems extends BaseEntity {
   objectFileURL: string;
 
   /**
+   * URL to download macOS files (for mac systems). This file is compiled and
+   * then can be used on any macOS system
+   */
+  @Column()
+  macFileURL: string;
+
+  /**
    * This is the content of input file in plain text format.
    */
   @Column()

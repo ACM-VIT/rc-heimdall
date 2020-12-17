@@ -25,6 +25,7 @@ export class ProblemRepository extends Repository<Problems> {
         'problems.maxPoints',
         'problems.windowsFileURL',
         'problems.objectFileURL',
+        'problems.macFileURL',
         'problems.instructionsText',
       ])
       .from(Problems, 'problems')

@@ -53,6 +53,13 @@ export class CreateProblemDto {
   objectFileURL: string;
 
   /**
+   * URL to download object files (for mac systems). This file is compiled
+   * and then can be used on any macOS system.
+   */
+  @ApiProperty({ description: 'URL to download object(.o) file' })
+  macFileURL: string;
+
+  /**
    * All problems have a short description to explain the type of inputs they
    * take, this is displayed directly in participant's portal.
    */

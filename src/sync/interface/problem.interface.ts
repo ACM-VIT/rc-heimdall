@@ -21,6 +21,9 @@ interface ProblemMetadata {
   /** windows binary download URL */
   windows?: string;
 
+  /** mac file to download URL */
+  mac?: string;
+
   /** plain text input */
   inputText?: string;
 

@@ -37,6 +37,7 @@ export class ProblemsService {
         maxPoints: problem.maxPoints,
         windowsFileURL: problem.windowsFileURL,
         objectFileURL: problem.objectFileURL,
+        macFileURL: problem.macFileURL,
         instructionsText: problem.instructionsText,
       };
     });

@@ -88,6 +88,7 @@ export class SyncService {
           instructionsFileURL: problem.instructions,
           windowsFileURL: problem.windows,
           objectFileURL: problem.object,
+          macFileURL: problem.mac,
         });
       });
 
@@ -177,6 +178,7 @@ export class SyncService {
           instructions: problems[i].instructions,
           windows: problems[i].windows,
           object: problems[i].object,
+          mac: problems[i].mac,
           inputText: response[0].data,
           outputText: response[1].data,
           instructionsText: response[2].data,
