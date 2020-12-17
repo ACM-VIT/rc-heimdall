@@ -24,8 +24,8 @@ seeder:
   endpoint: https://rc-broadcaster.vercel.app/api/app.js
 
 judge:
-  endpoint: http://40.76.50.156
-  callback:  http://localhost:5000/judge/callback
+  endpoint: http://52.171.196.193:1974
+  callback:  https://webhook.site/4ff8e637-81c0-48b1-93a1-abc1769db1c0
 
 code_response:
   in_queue: submission queued

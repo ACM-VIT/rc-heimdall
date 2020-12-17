@@ -20,6 +20,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DILUTE } from './enum/codeStates.enum';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { JwtToken } from 'src/auth/interface/auth.token.interface';
+import { Judge0Callback } from './interface/judge0.interfaces';
 
 /**
  * **Judge Controller**
@@ -84,10 +85,9 @@ export class JudgeController {
    * To receive callback from judge0 and initiate points tally
    */
   @Put('callback')
-  @UsePipes(ValidationPipe)
-  callbackHandler(@Request() req, @Body() callbackJudgeDto: CallbackJudgeDto) {
-    this.logger.verbose(`> ${callbackJudgeDto.token} :: ${DILUTE[callbackJudgeDto.status.id]}`);
-    return this.judgeService.handleCallback(callbackJudgeDto);
+  callbackHandler(@Body() judge0Callback: Judge0Callback) {
+    this.logger.verbose(`> ${judge0Callback.token} :: ${DILUTE[judge0Callback.status.id]}`);
+    return this.judgeService.handleCallback(judge0Callback);
   }
 
   /**
