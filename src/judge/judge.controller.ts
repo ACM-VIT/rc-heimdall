@@ -15,7 +15,6 @@ import {
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
-import { CallbackJudgeDto } from './dto/callback-judge.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DILUTE } from './enum/codeStates.enum';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -51,7 +50,8 @@ export class JudgeController {
   @UsePipes(ValidationPipe)
   create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
     const user: JwtToken = req.user;
-    console.log(user.team);
+    createJudgeDto.teamID = user.team.id;
+    this.logger.verbose(`New submission from ${createJudgeDto.teamID}`);
     return this.judgeService.create(createJudgeDto);
   }
 
@@ -75,7 +75,6 @@ export class JudgeController {
   @UseGuards(JwtAuthGuard)
   findOne(@Request() req, @Param('id') id: string) {
     const user: JwtToken = req.user;
-    console.log(user.team);
     return this.judgeService.findOne(id);
   }
 

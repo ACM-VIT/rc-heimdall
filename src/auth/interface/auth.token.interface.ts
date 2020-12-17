@@ -9,7 +9,7 @@ export interface AuthToken {
 
 export interface JwtToken {
   team: {
-    id: string;
+    id: number;
     name: string;
   };
   participant: {
