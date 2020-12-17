@@ -23,6 +23,8 @@ import { Judge0Callback, JudgeOSubmissionRequest } from './interface/judge0.inte
 import { JudgeRepository } from './judge.repository';
 import { mapLanguageStringToObject } from './minions/language';
 import { referee } from './minions/referee';
+import { NotEquals } from 'class-validator';
+import { MoreThanOrEqual } from 'typeorm';
 
 /**
  * **Judge Service**
@@ -243,5 +245,12 @@ export class JudgeService {
    */
   remove(id: number) {
     return `This action removes a #${id} judge`;
+  }
+
+  /**
+   * to clear entire storage
+   */
+  clear() {
+    return this.judgeRepository.delete({ points: MoreThanOrEqual(0) });
   }
 }

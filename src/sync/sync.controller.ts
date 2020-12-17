@@ -50,4 +50,9 @@ export class SyncController {
   seedProblems() {
     return this.syncService.syncWithCloudStorage();
   }
+
+  @Get('/participants')
+  seedParticipants() {
+    return this.syncService.syncWithParticipants();
+  }
 }

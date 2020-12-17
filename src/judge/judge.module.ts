@@ -18,5 +18,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [TypeOrmModule.forFeature([JudgeRepository]), HttpModule, ProblemsModule, TeamsModule],
   controllers: [JudgeController],
   providers: [JudgeService],
+  exports: [JudgeService],
 })
 export class JudgeModule {}
