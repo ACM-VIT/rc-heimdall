@@ -42,7 +42,8 @@ export class ParticipantsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
-    return this.participantsService.findAll();
+    // return this.participantsService.findAll();
+    return [];
   }
 
   /**
@@ -62,9 +63,9 @@ export class ParticipantsController {
    * To delete a participant
    *
    */
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.participantsService.remove(+id);
-  }
+  //   @UseGuards(JwtAuthGuard)
+  //   @Delete(':id')
+  //   remove(@Param('id') id: number) {
+  //     return this.participantsService.remove(+id);
+  //   }
 }

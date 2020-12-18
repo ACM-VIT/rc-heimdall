@@ -59,7 +59,8 @@ export class TeamsController {
    */
   @Get()
   findAll() {
-    return this.teamsService.findAll();
+    // return this.teamsService.findAll();
+    return [];
   }
 
   /**

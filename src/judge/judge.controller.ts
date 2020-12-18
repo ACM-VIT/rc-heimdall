@@ -60,11 +60,11 @@ export class JudgeController {
    *
    * Returns list of all submissions
    */
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  findAll() {
-    return this.judgeService.findAll();
-  }
+  //   @Get()
+  //   @UseGuards(JwtAuthGuard)
+  //   findAll() {
+  //     return this.judgeService.findAll();
+  //   }
 
   /**
    * Responds to: _GET(`/:id`)_
@@ -105,9 +105,9 @@ export class JudgeController {
    *
    * To delete a submission by id
    */
-  @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  remove(@Request() req, @Param('id') id: string) {
-    return this.judgeService.remove(+id);
-  }
+  //   @Delete(':id')
+  //   @UseGuards(JwtAuthGuard)
+  //   remove(@Request() req, @Param('id') id: string) {
+  //     return this.judgeService.remove(+id);
+  //   }
 }
