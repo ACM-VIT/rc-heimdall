@@ -132,6 +132,9 @@ export class TeamsService {
             id: problem.id,
             maxPoints: problem.maxPoints,
             instructionsText: problem.instructionsText,
+            macFileURL: problem.macFileURL,
+            windowsFileURL: problem.windowsFileURL,
+            objectFileURL: problem.objectFileURL,
           };
         });
         return filteredResult;

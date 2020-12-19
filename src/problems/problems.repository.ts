@@ -17,7 +17,7 @@ export class ProblemRepository extends Repository<Problems> {
    * the query builder. To include additional columns into the response, add another item
    * to the `.select` array
    * */
-  async findAndFilter(id: string): Promise<Problems> {
+  findAndFilter(id: string): Promise<Problems> {
     const query = this.createQueryBuilder()
       .select([
         'problems.id',
@@ -40,7 +40,7 @@ export class ProblemRepository extends Repository<Problems> {
    * submission. This includes the input, output and instructions in plainText format.
    * The response does not contain the downloadURLs as they are not required by the judge.
    */
-  async findOneForJudge(id: string) {
+  findOneForJudge(id: string) {
     const query = this.createQueryBuilder()
       .select([
         'problems.id',
@@ -49,6 +49,27 @@ export class ProblemRepository extends Repository<Problems> {
         'problems.instructionsText',
         'problems.name',
         'problems.maxPoints',
+      ])
+      .from(Problems, 'problems')
+      .andWhere('problems.id = :id', { id })
+      .getOne();
+
+    return query;
+  }
+
+  /**
+   * findOneForBidding provides all the data that is passed during budding. This does not
+   * include anything that can be sensitive as this is provided without tokens
+   */
+  async findOneForBidding(id: string): Promise<Problems> {
+    const query = this.createQueryBuilder()
+      .select([
+        'problems.id',
+        'problems.instructionsText',
+        'problems.name',
+        'problems.maxPoints',
+        'problems.sampleInput',
+        'problems.sampleOutput',
       ])
       .from(Problems, 'problems')
       .andWhere('problems.id = :id', { id })

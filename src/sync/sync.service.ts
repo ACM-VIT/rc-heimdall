@@ -80,15 +80,18 @@ export class SyncService {
         this.problemsService.create({
           name: problem.id,
           maxPoints: 100,
-          inputText: problem.inputText.replace(/\n/g, ' '),
-          outputText: problem.outputText.replace(/\n/g, ' '),
-          instructionsText: problem.instructionsText.replace(/\n/g, ' '),
+          inputText: problem.inputText,
+          outputText: problem.outputText,
+          instructionsText: problem.instructionsText,
           inputFileURL: problem.input,
           outputFileURL: problem.output,
           instructionsFileURL: problem.instructions,
           windowsFileURL: problem.windows,
           objectFileURL: problem.object,
           macFileURL: problem.mac,
+          multiplier: problem.multiplier ? problem.multiplier : 1,
+          sampleInput: problem.sampleInput ? problem.sampleInput : 'sample input',
+          sampleOutput: problem.sampleOutput ? problem.sampleOutput : 'sample output',
         });
       });
 
@@ -170,20 +173,29 @@ export class SyncService {
       const inputRequest = this.http.get(problems[i].input, { responseType: 'text' }).toPromise();
       const outputRequest = this.http.get(problems[i].output, { responseType: 'text' }).toPromise();
       const instructionRequest = this.http.get(problems[i].instructions, { responseType: 'text' }).toPromise();
-      await Promise.all([inputRequest, outputRequest, instructionRequest]).then((response) => {
-        tasks.push({
-          id: problems[i].id,
-          input: problems[i].input,
-          output: problems[i].output,
-          instructions: problems[i].instructions,
-          windows: problems[i].windows,
-          object: problems[i].object,
-          mac: problems[i].mac,
-          inputText: response[0].data,
-          outputText: response[1].data,
-          instructionsText: response[2].data,
+      const sampleInputRequest = this.http.get(problems[i].sampleInput, { responseType: 'text' }).toPromise();
+      const sampleOutputRequest = this.http.get(problems[i].sampleOutput, { responseType: 'text' }).toPromise();
+      await Promise.all([inputRequest, outputRequest, instructionRequest, sampleInputRequest, sampleOutputRequest])
+        .then((response) => {
+          tasks.push({
+            id: problems[i].id,
+            input: problems[i].input,
+            output: problems[i].output,
+            instructions: problems[i].instructions,
+            windows: problems[i].windows,
+            object: problems[i].object,
+            mac: problems[i].mac,
+            inputText: response[0].data,
+            outputText: response[1].data,
+            instructionsText: response[2].data,
+            multiplier: 1,
+            sampleInput: response[3].data,
+            sampleOutput: response[4].data,
+          });
+        })
+        .catch((error) => {
+          this.logger.error('Error fetching problem details', error);
         });
-      });
     }
     return tasks;
   }

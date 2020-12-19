@@ -59,6 +59,17 @@ export class ProblemsController {
   }
 
   /**
+   * Responds to: _GET(`demo/:id`)_
+   *
+   * To return details of a particular problem for bidding. This does not expose sensitive details
+   * like inputText or outputText, but only download links and problem details
+   */
+  @Get('/demo/:id')
+  findOneForDemo(@Param('id') id: string) {
+    return this.problemsService.findOneForBidding(id);
+  }
+
+  /**
    * Responds to: _DELETE(`/:id`)_
    *
    * To delete a problem by ID

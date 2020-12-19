@@ -1,3 +1,6 @@
+api:
+  route: API_ENDPOINT
+
 runner:
   runEndpoint: RUNNER_ENDPOINT_EXEC
   seedEndpoint: RUNNER_ENDPOINT_SEED

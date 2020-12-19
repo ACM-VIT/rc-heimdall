@@ -118,10 +118,10 @@ export class JudgeService {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
-      expected_output: Buffer.from(problem.outputText).toString('base64'),
-      stdin: Buffer.from(problem.inputText).toString('base64'),
+      expected_output: problem.outputText,
+      stdin: problem.inputText,
     };
-    this.logger.verbose(`sending to judge0 ${JSON.stringify(postBody)}`);
+    this.logger.verbose(`sending to judge0 ${JSON.stringify({ ...postBody, source_code: 'code...' })}`);
 
     /** make http request and receive response.data. Judge0 returns a uuid for the submission made */
     const { data } = await this.http.post(this.endpoint, postBody).toPromise();
@@ -173,17 +173,20 @@ export class JudgeService {
     await submission.save();
 
     /** map submission status into enum */
-    const codeStatus = CODE_STATES[status.id];
-    if (codeStatus !== CodeStates.WRONG && codeStatus !== CodeStates.ACCEPTED) {
-      this.logger.verbose(`received response ${status.id} not expected`);
-      return { error: false };
-    }
+    // const codeStatus = CODE_STATES[status.id];
+
+    // @depreciated, remove
+    // if (codeStatus !== CodeStates.WRONG && codeStatus !== CodeStates.ACCEPTED) {
+    //   this.logger.verbose(`received response ${status.id} not expected`);
+    //   return { error: false };
+    // }
 
     /** assign points only to CodeStates.{ACCEPTED | WRONG} responses  */
     const refereeEvaluation = referee(
       Buffer.from(stdout, 'base64').toString(),
-      submission.problem.outputText,
+      Buffer.from(submission.problem.outputText, 'base64').toString(),
       submission.problem.maxPoints,
+      submission.problem.multiplier,
     );
     this.logger.verbose(`${submission.judge0ID} got ${JSON.stringify(refereeEvaluation)}`);
 

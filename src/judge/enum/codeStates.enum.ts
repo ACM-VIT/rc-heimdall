@@ -73,4 +73,13 @@ export const DILUTE: Array<string> = [
   config.get('code_response.runtime_error') || 'runtime_error',
   config.get('code_response.internal_error') || 'internal_error',
   config.get('code_response.code_error') || 'code_error',
+  config.get('code_response.code_error') || 'code_error',
+  config.get('code_response.code_error') || 'code_error',
+  config.get('code_response.code_error') || 'code_error',
+  config.get('code_response.code_error') || 'code_error',
+  config.get('code_response.code_error') || 'code_error',
+  config.get('code_response.code_error') || 'code_error',
+  config.get('code_response.code_error') || 'code_error',
+  config.get('code_response.code_error') || 'code_error',
+  config.get('code_response.code_error') || 'code_error',
 ];

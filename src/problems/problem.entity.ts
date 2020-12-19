@@ -105,4 +105,22 @@ export class Problems extends BaseEntity {
     (team) => team.problems,
   )
   team: Team;
+
+  /**
+   * data to show while bidding, saved sample responses
+   */
+  @Column({
+    nullable: true,
+  })
+  sampleInput: string;
+
+  @Column({
+    nullable: true,
+  })
+  sampleOutput: string;
+
+  @Column({
+    default: 1,
+  })
+  multiplier: number;
 }
