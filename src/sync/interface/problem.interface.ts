@@ -32,6 +32,15 @@ interface ProblemMetadata {
 
   /** plain text instruction */
   instructionsText?: string;
+
+  /** multiplier for submission */
+  multiplier: number;
+
+  /** sample input for bidding */
+  sampleInput: string;
+
+  /** sample output for bidding */
+  sampleOutput: string;
 }
 
 export { ProblemMetadata };
