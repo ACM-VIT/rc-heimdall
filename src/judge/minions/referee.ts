@@ -20,16 +20,46 @@ import { RefereeResponse } from '../interface/referee.interface';
 
  * @category Judge
  */
-export const referee = (userOutput: string, actualOutput: string, maxPoints: number): RefereeResponse => {
+export const referee = (
+  userOutput: string,
+  actualOutput: string,
+  maxPoints: number,
+  multiplier: number,
+): RefereeResponse => {
+  const oneToN = worker(userOutput, actualOutput, maxPoints, multiplier, false);
+  const NToOne = worker(userOutput, actualOutput, maxPoints, multiplier, true);
+
+  if (oneToN.points > NToOne.points) {
+    return oneToN;
+  }
+  return NToOne;
+};
+
+const worker = (
+  userOutput: string,
+  actualOutput: string,
+  maxPoints: number,
+  multiplier: number,
+  reverse: boolean,
+): RefereeResponse => {
   const userSequence = userOutput
-    .replace(/\n/g, ' ')
-    .replace(/\r/g, ' ')
     .trim()
-    .split(' ');
+    .replace(/\r/g, '\n')
+    .trim()
+    .split('\n')
+    .reverse()
+    .map((x) => x.trim());
+
+  if (reverse) {
+    userSequence.reverse();
+  }
+
   const actualSequence = actualOutput
-    .replace(/\r/g, ' ')
     .trim()
-    .split(' ');
+    .replace(/\r/g, '\n')
+    .trim()
+    .split('\n')
+    .map((x) => x.trim());
 
   let actualCounter = 0;
   let userCounter = 0;
@@ -43,5 +73,14 @@ export const referee = (userOutput: string, actualOutput: string, maxPoints: num
     }
   }
 
+  if (isNaN(multiplier)) {
+    multiplier = 1;
+  }
+
+  points *= multiplier;
+  points = Math.ceil(points);
+  if (points > maxPoints * multiplier) {
+    points = maxPoints * multiplier;
+  }
   return { userSequence, actualSequence, points };
 };
