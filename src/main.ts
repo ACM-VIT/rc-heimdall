@@ -5,7 +5,6 @@ import * as rateLimit from 'express-rate-limit';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-import { JwtAuthGuard } from './auth/guards/jwt.guard';
 import { NestFactory } from '@nestjs/core';
 
 /**
