@@ -36,4 +36,21 @@ export class AssignProblemDTO {
   @IsNotEmpty()
   @IsNumber()
   points: number;
+
+  @ApiProperty({
+    name: 'multiplier',
+    description: 'Multiplier for code submission',
+    example: 2,
+    default: 1,
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  multiplier: number;
+
+  @ApiProperty({
+    name: 'phrase',
+    description: 'obvious message',
+    example: 'secure',
+  })
+  token: string;
 }

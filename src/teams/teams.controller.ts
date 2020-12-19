@@ -8,9 +8,7 @@ import {
   ValidationPipe,
   UsePipes,
   UseGuards,
-  NotFoundException,
   UnauthorizedException,
-  Req,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -81,8 +79,8 @@ export class TeamsController {
   @Get('/:id/problems')
   getProblems(@Request() request, @Param('id') id: number) {
     const user: JwtToken = request.user;
-    if (user.team.id != id) {
-      throw new UnauthorizedException(`not your team`);
+    if (user.team.id !== id) {
+      throw new UnauthorizedException(`who art thou? eff u!`);
     }
     return this.teamsService.getAssignedProblems(id);
   }

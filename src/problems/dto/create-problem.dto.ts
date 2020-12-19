@@ -83,4 +83,19 @@ export class CreateProblemDto {
    */
   @ApiProperty({ description: 'Actual text representation of instructions' })
   instructionsText: string;
+
+  @ApiProperty({
+    example: '1 2 3',
+  })
+  sampleInput: string;
+
+  @ApiProperty({
+    example: '1 2 3 4 5 6',
+  })
+  sampleOutput: string;
+
+  @ApiProperty({
+    example: 1,
+  })
+  multiplier: number;
 }

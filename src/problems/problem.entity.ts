@@ -118,4 +118,9 @@ export class Problems extends BaseEntity {
     nullable: true,
   })
   sampleOutput: string;
+
+  @Column({
+    default: 1,
+  })
+  multiplier: number;
 }
