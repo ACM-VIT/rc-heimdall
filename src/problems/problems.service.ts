@@ -83,6 +83,20 @@ export class ProblemsService {
     }
   }
 
+  /**
+   * Data to return to un-protected endpoint
+   */
+  async findOneForBidding(id: string) {
+    try {
+      const problemDetails = await this.problemRepository.findOneForBidding(id);
+      if (problemDetails === undefined) {
+        return new NotFoundException('Problem Not Found');
+      }
+    } catch (e) {
+      return new BadRequestException('Malformed Data Received');
+    }
+  }
+
   /** to delete a problem by uuid */
   remove(id: string) {
     return this.problemRepository.delete({ id });
