@@ -95,13 +95,15 @@ export class TeamsService {
    * To assign a [[Problem]] to [[Team]]
    */
   async assignProblem(assignProblemDto: AssignProblemDTO): Promise<{ problems: Array<Problems>; points: number }> {
-    const { problemID, teamID, points } = assignProblemDto;
+    const { problemID, teamID, points, multiplier } = assignProblemDto;
 
     /** fetch problem by problem ID */
     const problem = await this.problemService.findOne(problemID);
     if (problem === undefined) {
       throw new NotFoundException(`Problem with ID:${problemID} does not exist`);
     }
+    problem.multiplier = multiplier;
+    await problem.save();
 
     /** fetch team by teamID */
     const team = await this.teamRepository.findOne(teamID);
