@@ -1,6 +1,6 @@
 {
   "name": "rc-heimdall",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Heimdall is the gatekeeper service which does the heavy lifting of RC Infrastructure",
   "author": "Yash Kumar Verma <yk.verma2000@gmail.com>",
   "private": true,
