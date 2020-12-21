@@ -3,12 +3,10 @@
 </p>
 
 [![Build Status](https://travis-ci.com/YashKumarVerma/rc-heimdall.svg?token=bdYdpM7ki4qrmdCwJmGf&branch=master)](https://travis-ci.com/YashKumarVerma/rc-heimdall)
-
 ![Docker Image Version (latest by date)](https://img.shields.io/docker/v/yashkumarverma/rc-heimdall)
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/yashkumarverma/rc-heimdall/latest)
 ![Docker Pulls](https://img.shields.io/docker/pulls/yashkumarverma/rc-heimdall)
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/yashkumarverma/rc-heimdall/latest)
-
 ![GitHub](https://img.shields.io/github/license/yashkumarverma/rc-heimdall)
 ![GitHub contributors](https://img.shields.io/github/contributors/yashkumarverma/rc-heimdall)
 ![GitHub last commit](https://img.shields.io/github/last-commit/yashkumarverma/rc-heimdall)
@@ -17,7 +15,6 @@
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/yashkumarverma/rc-heimdall)
 ![Lines of code](https://img.shields.io/tokei/lines/github/yashkumarverma/rc-heimdall)
 ![GitHub repo size](https://img.shields.io/github/repo-size/yashkumarverma/rc-heimdall)
-
 ![Documentation Coverage](http://rc-heimdall.ykv.surge.sh/images/coverage-badge-documentation.svg)
 
 [![CodeFactor](https://www.codefactor.io/repository/github/yashkumarverma/rc-heimdall/badge?s=eabdf8d1d657fd0cfdb8988fad909011e443633a)](https://www.codefactor.io/repository/github/yashkumarverma/rc-heimdall)
