@@ -31,14 +31,14 @@ export class ParticipantsService {
    * If the team does not exist, then it is created.
    */
   async create(createParticipantDto: CreateParticipantDto) {
-    const participantTeam = await this.teamService.findOne(createParticipantDto.teamName);
+    const participantTeam = await this.teamService.findOne(createParticipantDto.team_id);
 
-    if (participantTeam === undefined) {
-      const newTeam = await this.teamService.create({
-        name: createParticipantDto.teamName,
-      });
-      return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, newTeam);
-    }
+    // if (participantTeam === undefined) {
+    //   const newTeam = await this.teamService.create({
+    //     name: createParticipantDto.teamName,
+    //   });
+    //   return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, newTeam);
+    // }
 
     return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, participantTeam);
   }
@@ -60,8 +60,8 @@ export class ParticipantsService {
   /**
    * To return details of particular participant by email
    */
-  async findOneByEmailAndID(email: string, googleID: string) {
-    return this.participantRepository.findOneByEmailAndGoogleID(email, googleID);
+  async findOneByEmailAndID(googleID: string) {
+    return this.participantRepository.findOneByEmailAndGoogleID( googleID);
   }
 
   /**

@@ -2,7 +2,7 @@ export interface AuthToken {
   _id: string;
   name: string;
   email: string;
-  googleId: string;
+  googleID: string;
   iat: number;
   exp: number;
 }

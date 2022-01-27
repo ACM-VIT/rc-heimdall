@@ -115,25 +115,28 @@ export class SyncService {
       await this.participantService.clear();
       this.logger.verbose(`cleared participants list`);
 
-      const { data } = await this.http.get(this.registrationEndpoint).toPromise();
+      const { data } = await this.http
+        .post(this.registrationEndpoint, {
+          secret: 1234,
+        })
+        .toPromise();
       data.forEach(async (item) => {
-        this.logger.verbose(`adding ${item.name} with ${item.googleId}`);
+        this.logger.verbose(`adding ${item.name} with ${item.googleID}`);
         try {
           await this.participantService.create({
             email: item.email,
-            googleID: item.googleId,
+            googleID: item.googleID,
             isAdmin: item.isAdmin,
             name: item.name,
-            phoneNumber: '9870000000',
-            registrationNumber: '19BCE0000',
-            teamName: item.teamName,
+            team_id: item.team_id,
           });
         } catch (e) {
-          this.logger.error(`Error adding ${item.name} / ${item.teamName} / ${item.googleId}`);
+          this.logger.error(`Error adding ${item.name} / ${item.teamName} / ${item.googleID}`);
         }
       });
       console.log(data.length);
     } catch (e) {
+      console.log(e);
       this.logger.error('Error seeding participants');
     }
   }

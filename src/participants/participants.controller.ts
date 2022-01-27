@@ -42,8 +42,8 @@ export class ParticipantsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
-    // return this.participantsService.findAll();
-    return [];
+    return this.participantsService.findAll();
+    // return [];
   }
 
   /**

@@ -5,7 +5,7 @@
 .vscode
 typedoc
 
-config/production.yml
+config/default.yml
 
 # Logs
 logs

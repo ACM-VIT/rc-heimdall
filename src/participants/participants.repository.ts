@@ -21,24 +21,23 @@ export class ParticipantRepository extends Repository<Participant> {
    * participants to join a particular team.
    */
   async createParticipantAndJoinTeam(createParticipantDto: CreateParticipantDto, team: Team): Promise<Participant> {
-    const { email, googleID, name, phoneNumber, registrationNumber, isAdmin } = createParticipantDto;
+    const { email, googleID, name, isAdmin, team_id } = createParticipantDto;
     const participant = this.create();
     participant.email = email;
     participant.googleID = googleID;
     participant.name = name;
-    participant.phoneNumber = phoneNumber;
-    participant.registrationNumber = registrationNumber;
     participant.isAdmin = isAdmin;
     participant.team = team;
+    participant.team_id = team_id;
 
     await participant.save();
     return participant;
   }
 
-  async findOneByEmailAndGoogleID(email: string, googleID: string) {
+  async findOneByEmailAndGoogleID(googleID: string) {
     const query = await this.createQueryBuilder('participant')
       .andWhere('participant.googleID = :token', { token: googleID })
-      .leftJoinAndSelect('participant.team', 'problems')
+      // .leftJoinAndSelect('participant.team', 'problems')
       .getOne();
 
     return query;

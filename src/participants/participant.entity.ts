@@ -30,23 +30,11 @@ export class Participant extends BaseEntity {
   })
   email: string;
 
-  /** college registration number */
-  @Column({
-    nullable: true,
-  })
-  registrationNumber: string;
-
   /** whether participant is admin of his/her team */
   @Column({
     default: false,
   })
   isAdmin: boolean;
-
-  /** contact number of participant, optional */
-  @Column({
-    nullable: true,
-  })
-  phoneNumber: string;
 
   /** entity representing team which the participant is a member of */
   @ManyToOne(
@@ -54,4 +42,10 @@ export class Participant extends BaseEntity {
     (team) => team.participants,
   )
   team: Team;
+
+  /** team_id of the participant, references [[Team]] by [[Team.id]] */
+  @Column({
+    default: null,
+  })
+  team_id: number;
 }

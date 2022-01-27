@@ -51,8 +51,8 @@ export class TeamsService {
   /**
    * To fetch details of [[Team]] by [[Team.name]]
    */
-  async findOne(name: string) {
-    const response = await this.teamRepository.find({ name });
+  async findOne(id: number) {
+    const response = await this.teamRepository.find({ id });
     if (response.length === 0) {
       return undefined;
     }
