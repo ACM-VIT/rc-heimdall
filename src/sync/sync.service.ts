@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Dependencies,
   HttpService,
   Inject,
@@ -117,7 +118,7 @@ export class SyncService {
 
       const { data } = await this.http
         .post(this.registrationEndpoint, {
-          secret: 1234,
+          secret: config.get('roundone.secret'),
         })
         .toPromise();
       data.forEach(async (item) => {
