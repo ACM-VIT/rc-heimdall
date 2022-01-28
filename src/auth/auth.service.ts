@@ -1,11 +1,9 @@
 import { JwtService } from '@nestjs/jwt';
-import { Participant } from 'src/participants/participant.entity';
 import { ParticipantsService } from 'src/participants/participants.service';
 import { Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { TokenExchangeDTO } from './dto/token-exchange.dto';
 import { newJWTConstants, oldJWTConstants } from './constants/auth.constants';
 import { AuthToken } from './interface/auth.token.interface';
-import { networkInterfaces } from 'os';
 
 @Injectable()
 export class AuthService {
@@ -42,25 +40,22 @@ export class AuthService {
         throw new NotFoundException();
       }
 
-      console.log(userDetails);
-
       const payload = {
-        // team: {
-        //   id: userDetails.team.id,
-        //   name: userDetails.team.name,
-        // },
         participant: {
+          id: userDetails.id,
           googleID: userDetails.googleID,
           name: userDetails.name,
           isAdmin: userDetails.isAdmin,
+          email: userDetails.email,
+          team_id: userDetails.team_id,
         },
       };
 
-      console.log("first payload", payload);
+      console.log('first payload', payload);
 
       const newToken = await this.jwtService.signAsync(payload, newJWTConstants);
+      console.log('newToken', newToken);
       return newToken;
-      return;
     } catch (e) {
       console.log(e);
       throw new UnauthorizedException(`Invalid token`);
