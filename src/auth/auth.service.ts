@@ -24,7 +24,10 @@ export class AuthService {
       const isValidToken = await this.jwtService.verifyAsync(token, newJWTConstants);
       return isValidToken;
     } catch (e) {
-      throw new UnauthorizedException(`Un-authorized access`);
+      throw new UnauthorizedException({
+        error: 'as-ua-001',
+        message: 'Not authorized, invalid token',
+      });
     }
   }
 
@@ -35,7 +38,10 @@ export class AuthService {
       const { googleID } = isValidToken;
       const userDetails = await this.participantService.findOneByEmailAndID(googleID);
       if (userDetails === undefined) {
-        throw new NotFoundException();
+        throw new NotFoundException({
+          error: 'as-nf-002',
+          message: 'User not found in the database',
+        });
       }
 
       const payload = {
@@ -52,7 +58,10 @@ export class AuthService {
       const newToken = await this.jwtService.signAsync(payload, newJWTConstants);
       return newToken;
     } catch (e) {
-      throw new UnauthorizedException(`Invalid token`);
+      throw new UnauthorizedException({
+        error: 'as-ua-003',
+        message: 'Not authorized, invalid token',
+      });
     }
   }
 }
