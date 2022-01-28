@@ -31,9 +31,7 @@ export class AuthService {
   async tokenExchanger(tokenExchangeDTO: TokenExchangeDTO): Promise<string> {
     try {
       const { token } = tokenExchangeDTO;
-      console.log('tokenExchanger', token);
       const isValidToken: AuthToken = await this.jwtService.verifyAsync(token, oldJWTConstants);
-      console.log('isValidToken', isValidToken);
       const { googleID } = isValidToken;
       const userDetails = await this.participantService.findOneByEmailAndID(googleID);
       if (userDetails === undefined) {
@@ -51,13 +49,9 @@ export class AuthService {
         },
       };
 
-      console.log('first payload', payload);
-
       const newToken = await this.jwtService.signAsync(payload, newJWTConstants);
-      console.log('newToken', newToken);
       return newToken;
     } catch (e) {
-      console.log(e);
       throw new UnauthorizedException(`Invalid token`);
     }
   }
