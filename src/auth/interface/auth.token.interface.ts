@@ -8,13 +8,14 @@ export interface AuthToken {
 }
 
 export interface JwtToken {
-  team: {
-    id: number;
-    name: string;
-  };
+  // team: {
+  //   id: number;
+  //   name: string;
+  // };
   participant: {
     googleID: string;
     name: string;
     isAdmin: boolean;
+    team_id: number;
   };
 }

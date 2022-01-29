@@ -47,7 +47,31 @@ export class JudgeSubmissions extends BaseEntity {
     enum: CodeStates,
     default: CodeStates.IN_QUEUE,
   })
-  state: CodeStates;
+  state1: CodeStates;
+  @Column({
+    type: 'enum',
+    enum: CodeStates,
+    default: CodeStates.IN_QUEUE,
+  })
+  state2: CodeStates;
+  @Column({
+    type: 'enum',
+    enum: CodeStates,
+    default: CodeStates.IN_QUEUE,
+  })
+  state3: CodeStates;
+  @Column({
+    type: 'enum',
+    enum: CodeStates,
+    default: CodeStates.IN_QUEUE,
+  })
+  state4: CodeStates;
+  @Column({
+    type: 'enum',
+    enum: CodeStates,
+    default: CodeStates.IN_QUEUE,
+  })
+  state5: CodeStates;
 
   /** points assigned to the submission */
   @Column({
@@ -58,7 +82,15 @@ export class JudgeSubmissions extends BaseEntity {
 
   /** judge0 uuid obtained after making the submission requests */
   @Column()
-  judge0ID: string;
+  judge0ID1: string;
+  @Column()
+  judge0ID2: string;
+  @Column()
+  judge0ID3: string;
+  @Column()
+  judge0ID4: string;
+  @Column()
+  judge0ID5: string;
 
   /**
    * base64 representation of code submitted by participant. Kept in base64 to accommodate

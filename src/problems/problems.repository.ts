@@ -40,12 +40,20 @@ export class ProblemRepository extends Repository<Problems> {
    * submission. This includes the input, output and instructions in plainText format.
    * The response does not contain the downloadURLs as they are not required by the judge.
    */
-  findOneForJudge(id: string) {
-    const query = this.createQueryBuilder()
+  async findOneForJudge(id: string) {
+    const query = await this.createQueryBuilder()
       .select([
         'problems.id',
-        'problems.inputText',
-        'problems.outputText',
+        'problems.inputText1',
+        'problems.outputText1',
+        'problems.inputText2',
+        'problems.outputText2',
+        'problems.inputText3',
+        'problems.outputText3',
+        'problems.inputText4',
+        'problems.outputText4',
+        'problems.inputText5',
+        'problems.outputText5',
         'problems.instructionsText',
         'problems.name',
         'problems.maxPoints',
@@ -53,7 +61,6 @@ export class ProblemRepository extends Repository<Problems> {
       .from(Problems, 'problems')
       .andWhere('problems.id = :id', { id })
       .getOne();
-
     return query;
   }
 

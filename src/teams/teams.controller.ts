@@ -57,8 +57,8 @@ export class TeamsController {
    */
   @Get()
   findAll() {
-    // return this.teamsService.findAll();
-    return [];
+    return this.teamsService.findAll();
+    // return [];
   }
 
   /**
@@ -79,7 +79,7 @@ export class TeamsController {
   @Get('/:id/problems')
   getProblems(@Request() request, @Param('id') id: number) {
     const user: JwtToken = request.user;
-    if (user.team.id !== id) {
+    if (user.participant.team_id !== id) {
       throw new UnauthorizedException(`who art thou? eff u!`);
     }
     return this.teamsService.getAssignedProblems(id);
@@ -104,7 +104,7 @@ export class TeamsController {
   @Get(':id')
   async findOne(@Request() request, @Param('id') id: number) {
     const user: JwtToken = request.user;
-    if (user.team.id != id) {
+    if (user.participant.team_id != id) {
       throw new UnauthorizedException(`Not your team`);
     }
     /** fetch all team details to display */
@@ -130,9 +130,9 @@ export class TeamsController {
       return {
         id: submission.id,
         language: mapLanguageIdToObject(submission.language).extension,
-        state: DILUTE[submission.state],
+        state: DILUTE[submission.state1],
         points: submission.points,
-        judge0ID: submission.judge0ID,
+        judge0ID: submission.judge0ID1,
         code: submission.code,
         problem: {
           id: submission.problem.id,

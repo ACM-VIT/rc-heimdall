@@ -63,7 +63,7 @@ export class JudgeService {
   ) {
     this.logger.verbose('service initialized');
     this.callbackURL = config.get('judge.callback');
-    this.endpoint = `${config.get('judge.endpoint')}/submissions?base64_encoded=true`;
+    this.endpoint = `${config.get('judge.endpoint')}/submissions/batch?base64_encoded=true`;
   }
 
   /**
@@ -95,12 +95,14 @@ export class JudgeService {
 
     /** fetch question details about question for which the submission is made */
     const problem = await this.problemService.findOneForJudge(problemID);
+    console.log("problem ", problem);
     if (problem === undefined) {
       this.logger.verbose(`sent invalid problem id ${problemID}`);
       throw new BadRequestException(`No problem with id:${problemID}`);
     }
 
     /** fetch details of the team who made the submission */
+    console.log("teamid: ",teamID);
     const team = await this.teamService.findOneById(teamID);
     if (team === undefined) {
       this.logger.verbose(`is an invalid team ID`);
@@ -114,34 +116,74 @@ export class JudgeService {
     }
 
     /** prepare postBody to send to Judge0  */
-    const postBody: JudgeOSubmissionRequest = {
+    const postBody1: JudgeOSubmissionRequest = {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
       expected_output: problem.outputText1,
-      stdin: problem.inputText,
+      stdin: problem.inputText1,
     };
-    this.logger.verbose(`sending to judge0 ${JSON.stringify({ ...postBody, source_code: 'code...' })}`);
+    const postBody2: JudgeOSubmissionRequest = {
+      source_code: code,
+      language_id: codeLanguage.id,
+      callback_url: this.callbackURL,
+      expected_output: problem.outputText2,
+      stdin: problem.inputText2,
+    };
+    const postBody3: JudgeOSubmissionRequest = {
+      source_code: code,
+      language_id: codeLanguage.id,
+      callback_url: this.callbackURL,
+      expected_output: problem.outputText3,
+      stdin: problem.inputText3,
+    };
+    const postBody4: JudgeOSubmissionRequest = {
+      source_code: code,
+      language_id: codeLanguage.id,
+      callback_url: this.callbackURL,
+      expected_output: problem.outputText4,
+      stdin: problem.inputText4,
+    };
+    const postBody5: JudgeOSubmissionRequest = {
+      source_code: code,
+      language_id: codeLanguage.id,
+      callback_url: this.callbackURL,
+      expected_output: problem.outputText5,
+      stdin: problem.inputText5,
+    };
+    this.logger.verbose(`sending to judge0 ${JSON.stringify({ ...postBody1, source_code: 'code...' })}`);
 
     /** make http request and receive response.data. Judge0 returns a uuid for the submission made */
-    const { data } = await this.http.post(this.endpoint, postBody).toPromise();
-    const judge0ID = data.token;
-    this.logger.verbose(`made submission, judge0 token ${judge0ID}`);
+    const body = {
+      submissions: [postBody1, postBody2, postBody3, postBody4, postBody5],
+    };
+    const { data } = await this.http.post(this.endpoint, body).toPromise();
+    console.log(data);
+    const [judge0ID1, judge0ID2, judge0ID3, judge0ID4, judge0ID5] = data;
+    this.logger.verbose(`made submission, judge0 token ${judge0ID1}`);
 
     /** persist the submission details */
     await this.judgeRepository.save({
       problem,
       team,
       language: codeLanguage.id,
-      state: CodeStates.IN_QUEUE,
+      state1: CodeStates.IN_QUEUE,
+      state2: CodeStates.IN_QUEUE,
+      state3: CodeStates.IN_QUEUE,
+      state4: CodeStates.IN_QUEUE,
+      state5: CodeStates.IN_QUEUE,
       points: 0,
-      judge0ID,
+      judge0ID1,
+      judge0ID2,
+      judge0ID3,
+      judge0ID4,
+      judge0ID5,
       code,
     });
     this.logger.verbose(` submission saved into database`);
 
     /** return submission details back to client with Judge0 token to ping for results */
-    return { submissionToken: judge0ID };
+    return { submissionToken: judge0ID1 };
   }
 
   /**
@@ -169,7 +211,7 @@ export class JudgeService {
     }
 
     /** update code state in database */
-    submission.state = status.id;
+    submission.state1 = status.id;
     await submission.save();
 
     /** map submission status into enum */
@@ -188,7 +230,7 @@ export class JudgeService {
       submission.problem.maxPoints,
       submission.problem.multiplier,
     );
-    this.logger.verbose(`${submission.judge0ID} got ${JSON.stringify(refereeEvaluation)}`);
+    this.logger.verbose(`${submission.judge0ID1} got ${JSON.stringify(refereeEvaluation)}`);
 
     /** save the current submission into database */
     submission.points = refereeEvaluation.points;

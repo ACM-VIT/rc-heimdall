@@ -29,8 +29,8 @@ export class ProblemsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createProblemDto: CreateProblemDto) {
-    // return this.problemsService.create(createProblemDto);
-    return [];
+    return this.problemsService.create(createProblemDto);
+    // return [];
   }
 
   /**
@@ -41,9 +41,9 @@ export class ProblemsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Request() req) {
-    // console.log(req.user);
-    // return this.problemsService.findAll();
-    return [];
+    console.log(req.user);
+    return this.problemsService.findAll();
+    // return [];
   }
 
   /**

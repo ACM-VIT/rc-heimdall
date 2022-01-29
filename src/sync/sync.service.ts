@@ -10,6 +10,7 @@ import {
 import * as config from 'config';
 import { JudgeService } from 'src/judge/judge.service';
 import { ParticipantsService } from 'src/participants/participants.service';
+// import { TeamsService } from 'src/teams/teams.service';
 import { ProblemsService } from '../problems/problems.service';
 import { ProblemMetadata } from './interface/problem.interface';
 
@@ -43,6 +44,9 @@ export class SyncService {
     @Inject(ParticipantsService)
     private readonly participantService: ParticipantsService,
 
+    // @Inject(TeamsService)
+    // private readonly teamService: TeamsService,
+
     @Inject(JudgeService)
     private readonly judgeService: JudgeService,
   ) {
@@ -74,7 +78,6 @@ export class SyncService {
       /** save problem details locally and return data as string object */
       const parsedData = await this.saveLocally(problems);
       console.log('after parsing');
-
       /** clear old storage */
       const clearOperation = await this.problemsService.clear();
       this.logger.verbose(`Cleared ${clearOperation.affected} from problem storage`);
@@ -135,6 +138,7 @@ export class SyncService {
         .toPromise();
       data.forEach(async (item) => {
         this.logger.verbose(`adding ${item.name} with ${item.googleID}`);
+        console.log(item);
         try {
           await this.participantService.create({
             email: item.email,
@@ -189,7 +193,7 @@ export class SyncService {
       const Problem = problems[keyArr[i]];
       const testCases = Problem['test-cases'];
 
-      this.logger.verbose(`Processing id:${Problem.id}`);
+      this.logger.verbose(`Processing id:${keyArr[i]}`);
       const inputRequest1 = this.http.get(testCases['test-case-1']['input.txt'], { responseType: 'text' }).toPromise();
       const inputRequest2 = this.http.get(testCases['test-case-2']['input.txt'], { responseType: 'text' }).toPromise();
       const inputRequest3 = this.http.get(testCases['test-case-3']['input.txt'], { responseType: 'text' }).toPromise();
@@ -232,11 +236,11 @@ export class SyncService {
           tasks.push({
             id: keyArr[i],
             input: Problem['sample-input.txt'],
-            output: Problem['output-input.txt'],
+            output: Problem['sample-output.txt'],
             instructions: Problem['description.txt'],
-            windows: Problem['windows.exe'],
-            object: Problem['linux.o'],
-            mac: Problem['mac.mac'],
+            windows: Problem['executables']['windows.exe'],
+            object: Problem['executables']['linux.o'],
+            mac: Problem['executables']['mac.mac'],
             inputText1: response[0].data,
             inputText2: response[1].data,
             inputText3: response[2].data,
@@ -247,8 +251,8 @@ export class SyncService {
             outputText3: response[7].data,
             outputText4: response[8].data,
             outputText5: response[9].data,
-            instructionsText: response[10].data,
             multiplier: 1,
+            instructionsText: response[10].data,
             sampleInput: response[11].data,
             sampleOutput: response[12].data,
           });
