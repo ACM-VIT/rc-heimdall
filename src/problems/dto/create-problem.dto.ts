@@ -70,13 +70,21 @@ export class CreateProblemDto {
    * This is the content of input file in plain text format.
    */
   @ApiProperty({ description: 'Actual text representation of input text' })
-  inputText: string;
+  inputText1: string;
+  inputTex2: string;
+  inputText3: string;
+  inputText4: string;
+  inputText5: string;
 
   /**
    * This is the content of output file in plain text format.
    */
   @ApiProperty({ description: 'Actual text representation of code output' })
-  outputText: string;
+  outputText1: string;
+  outputText2: string;
+  outputText3: string;
+  outputText4: string;
+  outputText5: string;
 
   /**
    * This is the content of instructions file in plain text format.
