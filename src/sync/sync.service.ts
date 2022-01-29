@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   Dependencies,
   HttpService,
   Inject,
@@ -70,19 +69,32 @@ export class SyncService {
       const problems = reply.data.payload;
       this.logger.verbose('Displaying problem details');
 
+      console.log('before parsing');
+
       /** save problem details locally and return data as string object */
       const parsedData = await this.saveLocally(problems);
+      console.log('after parsing');
 
       /** clear old storage */
       const clearOperation = await this.problemsService.clear();
       this.logger.verbose(`Cleared ${clearOperation.affected} from problem storage`);
 
+      console.log('before forEach');
       parsedData.forEach((problem) => {
+        console.log('after forEach');
         this.problemsService.create({
           name: problem.id,
           maxPoints: 100,
-          inputText: problem.inputText,
-          outputText: problem.outputText,
+          inputText1: problem.inputText1,
+          inputText2: problem.inputText2,
+          inputText3: problem.inputText3,
+          inputText4: problem.inputText4,
+          inputText5: problem.inputText5,
+          outputText1: problem.outputText1,
+          outputText2: problem.outputText2,
+          outputText3: problem.outputText3,
+          outputText4: problem.outputText4,
+          outputText5: problem.outputText5,
           instructionsText: problem.instructionsText,
           inputFileURL: problem.input,
           outputFileURL: problem.output,
@@ -135,9 +147,7 @@ export class SyncService {
           this.logger.error(`Error adding ${item.name} / ${item.teamName} / ${item.googleID}`);
         }
       });
-      console.log(data.length);
     } catch (e) {
-      console.log(e);
       this.logger.error('Error seeding participants');
     }
   }
@@ -172,29 +182,75 @@ export class SyncService {
    */
   private async saveLocally(problems: Array<ProblemMetadata>): Promise<Array<ProblemMetadata>> {
     const tasks: Array<ProblemMetadata> = [];
-    for (let i = 0; i < problems.length; i += 1) {
-      this.logger.verbose(`Processing id:${problems[i].id}`);
-      const inputRequest = this.http.get(problems[i].input, { responseType: 'text' }).toPromise();
-      const outputRequest = this.http.get(problems[i].output, { responseType: 'text' }).toPromise();
-      const instructionRequest = this.http.get(problems[i].instructions, { responseType: 'text' }).toPromise();
-      const sampleInputRequest = this.http.get(problems[i].sampleInput, { responseType: 'text' }).toPromise();
-      const sampleOutputRequest = this.http.get(problems[i].sampleOutput, { responseType: 'text' }).toPromise();
-      await Promise.all([inputRequest, outputRequest, instructionRequest, sampleInputRequest, sampleOutputRequest])
+
+    const keyArr = Object.keys(problems);
+
+    for (let i = 0; i < keyArr.length; i += 1) {
+      const Problem = problems[keyArr[i]];
+      const testCases = Problem['test-cases'];
+
+      this.logger.verbose(`Processing id:${Problem.id}`);
+      const inputRequest1 = this.http.get(testCases['test-case-1']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest2 = this.http.get(testCases['test-case-2']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest3 = this.http.get(testCases['test-case-3']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest4 = this.http.get(testCases['test-case-4']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest5 = this.http.get(testCases['test-case-5']['input.txt'], { responseType: 'text' }).toPromise();
+      const outputRequest1 = this.http
+        .get(testCases['test-case-1']['output.txt'], { responseType: 'text' })
+        .toPromise();
+      const outputRequest2 = this.http
+        .get(testCases['test-case-2']['output.txt'], { responseType: 'text' })
+        .toPromise();
+      const outputRequest3 = this.http
+        .get(testCases['test-case-3']['output.txt'], { responseType: 'text' })
+        .toPromise();
+      const outputRequest4 = this.http
+        .get(testCases['test-case-4']['output.txt'], { responseType: 'text' })
+        .toPromise();
+      const outputRequest5 = this.http
+        .get(testCases['test-case-5']['output.txt'], { responseType: 'text' })
+        .toPromise();
+      const instructionRequest = this.http.get(Problem['description.txt'], { responseType: 'text' }).toPromise();
+      const sampleInputRequest = this.http.get(Problem['sample-input.txt'], { responseType: 'text' }).toPromise();
+      const sampleOutputRequest = this.http.get(Problem['sample-output.txt'], { responseType: 'text' }).toPromise();
+      await Promise.all([
+        inputRequest1,
+        inputRequest2,
+        inputRequest3,
+        inputRequest4,
+        inputRequest5,
+        outputRequest1,
+        outputRequest2,
+        outputRequest3,
+        outputRequest4,
+        outputRequest5,
+        instructionRequest,
+        sampleInputRequest,
+        sampleOutputRequest,
+      ])
         .then((response) => {
           tasks.push({
-            id: problems[i].id,
-            input: problems[i].input,
-            output: problems[i].output,
-            instructions: problems[i].instructions,
-            windows: problems[i].windows,
-            object: problems[i].object,
-            mac: problems[i].mac,
-            inputText: response[0].data,
-            outputText: response[1].data,
-            instructionsText: response[2].data,
+            id: keyArr[i],
+            input: Problem['sample-input.txt'],
+            output: Problem['output-input.txt'],
+            instructions: Problem['description.txt'],
+            windows: Problem['windows.exe'],
+            object: Problem['linux.o'],
+            mac: Problem['mac.mac'],
+            inputText1: response[0].data,
+            inputText2: response[1].data,
+            inputText3: response[2].data,
+            inputText4: response[3].data,
+            inputText5: response[4].data,
+            outputText1: response[5].data,
+            outputText2: response[6].data,
+            outputText3: response[7].data,
+            outputText4: response[8].data,
+            outputText5: response[9].data,
+            instructionsText: response[10].data,
             multiplier: 1,
-            sampleInput: response[3].data,
-            sampleOutput: response[4].data,
+            sampleInput: response[11].data,
+            sampleOutput: response[12].data,
           });
         })
         .catch((error) => {

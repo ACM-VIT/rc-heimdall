@@ -118,7 +118,7 @@ export class JudgeService {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
-      expected_output: problem.outputText,
+      expected_output: problem.outputText1,
       stdin: problem.inputText,
     };
     this.logger.verbose(`sending to judge0 ${JSON.stringify({ ...postBody, source_code: 'code...' })}`);
@@ -184,7 +184,7 @@ export class JudgeService {
     /** assign points only to CodeStates.{ACCEPTED | WRONG} responses  */
     const refereeEvaluation = referee(
       Buffer.from(stdout, 'base64').toString(),
-      Buffer.from(submission.problem.outputText, 'base64').toString(),
+      Buffer.from(submission.problem.outputText1, 'base64').toString(),
       submission.problem.maxPoints,
       submission.problem.multiplier,
     );

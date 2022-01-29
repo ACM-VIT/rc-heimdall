@@ -25,10 +25,18 @@ interface ProblemMetadata {
   mac?: string;
 
   /** plain text input */
-  inputText?: string;
+  inputText1?: string;
+  inputText2?: string;
+  inputText3?: string;
+  inputText4?: string;
+  inputText5?: string;
 
   /** plain text output */
-  outputText?: string;
+  outputText1?: string;
+  outputText2?: string;
+  outputText3?: string;
+  outputText4?: string;
+  outputText5?: string;
 
   /** plain text instruction */
   instructionsText?: string;

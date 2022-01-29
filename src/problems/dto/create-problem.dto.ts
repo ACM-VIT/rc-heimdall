@@ -69,21 +69,29 @@ export class CreateProblemDto {
   /**
    * This is the content of input file in plain text format.
    */
-  @ApiProperty({ description: 'Actual text representation of input text' })
+  @ApiProperty({ description: 'Actual text representation of input text 1' })
   inputText1: string;
-  inputTex2: string;
+  @ApiProperty({ description: 'Actual text representation of input text 2' })
+  inputText2: string;
+  @ApiProperty({ description: 'Actual text representation of input text 3' })
   inputText3: string;
+  @ApiProperty({ description: 'Actual text representation of input text 4' })
   inputText4: string;
+  @ApiProperty({ description: 'Actual text representation of input text 5' })
   inputText5: string;
 
   /**
    * This is the content of output file in plain text format.
    */
-  @ApiProperty({ description: 'Actual text representation of code output' })
+  @ApiProperty({ description: 'Actual text representation of code output 1' })
   outputText1: string;
+  @ApiProperty({ description: 'Actual text representation of code output 2' })
   outputText2: string;
+  @ApiProperty({ description: 'Actual text representation of code output 3' })
   outputText3: string;
+  @ApiProperty({ description: 'Actual text representation of code output 4' })
   outputText4: string;
+  @ApiProperty({ description: 'Actual text representation of code output 5' })
   outputText5: string;
 
   /**
