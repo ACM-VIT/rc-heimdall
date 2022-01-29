@@ -93,7 +93,7 @@ export class Problems extends BaseEntity {
   @Column()
   inputText4: string;
   @Column()
-  inputText5: string;
+  inputText: string;
 
   /**
    * This is the content of output file in plain text format.
