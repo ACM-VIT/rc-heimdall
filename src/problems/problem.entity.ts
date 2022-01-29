@@ -85,13 +85,29 @@ export class Problems extends BaseEntity {
    * This is the content of input file in plain text format.
    */
   @Column()
-  inputText: string;
+  inputText1: string;
+  @Column()
+  inputText2: string;
+  @Column()
+  inputText3: string;
+  @Column()
+  inputText4: string;
+  @Column()
+  inputText5: string;
 
   /**
    * This is the content of output file in plain text format.
    */
   @Column()
-  outputText: string;
+  outputText1: string;
+  @Column()
+  outputText2: string;
+  @Column()
+  outputText3: string;
+  @Column()
+  outputText4: string;
+  @Column()
+  outputText5: string;
 
   /**
    * This is the content of instructions file in plain text format.
