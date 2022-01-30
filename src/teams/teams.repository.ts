@@ -14,9 +14,10 @@ import { Team } from './team.entity';
 export class TeamRepository extends Repository<Team> {
   /** to create a team  */
   async createWithJoins(createTeamDto: CreateTeamDto): Promise<Team> {
-    const { name } = createTeamDto;
+    const { name, id } = createTeamDto;
     const team = this.create();
     team.name = name;
+    team.id = id;
     await team.save();
     return team;
   }

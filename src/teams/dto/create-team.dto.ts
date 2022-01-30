@@ -19,4 +19,8 @@ export class CreateTeamDto {
   @MinLength(6)
   @ApiProperty({ description: 'Name of team', type: String, example: 'January Jaguars', required: true, minLength: 6 })
   name: string;
+
+  /** id of the team */
+  @ApiProperty({ description: 'ID of team', type: Number, example: 1, required: true })
+  id: number;
 }
