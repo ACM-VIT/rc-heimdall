@@ -34,4 +34,10 @@ export class CreateParticipantDto {
   /** teamId of the participant, references [[Team]] by [[Team.id]] */
   @ApiProperty()
   team_id: number;
+
+  /** team of the participant, references [[Team]] by [[Team.id]] */
+  @ApiProperty()
+  team: {
+    name: string;
+  };
 }

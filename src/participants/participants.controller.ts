@@ -58,14 +58,14 @@ export class ParticipantsController {
   }
 
   /**
-   * Responds to: _DELETE(`/:id`)_
+   * Responds to: _DELETE(`/`)_
    *
-   * To delete a participant
+   * To delete all participants
    *
    */
-  //   @UseGuards(JwtAuthGuard)
-  //   @Delete(':id')
-  //   remove(@Param('id') id: number) {
-  //     return this.participantsService.remove(+id);
-  //   }
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  deleteAll() {
+    return this.participantsService.clear();
+  }
 }

@@ -63,8 +63,8 @@ export class TeamsService {
    * To fetch details of [[Team]] by [[Team.id]]
    */
   async findOneById(id: number) {
-    const teamData = await this.teamRepository.findOne({id});
-    console.log("team data", teamData);
+    const teamData = await this.teamRepository.findOne({ id });
+    console.log('team data', teamData);
     return teamData;
   }
   /**
@@ -166,5 +166,12 @@ export class TeamsService {
     } else {
       return true;
     }
+  }
+
+  /**
+   * To remove all teams
+   */
+  removeAll() {
+    return this.teamRepository.removeAll();
   }
 }

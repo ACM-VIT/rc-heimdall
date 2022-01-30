@@ -145,10 +145,11 @@ export class SyncService {
             googleID: item.googleID,
             isAdmin: item.isAdmin,
             name: item.name,
+            team: item.team,
             team_id: item.team_id,
           });
         } catch (e) {
-          this.logger.error(`Error adding ${item.name} / ${item.teamName} / ${item.googleID}`);
+          this.logger.error(`Error adding ${item.name} / ${item.team.name} / ${item.googleID}`);
         }
       });
     } catch (e) {

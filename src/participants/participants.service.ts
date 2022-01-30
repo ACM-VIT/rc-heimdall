@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Logger } from 'typedoc/dist/lib/utils';
 import { MoreThanOrEqual } from 'typeorm';
 import { TeamsService } from '../teams/teams.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
@@ -32,14 +33,12 @@ export class ParticipantsService {
    */
   async create(createParticipantDto: CreateParticipantDto) {
     const participantTeam = await this.teamService.findOne(createParticipantDto.team_id);
-
-    // if (participantTeam === undefined) {
-    //   const newTeam = await this.teamService.create({
-    //     name: createParticipantDto.teamName,
-    //   });
-    //   return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, newTeam);
-    // }
-
+    if (participantTeam === undefined) {
+      const newTeam = await this.teamService.create({
+        name: createParticipantDto.team.name,
+      });
+      return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, newTeam);
+    }
     return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, participantTeam);
   }
 
@@ -61,7 +60,7 @@ export class ParticipantsService {
    * To return details of particular participant by email
    */
   async findOneByEmailAndID(googleID: string) {
-    return this.participantRepository.findOneByEmailAndGoogleID( googleID);
+    return this.participantRepository.findOneByEmailAndGoogleID(googleID);
   }
 
   /**

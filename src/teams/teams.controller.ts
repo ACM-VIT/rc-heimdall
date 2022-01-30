@@ -9,6 +9,7 @@ import {
   UsePipes,
   UseGuards,
   UnauthorizedException,
+  Delete,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -200,4 +201,14 @@ export class TeamsController {
   //   remove(@Param('id') id: string) {
   //     return this.teamsService.remove(+id);
   //   }
+
+  /**
+   * Responds to: _DELETE(`/`)_
+   *
+   * Delete all teams
+   */
+  @Delete()
+  removeAll() {
+    return this.teamsService.removeAll();
+  }
 }

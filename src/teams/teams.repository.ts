@@ -40,4 +40,12 @@ export class TeamRepository extends Repository<Team> {
 
     return query;
   }
+
+  /** to remove all teams */
+  async removeAll() {
+    const query = await this.createQueryBuilder('team')
+      .delete()
+      .execute();
+    return query;
+  }
 }
