@@ -10,4 +10,12 @@ import { TestCase } from './testCase.entity';
  * @category Problems
  */
 @EntityRepository(TestCase)
-export class TestCaseRepository extends Repository<TestCase> {}
+export class TestCaseRepository extends Repository<TestCase> {
+  async fetchDetailsByToken(token: string) {
+    const query = this.createQueryBuilder('testcase')
+      .andWhere('testcase.token = :token', { token })
+      .getOne();
+
+    return query;
+  }
+}

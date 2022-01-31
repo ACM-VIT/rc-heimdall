@@ -50,10 +50,10 @@ export class JudgeSubmissions extends BaseEntity {
   points: number;
 
   @ManyToOne(
-    () =>  TestCase,
+    () => TestCase,
     (testCase) => testCase.submission,
   )
-  testCase: TestCase;
+  testCase: TestCase[];
 
   /**
    * base64 representation of code submitted by participant. Kept in base64 to accommodate
@@ -63,9 +63,8 @@ export class JudgeSubmissions extends BaseEntity {
   code: string;
 }
 
-
 // 1 True +20
-// 2 False 
+// 2 False
 // 3 True +20
 // 4 False
 // 5 True +20

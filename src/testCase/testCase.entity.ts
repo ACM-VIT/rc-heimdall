@@ -1,7 +1,6 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, } from 'typeorm';
 
 import { CodeStates } from './enum/codeStates.enum';
-import { Problems } from '../problems/problem.entity';
 import { JudgeSubmissions } from '../judge/judge.entity';
 // testcase.entity
 // Token (one) (to be indexed) PK
@@ -21,6 +20,12 @@ export class TestCase extends BaseEntity {
     (submission) => submission.testCase,
   )
   submission: JudgeSubmissions;
+
+  /** testcase number can be from 1 to 5 */
+  @Column({
+    type: 'int',
+  })
+  testCaseNumber: number;
 
   @Column()
   dateCreated: Date;

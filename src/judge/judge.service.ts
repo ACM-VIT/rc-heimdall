@@ -1,6 +1,7 @@
 import * as config from 'config';
 import { ProblemsService } from '../problems/problems.service';
 import { TeamsService } from '../teams/teams.service';
+import { TestCase } from 'src/testCase/testCase.entity';
 
 import {
   BadRequestException,
@@ -14,18 +15,15 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { CallbackJudgeDto } from './dto/callback-judge.dto';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
-import { CODE_STATES, CodeStates } from './enum/codeStates.enum';
 import { LanguageStruct } from './interface/enums.interface';
 import { Judge0Callback, JudgeOSubmissionRequest } from './interface/judge0.interfaces';
 import { JudgeRepository } from './judge.repository';
 import { mapLanguageStringToObject } from './minions/language';
 import { referee } from './minions/referee';
-import { NotEquals } from 'class-validator';
 import { MoreThanOrEqual } from 'typeorm';
-
+// import { TestCaseService } from 'src/testCase/testCase.service';
 /**
  * **Judge Service**
  *
@@ -48,6 +46,10 @@ export class JudgeService {
 
     /** initiate logger with context:`judge` */
     private readonly logger = new Logger('judge'),
+
+    /** injecting [[TestCasesService]] to perform operations on TestCases */
+    // @Inject(TestCaseService)
+    // private readonly testCaseService: TestCaseService,
 
     /** injecting [[JudgeRepository]] as a persistence layer */
     @InjectRepository(JudgeRepository)
@@ -159,37 +161,23 @@ export class JudgeService {
     };
     const { data } = await this.http.post(this.endpoint, body).toPromise();
     console.log(data);
-    const [judge0ID1, judge0ID2, judge0ID3, judge0ID4, judge0ID5] = data;
-    this.logger.verbose(`made submission, judge0 token ${judge0ID1}`);
+
+    this.logger.verbose(`made submission, judge0 token ${data}`);
 
     /** persist the submission details */
-    await this.judgeRepository.save({
+    const judgeSubmission = await this.judgeRepository.save({
       problem,
       team,
       language: codeLanguage.id,
-      state1: CodeStates.IN_QUEUE,
-      state2: CodeStates.IN_QUEUE,
-      state3: CodeStates.IN_QUEUE,
-      state4: CodeStates.IN_QUEUE,
-      state5: CodeStates.IN_QUEUE,
       points: 0,
-      judge0ID1,
-      judge0ID2,
-      judge0ID3,
-      judge0ID4,
-      judge0ID5,
       code,
     });
     this.logger.verbose(` submission saved into database`);
 
+    // const all_testcases = await this.testCaseService.makeTestCases(data, judgeSubmission);
+
     /** return submission details back to client with Judge0 token to ping for results */
-    return {
-      submissionToken1: judge0ID1,
-      submissionToken2: judge0ID2,
-      submissionToken3: judge0ID3,
-      submissionToken4: judge0ID4,
-      submissionToken5: judge0ID5,
-    };
+    return;
   }
 
   /**

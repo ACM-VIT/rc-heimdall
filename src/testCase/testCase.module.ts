@@ -5,7 +5,6 @@ import { TestCaseRepository } from './testCase.repository';
 import { TestCaseService } from './testCase.service';
 import { ProblemsModule } from '../problems/problems.module';
 import { TeamsModule } from '../teams/teams.module';
-import { JudgeModule } from 'src/judge/judge.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 /**
@@ -16,7 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
  * @category Judge
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([TestCaseRepository]), HttpModule, ProblemsModule, TeamsModule, JudgeModule],
+  imports: [TypeOrmModule.forFeature([TestCaseRepository]), ProblemsModule, TeamsModule],
   controllers: [TestCaseController],
   providers: [TestCaseService],
   exports: [TestCaseService],
