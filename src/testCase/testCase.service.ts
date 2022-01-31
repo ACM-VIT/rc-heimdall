@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Judge0Callback } from './interface/judge0.interfaces';
 import { TestCaseRepository } from './testCase.repository';
@@ -10,7 +10,7 @@ import { CodeStates } from 'src/testCase/enum/codeStates.enum';
 export class TestCaseService {
   /** injecting imported modules and services into problem service */
   constructor(
-    private readonly logger = new Logger('judge'),
+    // private readonly logger = new Logger('judge'),
 
     // private readonly teamsService: TeamsService,
     /** injecting [[ProblemRepository]] as a persistence layer */
@@ -20,13 +20,13 @@ export class TestCaseService {
 
   async handleCallback(callbackJudgeDto: Judge0Callback) {
     const { status, stdout, token }: Judge0Callback = callbackJudgeDto;
-    this.logger.setContext('judge.callback');
+    // this.logger.setContext('judge.callback');
 
     /** update state of submission in database */
     const testCaseSubmission = await this.testCaseRepository.fetchDetailsByToken(token);
 
     if (testCaseSubmission === undefined) {
-      this.logger.verbose(`Invalid token received ${token}`);
+      // this.logger.verbose(`Invalid token received ${token}`);
       throw new BadRequestException(`submission with token ${token} not found`);
     }
 

@@ -16,7 +16,7 @@ import { TestCaseModule } from 'src/testCase/testCase.module';
  * @category Judge
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([JudgeRepository]), HttpModule, ProblemsModule, TeamsModule],
+  imports: [TypeOrmModule.forFeature([JudgeRepository]), HttpModule, ProblemsModule, TeamsModule, TestCaseModule],
   controllers: [JudgeController],
   providers: [JudgeService],
   exports: [JudgeService],
