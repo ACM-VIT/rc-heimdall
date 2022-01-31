@@ -36,6 +36,30 @@ export class Participant extends BaseEntity {
   })
   isAdmin: boolean;
 
+  /** college of the participant */
+  @Column({
+    default: 'VIT',
+  })
+  college: string;
+
+  /** registration number of the participant */
+  @Column({
+    default: '21BCE0999',
+  })
+  registrationNumber: string;
+
+  /** phone number of the participant */
+  @Column({
+    default: 9876543210,
+  })
+  phoneNumber: string;
+
+  /** To check if participant is a fresher from VIT */
+  @Column({
+    default: false,
+  })
+  fresher: boolean;
+
   /** entity representing team which the participant is a member of */
   @ManyToOne(
     () => Team,

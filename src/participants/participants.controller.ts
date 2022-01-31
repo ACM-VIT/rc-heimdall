@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, UsePipes, ValidationPipe, Delete, U
 import { Participant } from './participant.entity';
 import { ParticipantsService } from './participants.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
+import { UpdateParticipantDto } from './dto/updateParticipantDto.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
@@ -32,6 +33,18 @@ export class ParticipantsController {
   @UsePipes(ValidationPipe)
   create(@Body() createParticipantDto: CreateParticipantDto): Promise<Participant> {
     return this.participantsService.create(createParticipantDto);
+  }
+
+  /**
+   * Responds to: _POST(`/`)_
+   *
+   * To update a the details of participant
+   */
+  @UseGuards(JwtAuthGuard)
+  @Post('update')
+  @UsePipes(ValidationPipe)
+  updateParticipant(@Body() updateParticipantDto: UpdateParticipantDto): Promise<Participant> {
+    return this.participantsService.update(updateParticipantDto);
   }
 
   /**

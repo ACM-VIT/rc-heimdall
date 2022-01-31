@@ -1,9 +1,10 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logger } from 'typedoc/dist/lib/utils';
 import { MoreThanOrEqual } from 'typeorm';
 import { TeamsService } from '../teams/teams.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
+import { UpdateParticipantDto } from './dto/updateParticipantDto.dto';
 import { ParticipantRepository } from './participants.repository';
 
 /**
@@ -40,6 +41,31 @@ export class ParticipantsService {
       return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, newTeam);
     }
     return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, participantTeam);
+  }
+
+  /**
+   * Update  participant and adds him/her details in the existing details using [[UpdateParticipantDto]]
+   * Updating the participant details using participant ID
+   */
+  async update(updateParticipantDto: UpdateParticipantDto) {
+    // find the participant and update the details
+    try {
+      const participant = await this.participantRepository.findOne(updateParticipantDto.id);
+      console.log(participant);
+      if (participant) {
+        participant.phoneNumber = updateParticipantDto.phoneNumber;
+        participant.registrationNumber = updateParticipantDto.registrationNumber;
+        participant.college = updateParticipantDto.college;
+        participant.fresher = updateParticipantDto.fresher;
+        return this.participantRepository.save(participant);
+      }
+      return participant;
+    } catch (error) {
+      throw new NotFoundException({
+        error: 'ps-nf-001',
+        message: 'Parctipant not found',
+      });
+    }
   }
 
   /**
