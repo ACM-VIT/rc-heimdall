@@ -48,12 +48,12 @@ export class ProblemsService {
    * [[findAndFilter]] method of [[ProblemRepository]] to hide sensitive details of the problem
    */
   async findOne(id: string) {
-    try {
-      const problem = await this.problemRepository.findAndFilter(id);
-      return problem;
-    } catch (e) {
-      throw new NotFoundException(`Invalid QuestionID :${id}`);
-    }
+    // try {
+    const problem = await this.problemRepository.findAndFilter(id);
+    return problem;
+    // } catch (e) {
+    //   throw new NotFoundException(`Invalid QuestionID :${id}`);
+    // }
   }
 
   /**
@@ -75,12 +75,12 @@ export class ProblemsService {
    * download links.
    */
   async findOneForJudge(id: string) {
-    try {
-      const problem = await this.problemRepository.findOneForJudge(id);
-      return problem;
-    } catch (e) {
-      throw new BadRequestException(`Invalid QuestionID :${id}`);
-    }
+    // try {
+    const problem = await this.problemRepository.findOneForJudge(id);
+    return problem;
+    // } catch (e) {
+    throw new BadRequestException(`Invalid QuestionID :${id}`);
+    // }
   }
 
   /**

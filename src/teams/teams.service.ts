@@ -61,6 +61,36 @@ export class TeamsService {
   }
 
   /**
+   * To get list of [[Problems]] assigned to particular [[Team]]
+   */
+  async getAssignedProblems(id: number) {
+    if (config.get('application.assignProblemToTeams') === true) {
+      try {
+        const problems = await this.teamRepository.getAssignedProblems(id);
+        // console.log('problems: ', problems);
+        const filteredResult = problems.map((problem) => {
+          const assignedProblem = problem.assignProblems[0];
+          console.log('assignedProblem: ', assignedProblem);
+          return assignedProblem;
+          // return {
+          //   id: problem.id,
+          //   maxPoints: problem.maxPoints,
+          //   instructionsText: problem.instructionsText,
+          //   macFileURL: problem.macFileURL,
+          //   windowsFileURL: problem.windowsFileURL,
+          //   objectFileURL: problem.objectFileURL,
+          // };
+        });
+        return filteredResult;
+      } catch (e) {
+        throw new NotFoundException(`No Problems assigned to this team`);
+      }
+    } else {
+      return [];
+    }
+  }
+
+  /**
    * To fetch details of [[Team]] by [[Team.id]]
    */
   async findOneById(id: number) {
@@ -96,7 +126,7 @@ export class TeamsService {
   /**
    * To assign a [[Problem]] to [[Team]]
    */
-  async assignProblem(assignProblemDto: AssignProblemDTO): Promise<{ problems: Array<Problems>; points: number }> {
+  async assignProblem(assignProblemDto: AssignProblemDTO) {
     const { problemID, teamID, points, multiplier } = assignProblemDto;
 
     /** fetch problem by problem ID */
@@ -124,17 +154,15 @@ export class TeamsService {
   /**
    * To assign a [[Problem]] to [[Team]] for round 2
    */
-  async assignProblemRoundTwo(assignProblemR2DTO: AssignProblemR2DTO): Promise<{ problems: Array<Problems> }> {
-    const { problemID, teamID } = assignProblemR2DTO;
-
+  async assignProblemRoundTwo(problemID, teamID): Promise<{ problems: Array<Problems> }> {
+    console.log('Inside assignProblemRoundTwo');
     /** fetch problem by problem ID */
     const problem = await this.problemService.findOne(problemID);
     if (problem === undefined) {
       throw new NotFoundException(`Problem with ID:${problemID} does not exist`);
     }
-    // problem.multiplier = multiplier;
-    await problem.save();
 
+    console.log('problem', problem);
     /** fetch team by teamID */
     const team = await this.teamRepository.findOne(teamID);
     if (team === undefined) {
@@ -143,39 +171,8 @@ export class TeamsService {
 
     /** attach problem into team, operate on points */
     team.assignProblems.push(problem);
-    // team.pointsR2 += points;
-    await team.save();
-
-    return { problems: team.assignProblems };
-  }
-
-  /**
-   * To get list of [[Problems]] assigned to particular [[Team]]
-   */
-  async getAssignedProblems(id: number) {
-    if (config.get('application.assignProblemToTeams') === true) {
-      /**
-       * @todo : shift this logic to repository
-       */
-      try {
-        const { problems } = await this.teamRepository.getAssignedProblems(id);
-        const filteredResult = problems.map((problem) => {
-          return {
-            id: problem.id,
-            maxPoints: problem.maxPoints,
-            instructionsText: problem.instructionsText,
-            macFileURL: problem.macFileURL,
-            windowsFileURL: problem.windowsFileURL,
-            objectFileURL: problem.objectFileURL,
-          };
-        });
-        return filteredResult;
-      } catch (e) {
-        throw new NotFoundException(`Not found `);
-      }
-    } else {
-      return [];
-    }
+    console.log('team', team.assignProblems);
+    return await team.save();
   }
 
   /**

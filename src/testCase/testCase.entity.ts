@@ -2,12 +2,6 @@ import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { CodeStates } from './enum/codeStates.enum';
 import { JudgeSubmissions } from '../judge/judge.entity';
-// testcase.entity
-// Token (one) (to be indexed) PK
-// submission id FK
-// Date created
-// Date updated
-// status
 
 @Entity()
 export class TestCase extends BaseEntity {

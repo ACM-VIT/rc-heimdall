@@ -42,22 +42,7 @@ export class ProblemRepository extends Repository<Problems> {
    */
   async findOneForJudge(id: string) {
     const query = await this.createQueryBuilder()
-      .select([
-        'problems.id',
-        'problems.inputText1',
-        'problems.outputText1',
-        'problems.inputText2',
-        'problems.outputText2',
-        'problems.inputText3',
-        'problems.outputText3',
-        'problems.inputText4',
-        'problems.outputText4',
-        'problems.inputText5',
-        'problems.outputText5',
-        'problems.instructionsText',
-        'problems.name',
-        'problems.maxPoints',
-      ])
+      .select(['problems.id', 'problems.instructionsText', 'problems.name', 'problems.maxPoints'])
       .from(Problems, 'problems')
       .andWhere('problems.id = :id', { id })
       .getOne();

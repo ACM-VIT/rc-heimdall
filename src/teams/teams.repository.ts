@@ -33,11 +33,11 @@ export class TeamRepository extends Repository<Team> {
     return query;
   }
 
-  async getAssignedProblems(id: number): Promise<Team> {
+  async getAssignedProblems(id: number) {
     const query = await this.createQueryBuilder('team')
-      .andWhere('team.ID = :id', { id })
-      .leftJoinAndSelect('team.problems', 'problem')
-      .getOne();
+      .andWhere('team.id = :id', { id })
+      .leftJoinAndSelect('team.assignProblems', 'problem')
+      .getMany();
 
     return query;
   }

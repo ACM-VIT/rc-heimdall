@@ -39,9 +39,6 @@ export class Team extends BaseEntity {
   @OneToMany(
     () => Participant,
     (participant) => participant.team,
-    {
-      eager: true,
-    },
   )
   participants: Participant[];
 
@@ -49,7 +46,7 @@ export class Team extends BaseEntity {
   @OneToMany(
     () => JudgeSubmissions,
     (judgeSubmissions) => judgeSubmissions.team,
-    { eager: true },
+    // { eager: true },
   )
   judgeSubmissions: JudgeSubmissions[];
 
@@ -57,7 +54,7 @@ export class Team extends BaseEntity {
   @OneToMany(
     () => Problems,
     (problem) => problem.team,
-    { eager: true },
+    // { eager: true },
   )
   problems: Problems[];
 

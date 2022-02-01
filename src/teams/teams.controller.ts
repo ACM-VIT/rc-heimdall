@@ -21,6 +21,7 @@ import { DILUTE } from '../judge/enum/codeStates.enum';
 import { mapLanguageIdToObject } from '../judge/minions/language';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { JwtToken } from 'src/auth/interface/auth.token.interface';
+import { request } from 'http';
 
 /**
  * **Teams Controller**
@@ -99,14 +100,26 @@ export class TeamsController {
   }
 
   /**
+   * Responds to: _GET(`/getassignedproblems`)_
+   *
+   * Get list of problems assigned to team
+   */
+  @Get('/getassignedproblems')
+  getAssignedProblems(@Request() request) {
+    const user: JwtToken = request.user;
+    return this.teamsService.getAssignedProblems(user.participant.team_id);
+  }
+
+  /**
    * Responds to: _POST(`/assignproblems`)_
    *
    * Assign a problem to team for round 2
    */
   @Post('/assignproblems')
   @UsePipes(ValidationPipe)
-  assignProblemRoundTwo(@Body() assignProblemR2DTO: AssignProblemR2DTO) {
-    return this.teamsService.assignProblemRoundTwo(assignProblemR2DTO);
+  assignProblemRoundTwo(@Request() request, @Body() assignProblemR2DTO: AssignProblemR2DTO) {
+    const user: JwtToken = request.user;
+    return this.teamsService.assignProblemRoundTwo(assignProblemR2DTO.problemID, user.participant.team_id);
   }
   /**
    * Responds to: _GET(`/:id`)_
