@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CodeStates } from './enum/codeStates.enum';
 import { Problems } from '../problems/problem.entity';
@@ -49,7 +49,7 @@ export class JudgeSubmissions extends BaseEntity {
   })
   points: number;
 
-  @ManyToOne(
+  @OneToMany(
     () => TestCase,
     (testCase) => testCase.submission,
   )

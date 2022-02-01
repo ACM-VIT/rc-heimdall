@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { CodeStates } from './enum/codeStates.enum';
 import { JudgeSubmissions } from '../judge/judge.entity';

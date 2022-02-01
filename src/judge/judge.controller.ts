@@ -11,6 +11,7 @@ import {
   Logger,
   UseGuards,
   UnauthorizedException,
+  Delete,
 } from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
@@ -107,12 +108,11 @@ export class JudgeController {
 
   /**
    * Responds to: _DELETE(`/:id`)_
-   *
    * To delete a submission by id
    */
-  //   @Delete(':id')
-  //   @UseGuards(JwtAuthGuard)
-  //   remove(@Request() req, @Param('id') id: string) {
-  //     return this.judgeService.remove(+id);
-  //   }
+  @Delete()
+  @UseGuards(JwtAuthGuard)
+  remove() {
+    return this.judgeService.clear();
+  }
 }

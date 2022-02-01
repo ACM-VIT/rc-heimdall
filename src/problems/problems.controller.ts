@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request, Delete} from '@nestjs/common';
 import { ProblemsService } from './problems.service';
 import { CreateProblemDto } from './dto/create-problem.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -74,8 +74,8 @@ export class ProblemsController {
    *
    * To delete a problem by ID
    */
-  //   @Delete(':id')
-  //   remove(@Param('id') id: string) {
-  //     return this.problemsService.remove(id);
-  //   }
+  @Delete()
+  remove() {
+    return this.problemsService.clear();
+  }
 }

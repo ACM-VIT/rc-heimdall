@@ -100,4 +100,11 @@ export class TestCaseService {
   async getAll() {
     return await this.testCaseRepository.find();
   }
+
+  /**
+   * To delete all testcases
+   */
+  async clear() {
+    return await this.testCaseRepository.clear();
+  }
 }

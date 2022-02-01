@@ -1,4 +1,4 @@
-import { Controller, Body, Put, Logger, Get } from '@nestjs/common';
+import { Controller, Body, Put, Logger, Get, Delete, UseGuards } from '@nestjs/common';
 import { TestCaseService } from './testCase.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -21,7 +21,14 @@ export class TestCaseController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   getAll() {
     return this.testCaseService.getAll();
+  }
+
+  @Delete()
+  @UseGuards(JwtAuthGuard)
+  deleteAll() {
+    return this.testCaseService.clear();
   }
 }

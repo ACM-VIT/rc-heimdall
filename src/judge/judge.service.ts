@@ -66,7 +66,7 @@ export class JudgeService {
   ) {
     this.logger.verbose('service initialized');
     // this.callbackURL = config.get('judge.callback');
-    this.callbackURL = 'http://localhost:5000/testcase/QAEJCC9JjMfdAQZ4dTTNfVNF9jUHA3UW/';
+    this.callbackURL = 'http://localhost:5000/testcase/QAEJCC9JjMfdAQZ4dTTNfVNF9jUHA3UW';
     this.endpoint = `${config.get('judge.endpoint')}/submissions/batch?base64_encoded=true`;
   }
 
