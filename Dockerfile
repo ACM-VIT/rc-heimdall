@@ -24,10 +24,10 @@ WORKDIR /usr/src/app
 COPY package.json .
 
 # Install all Packages
-RUN npm install
+RUN npm install --save --legacy-peer-deps
 
 # Copy all other source code to work directory
-ADD . /usr/src/app
+COPY . .
 
 # Build the project
 RUN npm run build
@@ -35,4 +35,4 @@ RUN npm run build
 # run the server
 CMD ["npm", "start"] 
 
-EXPOSE 80
+EXPOSE 5000

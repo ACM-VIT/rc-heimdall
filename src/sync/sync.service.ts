@@ -146,6 +146,7 @@ export class SyncService {
         }
       });
     } catch (e) {
+      console.log(e);
       this.logger.error('Error seeding participants');
     }
   }

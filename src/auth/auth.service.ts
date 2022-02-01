@@ -34,9 +34,12 @@ export class AuthService {
   async tokenExchanger(tokenExchangeDTO: TokenExchangeDTO): Promise<string> {
     try {
       const { token } = tokenExchangeDTO;
+      console.log('after token: ', token);
       const isValidToken: AuthToken = await this.jwtService.verifyAsync(token, oldJWTConstants);
+      console.log('after isValidToken: ', isValidToken);
       const { googleID } = isValidToken;
       const userDetails = await this.participantService.findOneByEmailAndID(googleID);
+      console.log('after userDetails: ', userDetails);
       if (userDetails === undefined) {
         throw new NotFoundException({
           error: 'as-nf-002',
@@ -54,10 +57,10 @@ export class AuthService {
           team_id: userDetails.team_id,
         },
       };
-
       const newToken = await this.jwtService.signAsync(payload, newJWTConstants);
       return newToken;
     } catch (e) {
+      console.log(e);
       throw new UnauthorizedException({
         error: 'as-ua-003',
         message: 'Not authorized, invalid token',
