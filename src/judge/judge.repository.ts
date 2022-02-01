@@ -12,9 +12,46 @@ import { JudgeSubmissions } from './judge.entity';
 @EntityRepository(JudgeSubmissions)
 export class JudgeRepository extends Repository<JudgeSubmissions> {
   /** to fetch submission details by Judge0 Token */
-  async fetchDetailsByJudge0Token(token: string) {
+  async fetchDetailsByJudge01Token(token: string) {
     const query = this.createQueryBuilder('submission')
-      .andWhere('submission.judge0ID = :token', { token })
+      .andWhere('submission.judge0ID1 = :token', { token })
+      .leftJoinAndSelect('submission.problem', 'problems')
+      .leftJoinAndSelect('submission.team', 'team')
+      .getOne();
+
+    return query;
+  }
+
+  async fetchDetailsByJudge02Token(token: string) {
+    const query = this.createQueryBuilder('submission')
+      .andWhere('submission.judge0ID2 = :token', { token })
+      .leftJoinAndSelect('submission.problem', 'problems')
+      .leftJoinAndSelect('submission.team', 'team')
+      .getOne();
+
+    return query;
+  }
+  async fetchDetailsByJudge03Token(token: string) {
+    const query = this.createQueryBuilder('submission')
+      .andWhere('submission.judge0ID3 = :token', { token })
+      .leftJoinAndSelect('submission.problem', 'problems')
+      .leftJoinAndSelect('submission.team', 'team')
+      .getOne();
+
+    return query;
+  }
+  async fetchDetailsByJudge04Token(token: string) {
+    const query = this.createQueryBuilder('submission')
+      .andWhere('submission.judge0ID4 = :token', { token })
+      .leftJoinAndSelect('submission.problem', 'problems')
+      .leftJoinAndSelect('submission.team', 'team')
+      .getOne();
+
+    return query;
+  }
+  async fetchDetailsByJudge05Token(token: string) {
+    const query = this.createQueryBuilder('submission')
+      .andWhere('submission.judge0ID5 = :token', { token })
       .leftJoinAndSelect('submission.problem', 'problems')
       .leftJoinAndSelect('submission.team', 'team')
       .getOne();

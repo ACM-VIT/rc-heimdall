@@ -17,6 +17,7 @@ import { TeamsModule } from './teams/teams.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
+import { TestCaseModule } from './testCase/testCase.module';
 
 /**
  * Main Application Module
@@ -28,6 +29,7 @@ import { AuthModule } from './auth/auth.module';
     RunnerModule,
     TeamsModule,
     ParticipantsModule,
+    TestCaseModule,
     ProblemsModule,
     JudgeModule,
     SyncModule,

@@ -1,6 +1,7 @@
 import * as config from 'config';
 import { ProblemsService } from '../problems/problems.service';
 import { TeamsService } from '../teams/teams.service';
+import { TestCase } from 'src/testCase/testCase.entity';
 
 import {
   BadRequestException,
@@ -14,18 +15,16 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { CallbackJudgeDto } from './dto/callback-judge.dto';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
-import { CODE_STATES, CodeStates } from './enum/codeStates.enum';
 import { LanguageStruct } from './interface/enums.interface';
 import { Judge0Callback, JudgeOSubmissionRequest } from './interface/judge0.interfaces';
 import { JudgeRepository } from './judge.repository';
 import { mapLanguageStringToObject } from './minions/language';
 import { referee } from './minions/referee';
-import { NotEquals } from 'class-validator';
 import { MoreThanOrEqual } from 'typeorm';
-
+import { TestCaseService } from 'src/testCase/testCase.service';
+// import { TestCaseService } from 'src/testCase/testCase.service';
 /**
  * **Judge Service**
  *
@@ -49,6 +48,10 @@ export class JudgeService {
     /** initiate logger with context:`judge` */
     private readonly logger = new Logger('judge'),
 
+    /** injecting [[TestCasesService]] to perform operations on TestCases */
+    @Inject(TestCaseService)
+    private readonly testCaseService: TestCaseService,
+
     /** injecting [[JudgeRepository]] as a persistence layer */
     @InjectRepository(JudgeRepository)
     private readonly judgeRepository: JudgeRepository,
@@ -62,7 +65,8 @@ export class JudgeService {
     private readonly teamService: TeamsService,
   ) {
     this.logger.verbose('service initialized');
-    this.callbackURL = config.get('judge.callback');
+    // this.callbackURL = config.get('judge.callback');
+    this.callbackURL = 'http://localhost:5000/testcase/QAEJCC9JjMfdAQZ4dTTNfVNF9jUHA3UW';
     this.endpoint = `${config.get('judge.endpoint')}/submissions/batch?base64_encoded=true`;
   }
 
@@ -95,14 +99,14 @@ export class JudgeService {
 
     /** fetch question details about question for which the submission is made */
     const problem = await this.problemService.findOneForJudge(problemID);
-    console.log("problem ", problem);
+    console.log('problem ', problem);
     if (problem === undefined) {
       this.logger.verbose(`sent invalid problem id ${problemID}`);
       throw new BadRequestException(`No problem with id:${problemID}`);
     }
 
     /** fetch details of the team who made the submission */
-    console.log("teamid: ",teamID);
+    console.log('teamid: ', teamID);
     const team = await this.teamService.findOneById(teamID);
     if (team === undefined) {
       this.logger.verbose(`is an invalid team ID`);
@@ -159,31 +163,23 @@ export class JudgeService {
     };
     const { data } = await this.http.post(this.endpoint, body).toPromise();
     console.log(data);
-    const [judge0ID1, judge0ID2, judge0ID3, judge0ID4, judge0ID5] = data;
-    this.logger.verbose(`made submission, judge0 token ${judge0ID1}`);
+
+    this.logger.verbose(`made submission, judge0 token ${data}`);
 
     /** persist the submission details */
-    await this.judgeRepository.save({
+    const judgeSubmission = await this.judgeRepository.save({
       problem,
       team,
       language: codeLanguage.id,
-      state1: CodeStates.IN_QUEUE,
-      state2: CodeStates.IN_QUEUE,
-      state3: CodeStates.IN_QUEUE,
-      state4: CodeStates.IN_QUEUE,
-      state5: CodeStates.IN_QUEUE,
       points: 0,
-      judge0ID1,
-      judge0ID2,
-      judge0ID3,
-      judge0ID4,
-      judge0ID5,
       code,
     });
     this.logger.verbose(` submission saved into database`);
 
+    const all_testcases = await this.testCaseService.makeTestCases(data, judgeSubmission);
+
     /** return submission details back to client with Judge0 token to ping for results */
-    return { submissionToken: judge0ID1 };
+    return;
   }
 
   /**
@@ -204,24 +200,40 @@ export class JudgeService {
     this.logger.setContext('judge.callback');
 
     /** update state of submission in database */
-    const submission = await this.judgeRepository.fetchDetailsByJudge0Token(token);
-    if (submission === undefined) {
+    const submission1 = await this.judgeRepository.fetchDetailsByJudge01Token(token);
+    const submission2 = await this.judgeRepository.fetchDetailsByJudge02Token(token);
+    const submission3 = await this.judgeRepository.fetchDetailsByJudge03Token(token);
+    const submission4 = await this.judgeRepository.fetchDetailsByJudge04Token(token);
+    const submission5 = await this.judgeRepository.fetchDetailsByJudge05Token(token);
+
+    if (
+      submission1 === undefined &&
+      submission2 === undefined &&
+      submission3 === undefined &&
+      submission4 === undefined &&
+      submission5 === undefined
+    ) {
       this.logger.verbose(`Invalid token received ${token}`);
       throw new BadRequestException(`submission with token ${token} not found`);
     }
 
+    const submission = [submission1, submission2, submission3, submission4, submission5].find(
+      (sub) => sub !== undefined,
+    );
+
     /** update code state in database */
-    submission.state1 = status.id;
-    await submission.save();
-
-    /** map submission status into enum */
-    // const codeStatus = CODE_STATES[status.id];
-
-    // @depreciated, remove
-    // if (codeStatus !== CodeStates.WRONG && codeStatus !== CodeStates.ACCEPTED) {
-    //   this.logger.verbose(`received response ${status.id} not expected`);
-    //   return { error: false };
+    // if (submission1 !== undefined) {
+    //   submission.state1 = status.id;
+    // }else if(submission2 !== undefined){
+    //   submission.state2 = status.id;
+    // }else if(submission3 !== undefined){
+    //   submission.state3 = status.id;
+    // }else if(submission4 !== undefined){
+    //   submission.state4 = status.id;
+    // }else if(submission5 !== undefined){
+    //   submission.state5 = status.id;
     // }
+    await submission.save();
 
     /** assign points only to CodeStates.{ACCEPTED | WRONG} responses  */
     const refereeEvaluation = referee(
@@ -230,7 +242,7 @@ export class JudgeService {
       submission.problem.maxPoints,
       submission.problem.multiplier,
     );
-    this.logger.verbose(`${submission.judge0ID1} got ${JSON.stringify(refereeEvaluation)}`);
+    this.logger.verbose(`${submission} got ${JSON.stringify(refereeEvaluation)}`);
 
     /** save the current submission into database */
     submission.points = refereeEvaluation.points;

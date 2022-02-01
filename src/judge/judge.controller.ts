@@ -11,6 +11,7 @@ import {
   Logger,
   UseGuards,
   UnauthorizedException,
+  Delete,
 } from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
@@ -50,7 +51,8 @@ export class JudgeController {
   @UsePipes(ValidationPipe)
   create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
     const user: JwtToken = req.user;
-    console.log(user);
+    console.log('user: ', user);
+    console.log('judge: ', createJudgeDto);
     if (user.participant.team_id != createJudgeDto.teamID) {
       return new UnauthorizedException('who art thou');
     }
@@ -64,11 +66,11 @@ export class JudgeController {
    *
    * Returns list of all submissions
    */
-  //   @Get()
-  //   @UseGuards(JwtAuthGuard)
-  //   findAll() {
-  //     return this.judgeService.findAll();
-  //   }
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  findAll() {
+    return this.judgeService.findAll();
+  }
 
   /**
    * Responds to: _GET(`/:id`)_
@@ -106,12 +108,11 @@ export class JudgeController {
 
   /**
    * Responds to: _DELETE(`/:id`)_
-   *
    * To delete a submission by id
    */
-  //   @Delete(':id')
-  //   @UseGuards(JwtAuthGuard)
-  //   remove(@Request() req, @Param('id') id: string) {
-  //     return this.judgeService.remove(+id);
-  //   }
+  @Delete()
+  @UseGuards(JwtAuthGuard)
+  remove() {
+    return this.judgeService.clear();
+  }
 }

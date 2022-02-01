@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 import { JudgeSubmissions } from '../judge/judge.entity';
 import { Participant } from '../participants/participant.entity';
@@ -18,7 +18,7 @@ import { Problems } from '../problems/problem.entity';
 @Entity()
 export class Team extends BaseEntity {
   /** primary key, auto-generated */
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   /** each team should have a unique name */

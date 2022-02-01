@@ -131,9 +131,9 @@ export class TeamsController {
       return {
         id: submission.id,
         language: mapLanguageIdToObject(submission.language).extension,
-        state: DILUTE[submission.state1],
+        // state: DILUTE[submission.state1],
         points: submission.points,
-        judge0ID: submission.judge0ID1,
+        // judge0ID: submission.judge0ID1,
         code: submission.code,
         problem: {
           id: submission.problem.id,

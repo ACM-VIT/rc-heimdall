@@ -1,8 +1,9 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CodeStates } from './enum/codeStates.enum';
 import { Problems } from '../problems/problem.entity';
 import { Team } from '../teams/team.entity';
+import { TestCase } from 'src/testCase/testCase.entity';
 
 /**
  * **Judge Entity**
@@ -41,38 +42,6 @@ export class JudgeSubmissions extends BaseEntity {
   })
   language: number;
 
-  /** the current state of submission, set to [[CodeStates]]::`IN_QUEUE` by default */
-  @Column({
-    type: 'enum',
-    enum: CodeStates,
-    default: CodeStates.IN_QUEUE,
-  })
-  state1: CodeStates;
-  @Column({
-    type: 'enum',
-    enum: CodeStates,
-    default: CodeStates.IN_QUEUE,
-  })
-  state2: CodeStates;
-  @Column({
-    type: 'enum',
-    enum: CodeStates,
-    default: CodeStates.IN_QUEUE,
-  })
-  state3: CodeStates;
-  @Column({
-    type: 'enum',
-    enum: CodeStates,
-    default: CodeStates.IN_QUEUE,
-  })
-  state4: CodeStates;
-  @Column({
-    type: 'enum',
-    enum: CodeStates,
-    default: CodeStates.IN_QUEUE,
-  })
-  state5: CodeStates;
-
   /** points assigned to the submission */
   @Column({
     type: 'int',
@@ -80,17 +49,11 @@ export class JudgeSubmissions extends BaseEntity {
   })
   points: number;
 
-  /** judge0 uuid obtained after making the submission requests */
-  @Column()
-  judge0ID1: string;
-  @Column()
-  judge0ID2: string;
-  @Column()
-  judge0ID3: string;
-  @Column()
-  judge0ID4: string;
-  @Column()
-  judge0ID5: string;
+  @OneToMany(
+    () => TestCase,
+    (testCase) => testCase.submission,
+  )
+  testCase: TestCase[];
 
   /**
    * base64 representation of code submitted by participant. Kept in base64 to accommodate

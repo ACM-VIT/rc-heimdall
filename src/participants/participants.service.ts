@@ -18,6 +18,7 @@ import { ParticipantRepository } from './participants.repository';
  */
 @Injectable()
 export class ParticipantsService {
+
   constructor(
     /** injecting [[ParticipantRepository]] as persistence layer */
     @InjectRepository(ParticipantRepository)
@@ -37,6 +38,7 @@ export class ParticipantsService {
     if (participantTeam === undefined) {
       const newTeam = await this.teamService.create({
         name: createParticipantDto.team.name,
+        id: createParticipantDto.team_id,
       });
       return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, newTeam);
     }
