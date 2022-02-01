@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, IsNull, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Team } from '../teams/team.entity';
 

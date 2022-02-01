@@ -31,6 +31,10 @@ export class Team extends BaseEntity {
   @Column({ type: 'int', default: 0 })
   points: number;
 
+  /** the points acquired by each time after solving questions */
+  @Column({ type: 'int', default: 0 })
+  pointsR2: number;
+
   /** 1:N relation between [[Team]] and [[Participant]]. One team can include any number of participants */
   @OneToMany(
     () => Participant,
@@ -56,4 +60,12 @@ export class Team extends BaseEntity {
     { eager: true },
   )
   problems: Problems[];
+
+  /** store question details of problems assigned to participant in round 2 */
+  @OneToMany(
+    () => Problems,
+    (problem) => problem.assignteam,
+    { eager: true },
+  )
+  assignProblems: Problems[];
 }

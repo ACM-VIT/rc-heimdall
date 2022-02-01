@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { AssignProblemDTO } from './dto/assign-problem.dto';
+import { AssignProblemR2DTO } from './dto/assign-problem-r2.dto';
 import { Team } from './team.entity';
 import { TeamRepository } from './teams.repository';
 import * as config from 'config';
@@ -118,6 +119,34 @@ export class TeamsService {
     await team.save();
 
     return { problems: team.problems, points: team.points };
+  }
+
+  /**
+   * To assign a [[Problem]] to [[Team]] for round 2
+   */
+  async assignProblemRoundTwo(assignProblemR2DTO: AssignProblemR2DTO): Promise<{ problems: Array<Problems> }> {
+    const { problemID, teamID } = assignProblemR2DTO;
+
+    /** fetch problem by problem ID */
+    const problem = await this.problemService.findOne(problemID);
+    if (problem === undefined) {
+      throw new NotFoundException(`Problem with ID:${problemID} does not exist`);
+    }
+    // problem.multiplier = multiplier;
+    await problem.save();
+
+    /** fetch team by teamID */
+    const team = await this.teamRepository.findOne(teamID);
+    if (team === undefined) {
+      throw new NotFoundException(`Team with ID: ${teamID} does not exist`);
+    }
+
+    /** attach problem into team, operate on points */
+    team.assignProblems.push(problem);
+    // team.pointsR2 += points;
+    await team.save();
+
+    return { problems: team.assignProblems };
   }
 
   /**
