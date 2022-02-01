@@ -18,6 +18,7 @@ export class TestCase extends BaseEntity {
   @ManyToOne(
     () => JudgeSubmissions,
     (submission) => submission.testCase,
+    { eager: true },
   )
   submission: JudgeSubmissions;
 

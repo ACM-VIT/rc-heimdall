@@ -65,8 +65,7 @@ export class JudgeService {
     private readonly teamService: TeamsService,
   ) {
     this.logger.verbose('service initialized');
-    // this.callbackURL = config.get('judge.callback');
-    this.callbackURL = 'http://localhost:5000/testcase/QAEJCC9JjMfdAQZ4dTTNfVNF9jUHA3UW';
+    this.callbackURL = config.get('judge.callback');
     this.endpoint = `${config.get('judge.endpoint')}/submissions/batch?base64_encoded=true`;
   }
 
@@ -92,6 +91,7 @@ export class JudgeService {
      * Map string representing submission to object which contains strict representation of language
      */
     const codeLanguage: LanguageStruct = mapLanguageStringToObject(language);
+    console.log('codelanguage: ', codeLanguage);
     if (codeLanguage.id === -1) {
       this.logger.verbose(`sent code in unacceptable language`);
       throw new BadRequestException('Code language not accepted');
@@ -99,7 +99,6 @@ export class JudgeService {
 
     /** fetch question details about question for which the submission is made */
     const problem = await this.problemService.findOneForJudge(problemID);
-    console.log('problem ', problem);
     if (problem === undefined) {
       this.logger.verbose(`sent invalid problem id ${problemID}`);
       throw new BadRequestException(`No problem with id:${problemID}`);
@@ -124,47 +123,47 @@ export class JudgeService {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
-      expected_output: problem.outputText1,
+      expected_output: Buffer.from(problem.outputText1, 'binary').toString('base64'),
       stdin: problem.inputText1,
     };
     const postBody2: JudgeOSubmissionRequest = {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
-      expected_output: problem.outputText2,
+      expected_output: Buffer.from(problem.outputText2, 'binary').toString('base64'),
       stdin: problem.inputText2,
     };
     const postBody3: JudgeOSubmissionRequest = {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
-      expected_output: problem.outputText3,
+      expected_output: Buffer.from(problem.outputText3, 'binary').toString('base64'),
       stdin: problem.inputText3,
     };
     const postBody4: JudgeOSubmissionRequest = {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
-      expected_output: problem.outputText4,
+      expected_output: Buffer.from(problem.outputText4, 'binary').toString('base64'),
       stdin: problem.inputText4,
     };
     const postBody5: JudgeOSubmissionRequest = {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
-      expected_output: problem.outputText5,
+      expected_output: Buffer.from(problem.outputText5, 'binary').toString('base64'),
       stdin: problem.inputText5,
     };
-    this.logger.verbose(`sending to judge0 ${JSON.stringify({ ...postBody1, source_code: 'code...' })}`);
+    // this.logger.verbose(`sending to judge0 ${JSON.stringify({ source_code: 'code...' })}`);
 
     /** make http request and receive response.data. Judge0 returns a uuid for the submission made */
     const body = {
       submissions: [postBody1, postBody2, postBody3, postBody4, postBody5],
     };
     const { data } = await this.http.post(this.endpoint, body).toPromise();
-    console.log(data);
+    // console.log(data);
 
-    this.logger.verbose(`made submission, judge0 token ${data}`);
+    this.logger.verbose(`made submission, judge0 token`);
 
     /** persist the submission details */
     const judgeSubmission = await this.judgeRepository.save({

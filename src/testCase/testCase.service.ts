@@ -33,6 +33,7 @@ export class TestCaseService {
     testCaseSubmission.state = status.id;
     testCaseSubmission.dateUpdated = new Date();
     console.log('state: ', status);
+    console.log('testcase: ', testCaseSubmission);
     if (status.description === 'Accepted') {
       const judgeSubmission = testCaseSubmission.submission;
       judgeSubmission.points += 20;
@@ -79,19 +80,17 @@ export class TestCaseService {
    * To make testcases with tokens
    */
   async makeTestCases(data, judgeSubmission) {
-    const testcases = [];
     data.forEach(async (token, i) => {
-      const testCase = new TestCase();
-      testCase.token = token.token;
-      testCase.state = CodeStates.IN_QUEUE;
-      testCase.testCaseNumber = i + 1;
-      testCase.dateCreated = new Date();
-      testCase.dateUpdated = new Date();
-      testCase.submission = judgeSubmission;
-      await testCase.save();
-      testcases.push(testCase);
+      await this.testCaseRepository.save({
+        token: token.token,
+        state: CodeStates.IN_QUEUE,
+        testCaseNumber: i + 1,
+        dateCreated: new Date(),
+        dateUpdated: new Date(),
+        submission: judgeSubmission,
+      });
     });
-    return testcases;
+    return;
   }
 
   /**
