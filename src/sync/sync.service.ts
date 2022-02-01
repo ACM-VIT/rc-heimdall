@@ -73,18 +73,13 @@ export class SyncService {
       const problems = reply.data.payload;
       this.logger.verbose('Displaying problem details');
 
-      console.log('before parsing');
-
       /** save problem details locally and return data as string object */
       const parsedData = await this.saveLocally(problems);
-      console.log('after parsing');
       /** clear old storage */
       const clearOperation = await this.problemsService.clear();
       this.logger.verbose(`Cleared ${clearOperation.affected} from problem storage`);
 
-      console.log('before forEach');
       parsedData.forEach((problem) => {
-        console.log('after forEach');
         this.problemsService.create({
           name: problem.id,
           maxPoints: 100,
@@ -113,7 +108,6 @@ export class SyncService {
 
       this.logger.verbose(`Seeded ${parsedData.length} problems into storage`);
 
-      //   const taskRunnerStatus = await this.pingTaskRunnerToUpdateStorages();
       this.logger.verbose('Pinging task-runner to update storages');
 
       return parsedData;
@@ -138,7 +132,6 @@ export class SyncService {
         .toPromise();
       data.forEach(async (item) => {
         this.logger.verbose(`adding ${item.name} with ${item.googleID}`);
-        console.log(item);
         try {
           await this.participantService.create({
             email: item.email,
@@ -192,29 +185,19 @@ export class SyncService {
 
     for (let i = 0; i < keyArr.length; i += 1) {
       const Problem = problems[keyArr[i]];
-      const testCases = Problem['test-cases'];
+      const testCases = Problem['testcases'];
 
       this.logger.verbose(`Processing id:${keyArr[i]}`);
-      const inputRequest1 = this.http.get(testCases['test-case-1']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest2 = this.http.get(testCases['test-case-2']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest3 = this.http.get(testCases['test-case-3']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest4 = this.http.get(testCases['test-case-4']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest5 = this.http.get(testCases['test-case-5']['input.txt'], { responseType: 'text' }).toPromise();
-      const outputRequest1 = this.http
-        .get(testCases['test-case-1']['output.txt'], { responseType: 'text' })
-        .toPromise();
-      const outputRequest2 = this.http
-        .get(testCases['test-case-2']['output.txt'], { responseType: 'text' })
-        .toPromise();
-      const outputRequest3 = this.http
-        .get(testCases['test-case-3']['output.txt'], { responseType: 'text' })
-        .toPromise();
-      const outputRequest4 = this.http
-        .get(testCases['test-case-4']['output.txt'], { responseType: 'text' })
-        .toPromise();
-      const outputRequest5 = this.http
-        .get(testCases['test-case-5']['output.txt'], { responseType: 'text' })
-        .toPromise();
+      const inputRequest1 = this.http.get(testCases['testcase1']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest2 = this.http.get(testCases['testcase2']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest3 = this.http.get(testCases['testcase3']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest4 = this.http.get(testCases['testcase4']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest5 = this.http.get(testCases['testcase5']['input.txt'], { responseType: 'text' }).toPromise();
+      const outputRequest1 = this.http.get(testCases['testcase1']['output.txt'], { responseType: 'text' }).toPromise();
+      const outputRequest2 = this.http.get(testCases['testcase2']['output.txt'], { responseType: 'text' }).toPromise();
+      const outputRequest3 = this.http.get(testCases['testcase3']['output.txt'], { responseType: 'text' }).toPromise();
+      const outputRequest4 = this.http.get(testCases['testcase4']['output.txt'], { responseType: 'text' }).toPromise();
+      const outputRequest5 = this.http.get(testCases['testcase5']['output.txt'], { responseType: 'text' }).toPromise();
       const instructionRequest = this.http.get(Problem['description.txt'], { responseType: 'text' }).toPromise();
       const sampleInputRequest = this.http.get(Problem['sample-input.txt'], { responseType: 'text' }).toPromise();
       const sampleOutputRequest = this.http.get(Problem['sample-output.txt'], { responseType: 'text' }).toPromise();
@@ -239,9 +222,9 @@ export class SyncService {
             input: Problem['sample-input.txt'],
             output: Problem['sample-output.txt'],
             instructions: Problem['description.txt'],
-            windows: Problem['executables']['windows.exe'],
-            object: Problem['executables']['linux.o'],
-            mac: Problem['executables']['mac.mac'],
+            windows: Problem[`${keyArr[i]}-windows.exe`],
+            object: Problem[`${keyArr[i]}-linux.o`],
+            mac: Problem[`${keyArr[i]}-mac.mac`],
             inputText1: response[0].data,
             inputText2: response[1].data,
             inputText3: response[2].data,
