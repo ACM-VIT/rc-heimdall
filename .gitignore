@@ -4,6 +4,7 @@
 /documentation
 .vscode
 typedoc
+.env
 
 config/default.yml
 

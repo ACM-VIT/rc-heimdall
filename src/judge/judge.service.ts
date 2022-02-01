@@ -113,10 +113,10 @@ export class JudgeService {
     }
 
     /** only allow assigned teams to run problems */
-    const isAssigned = await this.teamService.isProblemAssignedTo(team, problem);
-    if (isAssigned === false) {
-      throw new ForbiddenException(`Everything comes at a cost, you need to buy the problem`);
-    }
+    // const isAssigned = await this.teamService.isProblemAssignedTo(team, problem);
+    // if (isAssigned === false) {
+    //   throw new ForbiddenException(`Everything comes at a cost, you need to buy the problem`);
+    // }
 
     /** prepare postBody to send to Judge0  */
     const postBody1: JudgeOSubmissionRequest = {

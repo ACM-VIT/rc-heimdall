@@ -2,17 +2,16 @@ version: '3.3'
 services:
   heimdall:
     container_name: heimdall
-    image: yashkumarverma/rc-heimdall
     ports:
-      - "80:80"
+      - '8000:8000'
     restart: always
     environment:
       - PORT=80
-      - NODE_ENV='production'
-      - DB_HOST='secret'
-      - DB_USERNAME='secret'
-      - DB_PASSWORD='secret'
-      - DB_NAME='secret'
-      - JUDGE_CALLBACK='secret'
+      - NODE_ENV=${NODE_ENV}
+      - DB_HOST=${DB_HOST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - JUDGE_CALLBACK=${JUDGE_CALLBACK}
       - RUNNER_ENDPOINT_EXEC='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203'
       - RUNNER_ENDPOINT_SEED='https://webhook.site/1406fdc8-be02-4774-b694-7b9d0696e203'
