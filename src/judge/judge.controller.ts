@@ -50,8 +50,8 @@ export class JudgeController {
   @UsePipes(ValidationPipe)
   create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
     const user: JwtToken = req.user;
-    console.log("user: ",user);
-    console.log("judge: ",createJudgeDto);
+    console.log('user: ', user);
+    console.log('judge: ', createJudgeDto);
     if (user.participant.team_id != createJudgeDto.teamID) {
       return new UnauthorizedException('who art thou');
     }
@@ -65,11 +65,11 @@ export class JudgeController {
    *
    * Returns list of all submissions
    */
-  //   @Get()
-  //   @UseGuards(JwtAuthGuard)
-  //   findAll() {
-  //     return this.judgeService.findAll();
-  //   }
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  findAll() {
+    return this.judgeService.findAll();
+  }
 
   /**
    * Responds to: _GET(`/:id`)_

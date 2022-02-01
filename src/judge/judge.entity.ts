@@ -62,9 +62,3 @@ export class JudgeSubmissions extends BaseEntity {
   @Column()
   code: string;
 }
-
-// 1 True +20
-// 2 False
-// 3 True +20
-// 4 False
-// 5 True +20

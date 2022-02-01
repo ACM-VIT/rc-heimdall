@@ -23,6 +23,7 @@ import { JudgeRepository } from './judge.repository';
 import { mapLanguageStringToObject } from './minions/language';
 import { referee } from './minions/referee';
 import { MoreThanOrEqual } from 'typeorm';
+import { TestCaseService } from 'src/testCase/testCase.service';
 // import { TestCaseService } from 'src/testCase/testCase.service';
 /**
  * **Judge Service**
@@ -48,8 +49,8 @@ export class JudgeService {
     private readonly logger = new Logger('judge'),
 
     /** injecting [[TestCasesService]] to perform operations on TestCases */
-    // @Inject(TestCaseService)
-    // private readonly testCaseService: TestCaseService,
+    @Inject(TestCaseService)
+    private readonly testCaseService: TestCaseService,
 
     /** injecting [[JudgeRepository]] as a persistence layer */
     @InjectRepository(JudgeRepository)
@@ -64,7 +65,8 @@ export class JudgeService {
     private readonly teamService: TeamsService,
   ) {
     this.logger.verbose('service initialized');
-    this.callbackURL = config.get('judge.callback');
+    // this.callbackURL = config.get('judge.callback');
+    this.callbackURL = 'http://localhost:5000/testcase/QAEJCC9JjMfdAQZ4dTTNfVNF9jUHA3UW/';
     this.endpoint = `${config.get('judge.endpoint')}/submissions/batch?base64_encoded=true`;
   }
 
@@ -174,7 +176,7 @@ export class JudgeService {
     });
     this.logger.verbose(` submission saved into database`);
 
-    // const all_testcases = await this.testCaseService.makeTestCases(data, judgeSubmission);
+    const all_testcases = await this.testCaseService.makeTestCases(data, judgeSubmission);
 
     /** return submission details back to client with Judge0 token to ping for results */
     return;

@@ -31,6 +31,14 @@ export class TestCaseService {
     }
 
     testCaseSubmission.state = status.id;
+    testCaseSubmission.dateUpdated = new Date();
+    console.log('state: ', status);
+    if (status.description === 'Accepted') {
+      const judgeSubmission = testCaseSubmission.submission;
+      judgeSubmission.points += 20;
+      await judgeSubmission.save();
+    }
+
     await testCaseSubmission.save();
 
     // /** assign points only to CodeStates.{ACCEPTED | WRONG} responses  */
@@ -74,7 +82,7 @@ export class TestCaseService {
     const testcases = [];
     data.forEach(async (token, i) => {
       const testCase = new TestCase();
-      testCase.token = token;
+      testCase.token = token.token;
       testCase.state = CodeStates.IN_QUEUE;
       testCase.testCaseNumber = i + 1;
       testCase.dateCreated = new Date();
@@ -84,5 +92,12 @@ export class TestCaseService {
       testcases.push(testCase);
     });
     return testcases;
+  }
+
+  /**
+   * To get all testcases of a submission
+   */
+  async getAll() {
+    return await this.testCaseRepository.find();
   }
 }

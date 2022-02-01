@@ -18,7 +18,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
 import { TestCaseModule } from './testCase/testCase.module';
-import { TCaseModule } from './t-case/t-case.module';
 
 /**
  * Main Application Module
@@ -29,14 +28,12 @@ import { TCaseModule } from './t-case/t-case.module';
     TypeOrmModule.forRoot(typeOrmConfig),
     RunnerModule,
     TeamsModule,
-    TCaseModule,
     ParticipantsModule,
     TestCaseModule,
     ProblemsModule,
     JudgeModule,
     SyncModule,
     AuthModule,
-    TCaseModule,
   ],
 })
 
