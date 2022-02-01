@@ -16,6 +16,7 @@ import { CreateTeamDto } from './dto/create-team.dto';
 import { Team } from './team.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AssignProblemDTO } from './dto/assign-problem.dto';
+import { AssignProblemR2DTO } from './dto/assign-problem-r2.dto';
 import { DILUTE } from '../judge/enum/codeStates.enum';
 import { mapLanguageIdToObject } from '../judge/minions/language';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -97,6 +98,16 @@ export class TeamsController {
     return this.teamsService.assignProblem(assignProblemDTO);
   }
 
+  /**
+   * Responds to: _POST(`/assignproblems`)_
+   *
+   * Assign a problem to team for round 2
+   */
+  @Post('/assignproblems')
+  @UsePipes(ValidationPipe)
+  assignProblemRoundTwo(@Body() assignProblemR2DTO: AssignProblemR2DTO) {
+    return this.teamsService.assignProblemRoundTwo(assignProblemR2DTO);
+  }
   /**
    * Responds to: _GET(`/:id`)_
    *
