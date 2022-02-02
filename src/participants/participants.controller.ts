@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Param, UsePipes, ValidationPipe, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UsePipes, ValidationPipe, Delete, UseGuards, Request } from '@nestjs/common';
 import { Participant } from './participant.entity';
 import { ParticipantsService } from './participants.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
 import { UpdateParticipantDto } from './dto/updateParticipantDto.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { JwtToken } from 'src/auth/interface/auth.token.interface';
 
 /**
  * **Participants Controller**
@@ -52,12 +53,12 @@ export class ParticipantsController {
    *
    * To list all the participants
    */
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  findAll() {
-    return this.participantsService.findAll();
-    // return [];
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get()
+  // findAll() {
+  //   return this.participantsService.findAll();
+  //   return [];
+  // }
 
   /**
    * Responds to: _GET(`/:id`)_
@@ -65,9 +66,11 @@ export class ParticipantsController {
    * To display all details of particular participant
    */
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.participantsService.findOne(+id);
+  @Get()
+  findOne(@Request() req) {
+    const googleID: JwtToken = req.user.participant.googleID;
+    console.log(googleID);
+    return this.participantsService.findOneByEmailAndID(googleID.toString());
   }
 
   /**

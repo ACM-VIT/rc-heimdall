@@ -18,7 +18,6 @@ import { ParticipantRepository } from './participants.repository';
  */
 @Injectable()
 export class ParticipantsService {
-
   constructor(
     /** injecting [[ParticipantRepository]] as persistence layer */
     @InjectRepository(ParticipantRepository)
@@ -75,13 +74,6 @@ export class ParticipantsService {
    */
   findAll() {
     return this.participantRepository.find();
-  }
-
-  /**
-   * To return details of particular participant by ID
-   */
-  findOne(id: number) {
-    return this.participantRepository.find({ id });
   }
 
   /**

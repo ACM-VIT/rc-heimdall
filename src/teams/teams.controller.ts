@@ -59,8 +59,10 @@ export class TeamsController {
    * Get list of all [[Team]] along-with their [[JudgeSubmissions]].
    */
   @Get()
-  findAll() {
-    return this.teamsService.findAll();
+  @UsePipes(ValidationPipe)
+  findAll(@Request() req) {
+    const user: JwtToken = req.user;
+    return this.teamsService.findOne(user.participant.team_id);
     // return [];
   }
 
@@ -146,6 +148,8 @@ export class TeamsController {
               windowsFileURL: problem.windowsFileURL,
               objectFileURL: problem.objectFileURL,
               instructionsText: problem.instructionsText,
+              sampleInput: problem.sampleInput,
+              sampleOutput: problem.sampleOutput,
             };
           })
         : [];

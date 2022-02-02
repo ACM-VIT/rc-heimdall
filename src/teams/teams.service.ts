@@ -53,11 +53,11 @@ export class TeamsService {
    * To fetch details of [[Team]] by [[Team.name]]
    */
   async findOne(id: number) {
-    const response = await this.teamRepository.find({ id });
-    if (response.length === 0) {
+    const response = await this.teamRepository.findWithParticipants(id);
+    if (response === undefined) {
       return undefined;
     }
-    return response[0];
+    return response;
   }
 
   /**

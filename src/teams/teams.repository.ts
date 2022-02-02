@@ -42,6 +42,15 @@ export class TeamRepository extends Repository<Team> {
     return query;
   }
 
+  /** to get team details with participants */
+  async findWithParticipants(id: number): Promise<Team> {
+    const query = await this.createQueryBuilder('team')
+      .andWhere('team.id = :id', { id })
+      .leftJoinAndSelect('team.participants', 'participant')
+      .getOne();
+    return query;
+  }
+
   /** to remove all teams */
   async removeAll() {
     const query = await this.createQueryBuilder('team')
