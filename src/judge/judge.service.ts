@@ -124,35 +124,35 @@ export class JudgeService {
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
       expected_output: Buffer.from(problem.outputText1, 'binary').toString('base64'),
-      stdin: problem.inputText1,
+      stdin: Buffer.from(problem.inputText1, 'binary').toString('base64'),
     };
     const postBody2: JudgeOSubmissionRequest = {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
       expected_output: Buffer.from(problem.outputText2, 'binary').toString('base64'),
-      stdin: problem.inputText2,
+      stdin: Buffer.from(problem.inputText2, 'binary').toString('base64'),
     };
     const postBody3: JudgeOSubmissionRequest = {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
       expected_output: Buffer.from(problem.outputText3, 'binary').toString('base64'),
-      stdin: problem.inputText3,
+      stdin: Buffer.from(problem.inputText3, 'binary').toString('base64'),
     };
     const postBody4: JudgeOSubmissionRequest = {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
       expected_output: Buffer.from(problem.outputText4, 'binary').toString('base64'),
-      stdin: problem.inputText4,
+      stdin: Buffer.from(problem.inputText4, 'binary').toString('base64'),
     };
     const postBody5: JudgeOSubmissionRequest = {
       source_code: code,
       language_id: codeLanguage.id,
       callback_url: this.callbackURL,
       expected_output: Buffer.from(problem.outputText5, 'binary').toString('base64'),
-      stdin: problem.inputText5,
+      stdin: Buffer.from(problem.inputText5, 'binary').toString('base64'),
     };
     // this.logger.verbose(`sending to judge0 ${JSON.stringify({ source_code: 'code...' })}`);
 
@@ -269,8 +269,8 @@ export class JudgeService {
   }
 
   /** To find details of all submission made */
-  findAll() {
-    return this.judgeRepository.find();
+  findWithTeamID(team_id) {
+    return this.judgeRepository.findByTeam(team_id);
   }
 
   /**

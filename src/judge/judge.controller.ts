@@ -68,8 +68,9 @@ export class JudgeController {
    */
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll() {
-    return this.judgeService.findAll();
+  findAll(@Request() req) {
+    const user: JwtToken = req.user;
+    return this.judgeService.findWithTeamID(user.participant.team_id);
   }
 
   /**
@@ -77,12 +78,12 @@ export class JudgeController {
    *
    * returns details of particular submission
    */
-  @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  findOne(@Request() req, @Param('id') id: string) {
-    const user: JwtToken = req.user;
-    return this.judgeService.findOne(id);
-  }
+  // @Get(':id')
+  // @UseGuards(JwtAuthGuard)
+  // findOne(@Request() req, @Param('id') id: string) {
+  //   const user: JwtToken = req.user;
+  //   return this.judgeService.findOne(id);
+  // }
 
   /**
    * Responds to: _PUT(`/callback`)_

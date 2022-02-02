@@ -83,4 +83,12 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
 
     return query;
   }
+
+  /** To fetch details of judgesubmissions from team */
+  async findByTeam(team_id) {
+    const query = await this.createQueryBuilder('submission')
+      .where('submission.team = :team_id', { team_id })
+      .getMany();
+    return query;
+  }
 }

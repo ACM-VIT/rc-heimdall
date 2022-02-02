@@ -207,7 +207,7 @@ export class SyncService {
       const sampleInputRequest = this.http.get(Problem['sample-input.txt'], { responseType: 'text' }).toPromise();
       const sampleOutputRequest = this.http.get(Problem['sample-output.txt'], { responseType: 'text' }).toPromise();
       console.log(`${keyArr[i]}-windows.exe`);
-      console.log(`${keyArr[i]}-linux.exe`);
+      console.log(`${keyArr[i]}-linux.lin`);
       console.log(`${keyArr[i]}-mac.mac`);
       await Promise.all([
         inputRequest1,
@@ -231,7 +231,7 @@ export class SyncService {
             output: Problem['sample-output.txt'],
             instructions: Problem['description.txt'],
             windows: Problem[`${keyArr[i]}-windows.exe`],
-            object: Problem[`${keyArr[i]}-linux.o`],
+            object: Problem[`${keyArr[i]}-linux.lin`],
             mac: Problem[`${keyArr[i]}-mac.mac`],
             inputText1: response[0].data,
             inputText2: response[1].data,
