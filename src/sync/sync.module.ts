@@ -2,6 +2,7 @@ import { HttpModule, Module } from '@nestjs/common';
 
 import { JudgeModule } from 'src/judge/judge.module';
 import { ParticipantsModule } from 'src/participants/participants.module';
+import { TestCaseModule } from 'src/testCase/testCase.module';
 import { ProblemsModule } from '../problems/problems.module';
 import { SyncController } from './sync.controller';
 import { SyncService } from './sync.service';
@@ -14,7 +15,7 @@ import { SyncService } from './sync.service';
  * @category Sync
  */
 @Module({
-  imports: [ProblemsModule, ParticipantsModule, JudgeModule, HttpModule],
+  imports: [ProblemsModule, ParticipantsModule, JudgeModule, HttpModule, TestCaseModule],
   controllers: [SyncController],
   providers: [SyncService],
 })

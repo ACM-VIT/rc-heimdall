@@ -10,6 +10,7 @@ import {
 import * as config from 'config';
 import { JudgeService } from 'src/judge/judge.service';
 import { ParticipantsService } from 'src/participants/participants.service';
+import { TestCaseService } from 'src/testCase/testCase.service';
 // import { TeamsService } from 'src/teams/teams.service';
 import { ProblemsService } from '../problems/problems.service';
 import { ProblemMetadata } from './interface/problem.interface';
@@ -44,8 +45,8 @@ export class SyncService {
     @Inject(ParticipantsService)
     private readonly participantService: ParticipantsService,
 
-    // @Inject(TeamsService)
-    // private readonly teamService: TeamsService,
+    @Inject(TestCaseService)
+    private readonly testCaseService: TestCaseService,
 
     @Inject(JudgeService)
     private readonly judgeService: JudgeService,
@@ -118,37 +119,40 @@ export class SyncService {
   }
 
   async syncWithParticipants() {
-    try {
-      this.logger.verbose(`Updating participant storages`);
-      await this.judgeService.clear();
-      this.logger.verbose(`cleared judge submissions`);
-      await this.participantService.clear();
-      this.logger.verbose(`cleared participants list`);
+    // try {
+    this.logger.verbose(`Updating participant storages`);
+    await this.testCaseService.clear();
+    this.logger.verbose(`Cleared testcases storages`);
+    await this.judgeService.clear();
+    this.logger.verbose(`cleared judge submissions`);
+    await this.participantService.clear();
+    this.logger.verbose(`cleared participants list`);
 
-      const { data } = await this.http
-        .post(this.registrationEndpoint, {
-          secret: config.get('roundone.secret'),
-        })
-        .toPromise();
-      data.forEach(async (item) => {
+    const { data } = await this.http
+      .post(this.registrationEndpoint, {
+        secret: config.get('roundone.secret'),
+      })
+      .toPromise();
+    data.forEach(async (item) => {
+      try {
         this.logger.verbose(`adding ${item.name} with ${item.googleID}`);
-        try {
-          await this.participantService.create({
-            email: item.email,
-            googleID: item.googleID,
-            isAdmin: item.isAdmin,
-            name: item.name,
-            team: item.team,
-            team_id: item.team_id,
-          });
-        } catch (e) {
-          this.logger.error(`Error adding ${item.name} / ${item.team.name} / ${item.googleID}`);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-      this.logger.error('Error seeding participants');
-    }
+        await this.participantService.create({
+          email: item.email,
+          googleID: item.googleID,
+          isAdmin: item.isAdmin,
+          name: item.name,
+          team: item.team,
+          team_id: item.team_id,
+        });
+      } catch (e) {
+        // console.log(e);
+        this.logger.error(`Error adding ${item.name} / ${item.googleID}`);
+      }
+    });
+    // } catch (e) {
+    //   // console.log(e);
+    //   this.logger.error('Error seeding participants');
+    // }
   }
 
   /**
