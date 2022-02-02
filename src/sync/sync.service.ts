@@ -61,6 +61,12 @@ export class SyncService {
    * To sync database entries with problems uploaded on cloud storage
    */
   async syncWithCloudStorage() {
+    await this.testCaseService.clear();
+    this.logger.verbose(`Cleared testcases storages`);
+    await this.judgeService.clear();
+    this.logger.verbose(`cleared judge submissions`);
+    await this.problemsService.clear();
+    this.logger.verbose(`cleared problems list`);
     try {
       this.logger.verbose(`connecting to seeding endpoint: ${this.seeder} `);
       const reply = await this.http.get(this.seeder).toPromise();

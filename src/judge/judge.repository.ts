@@ -86,8 +86,10 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
 
   /** To fetch details of judgesubmissions from team */
   async findByTeam(team_id) {
+    // show status for each testcase
     const query = await this.createQueryBuilder('submission')
       .where('submission.team = :team_id', { team_id })
+      .leftJoinAndSelect('submission.testCase', 'testCase')
       .getMany();
     return query;
   }
