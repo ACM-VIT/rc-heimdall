@@ -69,6 +69,19 @@ export class ProblemsService {
     }
   }
 
+  /**
+   * to fetch human readable name of a given problem by given uuid. This is used while calling the
+   * task runner as the client operates on uuid and task-runner operates on readable names.
+   */
+  async getNameDescriptionFromId(id: string) {
+    try {
+      const problem = await this.problemRepository.findOne(id);
+      return { problem_name: problem.name, description: problem.instructionsText };
+    } catch (e) {
+      throw new NotFoundException(`No Problems found with given id ${id}`);
+    }
+  }
+
   /** To get problem ID's for all problems */
   async getProblemIDs() {
     const problemIDs = await this.problemRepository.find();

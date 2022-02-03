@@ -175,85 +175,10 @@ export class JudgeService {
     });
     this.logger.verbose(` submission saved into database`);
 
-    const all_testcases = await this.testCaseService.makeTestCases(data, judgeSubmission);
+    await this.testCaseService.makeTestCases(data, judgeSubmission);
 
     /** return submission details back to client with Judge0 token to ping for results */
     return judgeSubmission.id;
-  }
-
-  /**
-   * **Judge0 Callback Handler**
-   *
-   * This method handles the callback from Judge0 that is sent when the submission is processed. The
-   * structure of the response is represented by [[Judge0Callback]] and validated using [[CallbackJudgeDto]].
-   *
-   * **Flow**
-   * - Fetch details of submission using Judge0Token via [[JudgeRepository.fetchDetailsByJudge0Token]]
-   * - Map response ID to [[CodeStates]]
-   * - Evaluate participant output to actual output using [[referee]]
-   * - Fetch highest points for the same problem scored by team, increment the difference of current submission
-   * points and last highest submission
-   */
-  async handleCallback(callbackJudgeDto: Judge0Callback) {
-    const { status, stdout, token }: Judge0Callback = callbackJudgeDto;
-    this.logger.setContext('judge.callback');
-
-    /** update state of submission in database */
-    // const submission1 = await this.judgeRepository.fetchDetailsByJudge01Token(token);
-    // const submission2 = await this.judgeRepository.fetchDetailsByJudge02Token(token);
-    // const submission3 = await this.judgeRepository.fetchDetailsByJudge03Token(token);
-    // const submission4 = await this.judgeRepository.fetchDetailsByJudge04Token(token);
-    // const submission5 = await this.judgeRepository.fetchDetailsByJudge05Token(token);
-
-    // if (
-    //   submission1 === undefined &&
-    //   submission2 === undefined &&
-    //   submission3 === undefined &&
-    //   submission4 === undefined &&
-    //   submission5 === undefined
-    // ) {
-    //   this.logger.verbose(`Invalid token received ${token}`);
-    //   throw new BadRequestException(`submission with token ${token} not found`);
-    // }
-
-    // const submission = [submission1, submission2, submission3, submission4, submission5].find(
-    //   (sub) => sub !== undefined,
-    // );
-
-    // await submission.save();
-
-    /** assign points only to CodeStates.{ACCEPTED | WRONG} responses  */
-    // const refereeEvaluation = referee(
-    //   Buffer.from(stdout, 'base64').toString(),
-    //   Buffer.from(submission.problem.outputText1, 'base64').toString(),
-    //   submission.problem.maxPoints,
-    //   submission.problem.multiplier,
-    // );
-    // this.logger.verbose(`${submission} got ${JSON.stringify(refereeEvaluation)}`);
-
-    // /** save the current submission into database */
-    // submission.points = refereeEvaluation.points;
-    // this.logger.verbose(`> ${token} :: awarded ${refereeEvaluation.points} points`);
-
-    // /** get the highest points for submission of same problem by same team */
-    // const bestSubmissionTillNow = await this.judgeRepository.getHighestPointsFor(
-    //   submission.problem.id,
-    //   submission.team.id,
-    // );
-    // await submission.save();
-
-    // /** handle changes regarding team points */
-    // const team = await this.teamService.findOneById(submission.team.id);
-    // if (bestSubmissionTillNow === undefined) {
-    //   team.points += submission.points;
-    //   this.logger.verbose(`Old record not found, adding ${submission.points}`);
-    // } else if (bestSubmissionTillNow.points < submission.points) {
-    //   team.points += Math.abs(submission.points - bestSubmissionTillNow.points);
-    //   this.logger.verbose(`Updating record by ${bestSubmissionTillNow.points} <= ${submission.points}`);
-    // }
-    // await team.save();
-
-    return;
   }
 
   /** To find details of all submission made */
@@ -265,7 +190,9 @@ export class JudgeService {
       const problem_id = problem_ids[i];
       const highest = await this.judgeRepository.getHighestPointsFor(problem_id, team_id);
       highest.problem_id = problem_id;
-      highest.problem_name = await this.problemService.getNameFromId(problem_id);
+      const problem = await this.problemService.getNameDescriptionFromId(problem_id);
+      highest.problem_name = problem.problem_name;
+      highest.instructionsText = problem.description;
       top_submissions.push(highest);
     }
     // get team and update the points
