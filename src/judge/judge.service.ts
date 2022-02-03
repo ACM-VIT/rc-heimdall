@@ -268,6 +268,11 @@ export class JudgeService {
       highest.problem_name = await this.problemService.getNameFromId(problem_id);
       top_submissions.push(highest);
     }
+    // get team and update the points
+    const team = await this.teamService.findOneById(team_id);
+    team.points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
+    await team.save();
+
     console.log(top_submissions);
     return top_submissions;
   }
