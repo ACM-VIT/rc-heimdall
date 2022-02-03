@@ -24,12 +24,19 @@ export class TeamRepository extends Repository<Team> {
 
   /** to generate the [[Team]] leaderBoard based on [[Team.points]] */
   async getLeaderBoard() {
+    // show top 10 teams based on points and timestamp
     const query = await this.createQueryBuilder('team')
-      .select('team.name')
-      .addSelect('team.id')
-      .addSelect('team.points')
       .orderBy('team.points', 'DESC')
+      .addOrderBy('team.timestamp', 'DESC')
+      .limit(10)
       .getMany();
+    // const query = await this.createQueryBuilder('team')
+    //   .select('team.name')
+    //   .addSelect('team.id')
+    //   .addSelect('team.points')
+    //   .orderBy('team.points', 'DESC')
+    //   .limit(30)
+    //   .getMany();
     return query;
   }
 

@@ -65,4 +65,8 @@ export class Team extends BaseEntity {
     { eager: true },
   )
   assignProblems: Problems[];
+
+  /** store timestamp for tie-braking  */
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  timestamp: Date;
 }
