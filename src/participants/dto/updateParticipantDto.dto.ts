@@ -20,7 +20,7 @@ export class UpdateParticipantDto {
   /** Registration Number of the participant */
   @IsNotEmpty()
   @IsString()
-  @Length(7)
+  @Length(9)
   @ApiProperty({ description: 'Registration Number of the participant', example: '20BCE0999' })
   registrationNumber: string;
 
