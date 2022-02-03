@@ -6,6 +6,7 @@ import { TestCaseService } from './testCase.service';
 import { ProblemsModule } from '../problems/problems.module';
 import { TeamsModule } from '../teams/teams.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JudgeModule } from 'src/judge/judge.module';
 
 /**
  * **Judge Module**

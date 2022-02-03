@@ -69,6 +69,14 @@ export class ProblemsService {
     }
   }
 
+  /** To get problem ID's for all problems */
+  async getProblemIDs() {
+    const problemIDs = await this.problemRepository.find();
+    return problemIDs.map((problem) => {
+      return problem.id;
+    });
+  }
+
   /**
    * to fetch details of a particular problem to judge the submission. This is different from
    * [[findAndFilter]] as this returns inputText and outputText as well, and does not include

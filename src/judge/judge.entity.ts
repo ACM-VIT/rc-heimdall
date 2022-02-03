@@ -55,6 +55,12 @@ export class JudgeSubmissions extends BaseEntity {
   )
   testCase: TestCase[];
 
+  @Column({
+    type: 'int',
+    default: 0,
+  })
+  returned_testcases: number;
+
   /**
    * base64 representation of code submitted by participant. Kept in base64 to accommodate
    * non-printable symbols and easy data transfer

@@ -49,7 +49,7 @@ export class JudgeController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
-  create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
+  async create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
     const user: JwtToken = req.user;
     console.log('user: ', user);
     console.log('judge: ', createJudgeDto);
@@ -58,7 +58,7 @@ export class JudgeController {
     }
 
     this.logger.verbose(`New submission from ${createJudgeDto.teamID}`);
-    return this.judgeService.create(createJudgeDto);
+    return await this.judgeService.create(createJudgeDto);
   }
 
   /**
@@ -78,23 +78,23 @@ export class JudgeController {
    *
    * returns details of particular submission
    */
-  // @Get(':id')
-  // @UseGuards(JwtAuthGuard)
-  // findOne(@Request() req, @Param('id') id: string) {
-  //   const user: JwtToken = req.user;
-  //   return this.judgeService.findOne(id);
-  // }
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  findOne(@Request() req, @Param('id') id: string) {
+    const user: JwtToken = req.user;
+    return this.judgeService.findOneByTeamAndID(id, user.participant.team_id);
+  }
 
   /**
-   * Responds to: _PUT(`/callback`)_
-   *
-   * To receive callback from judge0 and initiate points tally
-   */
-  @Put('QAEJCC9JjMfdAQZ4dTTNfVNF9jUHA3UW')
-  callbackHandler(@Body() judge0Callback: Judge0Callback) {
-    this.logger.verbose(`> ${judge0Callback.token} :: ${DILUTE[judge0Callback.status.id]}`);
-    return this.judgeService.handleCallback(judge0Callback);
-  }
+  //  * Responds to: _PUT(`/callback`)_
+  //  *
+  //  * To receive callback from judge0 and initiate points tally
+  //  */
+  // @Put('QAEJCC9JjMfdAQZ4dTTNfVNF9jUHA3UW')
+  // callbackHandler(@Body() judge0Callback: Judge0Callback) {
+  //   this.logger.verbose(`> ${judge0Callback.token} :: ${DILUTE[judge0Callback.status.id]}`);
+  //   return this.judgeService.handleCallback(judge0Callback);
+  // }
 
   /**
    * Responds to: _PUT(`/:id`)_

@@ -11,54 +11,6 @@ import { JudgeSubmissions } from './judge.entity';
  */
 @EntityRepository(JudgeSubmissions)
 export class JudgeRepository extends Repository<JudgeSubmissions> {
-  /** to fetch submission details by Judge0 Token */
-  async fetchDetailsByJudge01Token(token: string) {
-    const query = this.createQueryBuilder('submission')
-      .andWhere('submission.judge0ID1 = :token', { token })
-      .leftJoinAndSelect('submission.problem', 'problems')
-      .leftJoinAndSelect('submission.team', 'team')
-      .getOne();
-
-    return query;
-  }
-
-  async fetchDetailsByJudge02Token(token: string) {
-    const query = this.createQueryBuilder('submission')
-      .andWhere('submission.judge0ID2 = :token', { token })
-      .leftJoinAndSelect('submission.problem', 'problems')
-      .leftJoinAndSelect('submission.team', 'team')
-      .getOne();
-
-    return query;
-  }
-  async fetchDetailsByJudge03Token(token: string) {
-    const query = this.createQueryBuilder('submission')
-      .andWhere('submission.judge0ID3 = :token', { token })
-      .leftJoinAndSelect('submission.problem', 'problems')
-      .leftJoinAndSelect('submission.team', 'team')
-      .getOne();
-
-    return query;
-  }
-  async fetchDetailsByJudge04Token(token: string) {
-    const query = this.createQueryBuilder('submission')
-      .andWhere('submission.judge0ID4 = :token', { token })
-      .leftJoinAndSelect('submission.problem', 'problems')
-      .leftJoinAndSelect('submission.team', 'team')
-      .getOne();
-
-    return query;
-  }
-  async fetchDetailsByJudge05Token(token: string) {
-    const query = this.createQueryBuilder('submission')
-      .andWhere('submission.judge0ID5 = :token', { token })
-      .leftJoinAndSelect('submission.problem', 'problems')
-      .leftJoinAndSelect('submission.team', 'team')
-      .getOne();
-
-    return query;
-  }
-
   /** to fetch highest points scored by team on given problem */
   async getHighestPointsFor(problemID: string, teamID: number) {
     const query = await this.createQueryBuilder('submission')
@@ -86,11 +38,23 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
 
   /** To fetch details of judgesubmissions from team */
   async findByTeam(team_id) {
-    // show status for each testcase
+    // show status for each testcase and problemID only
     const query = await this.createQueryBuilder('submission')
-      .where('submission.team = :team_id', { team_id })
-      .leftJoinAndSelect('submission.testCase', 'testCase')
+      .leftJoinAndSelect('submission.problem', 'problem')
+      .groupBy('submission.problemId')
+      .select('MAX(submission.points)', 'points')
+      .andWhere('submission.team = :team_id', { team_id })
       .getMany();
+    return query;
+  }
+
+  /** To fetch details by team and ID */
+  async findOneByTeamAndID(id, team_id) {
+    const query = await this.createQueryBuilder('submission')
+      .andWhere('submission.id = :id', { id })
+      .andWhere('submission.team = :team_id', { team_id })
+      .leftJoinAndSelect('submission.testCase', 'testcase')
+      .getOne();
     return query;
   }
 }

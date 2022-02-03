@@ -44,7 +44,6 @@ export class TeamsController {
 
   /**
    * Responds to: _POST(`/`)_
-   *
    * To Create a new team based on [[CreateTeamDto]]
    */
   @Post()
@@ -68,7 +67,6 @@ export class TeamsController {
 
   /**
    * Responds to: _GET(`/leader`)_
-   *
    * Get leaderBoard with team id, name and points of [[Team]]
    */
   @Get('/leader')
@@ -78,7 +76,6 @@ export class TeamsController {
 
   /**
    * Responds to: _GET(`/problems`)_
-   *
    * Get details of problems assigned to [[Team]]
    */
   @Get('/:id/problems')
@@ -103,7 +100,6 @@ export class TeamsController {
 
   /**
    * Responds to: _GET(`/getassignedproblems`)_
-   *
    * Get list of problems assigned to team
    */
   @Get('/getassignedproblems')
@@ -125,7 +121,6 @@ export class TeamsController {
   }
   /**
    * Responds to: _GET(`/:id`)_
-   *
    * Get details of [[Team]] by ID
    */
   @Get(':id')
@@ -219,16 +214,6 @@ export class TeamsController {
     /** using spread operator to override the [[Team]] properties. */
     return { ...teamDetails, problems, judgeSubmissions, bestOfEachProblem };
   }
-
-  /**
-   * Responds to: _DELETE(`/:id`)_
-   *
-   * Delete a team by id
-   */
-  //   @Delete(':id')
-  //   remove(@Param('id') id: string) {
-  //     return this.teamsService.remove(+id);
-  //   }
 
   /**
    * Responds to: _DELETE(`/`)_

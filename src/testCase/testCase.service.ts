@@ -5,6 +5,7 @@ import { TestCaseRepository } from './testCase.repository';
 import { TeamsService } from '../teams/teams.service';
 import { TestCase } from './testCase.entity';
 import { CodeStates } from 'src/testCase/enum/codeStates.enum';
+import { JudgeRepository } from 'src/judge/judge.repository';
 
 @Injectable()
 export class TestCaseService {
@@ -34,11 +35,12 @@ export class TestCaseService {
     testCaseSubmission.dateUpdated = new Date();
     console.log('state: ', status);
     console.log('testcase: ', testCaseSubmission);
+    const judgeSubmission = testCaseSubmission.submission;
+    judgeSubmission.returned_testcases += 1;
     if (status.description === 'Accepted') {
-      const judgeSubmission = testCaseSubmission.submission;
       judgeSubmission.points += 20;
-      await judgeSubmission.save();
     }
+    await judgeSubmission.save();
 
     await testCaseSubmission.save();
 
