@@ -4,7 +4,7 @@ import { Judge0Callback } from './interface/judge0.interfaces';
 import { TestCaseRepository } from './testCase.repository';
 import { TeamsService } from '../teams/teams.service';
 import { TestCase } from './testCase.entity';
-import { CodeStates } from 'src/testCase/enum/codeStates.enum';
+import { CodeStates, DILUTE } from 'src/testCase/enum/codeStates.enum';
 import { JudgeRepository } from 'src/judge/judge.repository';
 
 @Injectable()
@@ -36,7 +36,10 @@ export class TestCaseService {
     console.log('state: ', status);
     console.log('testcase: ', testCaseSubmission);
     const judgeSubmission = testCaseSubmission.submission;
-    judgeSubmission.returned_testcases += 1;
+    console.log(`> ${token} :: ${DILUTE[testCaseSubmission.state]}`);
+    if (testCaseSubmission.state !== CodeStates.PROCESSING) {
+      judgeSubmission.returned_testcases += 1;
+    }
     if (status.description === 'Accepted') {
       judgeSubmission.points += 20;
     }
