@@ -28,15 +28,12 @@ export class TeamRepository extends Repository<Team> {
     const query = await this.createQueryBuilder('team')
       .orderBy('team.points', 'DESC')
       .addOrderBy('team.timestamp', 'DESC')
+      .select('team.name')
+      .addSelect('team.id')
+      .addSelect('team.points')
       .limit(10)
       .getMany();
-    // const query = await this.createQueryBuilder('team')
-    //   .select('team.name')
-    //   .addSelect('team.id')
-    //   .addSelect('team.points')
-    //   .orderBy('team.points', 'DESC')
-    //   .limit(30)
-    //   .getMany();
+
     return query;
   }
 

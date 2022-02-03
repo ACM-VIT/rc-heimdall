@@ -120,7 +120,13 @@ export class TeamsService {
    * To get leaderBoard of [[Team]] based on [[Team.points]]
    */
   async getLeaderBoard() {
-    return this.teamRepository.getLeaderBoard();
+    const allRanks = await this.teamRepository.getLeaderBoard();
+
+    // add ranks to each team
+    const teamsWithRanks = allRanks.map((team, index) => {
+      return { rank: index + 1, ...team };
+    });
+    return teamsWithRanks;
   }
 
   /**
