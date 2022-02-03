@@ -13,6 +13,7 @@ export interface JwtToken {
   //   name: string;
   // };
   participant: {
+    id: string;
     googleID: string;
     name: string;
     isAdmin: boolean;
