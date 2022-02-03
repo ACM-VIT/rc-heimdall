@@ -44,8 +44,9 @@ export class ParticipantsController {
   @UseGuards(JwtAuthGuard)
   @Post('update')
   @UsePipes(ValidationPipe)
-  updateParticipant(@Body() updateParticipantDto: UpdateParticipantDto): Promise<Participant> {
-    return this.participantsService.update(updateParticipantDto);
+  updateParticipant(@Request() req, @Body() updateParticipantDto: UpdateParticipantDto): Promise<Participant> {
+    const user: JwtToken = req.user;
+    return this.participantsService.update(user.participant.id, updateParticipantDto);
   }
 
   /**

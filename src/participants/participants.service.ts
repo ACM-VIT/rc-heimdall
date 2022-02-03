@@ -48,10 +48,10 @@ export class ParticipantsService {
    * Update  participant and adds him/her details in the existing details using [[UpdateParticipantDto]]
    * Updating the participant details using participant ID
    */
-  async update(updateParticipantDto: UpdateParticipantDto) {
+  async update(id, updateParticipantDto: UpdateParticipantDto) {
     // find the participant and update the details
     try {
-      const participant = await this.participantRepository.findOne(updateParticipantDto.id);
+      const participant = await this.participantRepository.findOne(id);
       console.log(participant);
       if (participant) {
         participant.phoneNumber = updateParticipantDto.phoneNumber;

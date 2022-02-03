@@ -11,10 +11,6 @@ import { ApiProperty } from '@nestjs/swagger';
  * @category Participants
  */
 export class UpdateParticipantDto {
-  /** id of the participant */
-  @ApiProperty({ description: 'id of the participant', example: 1 })
-  id: number;
-
   /** College of the participant */
   @IsNotEmpty()
   @ApiProperty({ description: 'College of the participant', example: 'VIT' })
