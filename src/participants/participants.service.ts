@@ -49,16 +49,16 @@ export class ParticipantsService {
    * Updating the participant details using participant ID
    */
   async update(id, updateParticipantDto: UpdateParticipantDto) {
-    // find the participant and update the details
+    console.log('id: ', id);
     try {
-      const participant = await this.participantRepository.findOne(id);
+      const participant = await this.participantRepository.findOneByEmailAndGoogleID(id);
       console.log(participant);
       if (participant) {
         participant.phoneNumber = updateParticipantDto.phoneNumber;
         participant.registrationNumber = updateParticipantDto.registrationNumber;
         participant.college = updateParticipantDto.college;
         participant.fresher = updateParticipantDto.fresher;
-        return this.participantRepository.save(participant);
+        return await this.participantRepository.save(participant);
       }
       return participant;
     } catch (error) {
