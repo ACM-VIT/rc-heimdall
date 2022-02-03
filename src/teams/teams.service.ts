@@ -69,7 +69,7 @@ export class TeamsService {
         const problems = await this.teamRepository.getAssignedProblems(id);
         // console.log('problems: ', problems);
         const filteredResult = problems.map((problem) => {
-          const assignedProblem = problem.assignProblems[0];
+          const assignedProblem = problem.problems[0];
           console.log('assignedProblem: ', assignedProblem);
           return assignedProblem;
           // return {
@@ -83,6 +83,7 @@ export class TeamsService {
         });
         return filteredResult;
       } catch (e) {
+        console.log(e);
         throw new NotFoundException(`No Problems assigned to this team`);
       }
     } else {
@@ -132,16 +133,12 @@ export class TeamsService {
   /**
    * To assign a [[Problem]] to [[Team]]
    */
-  async assignProblem(assignProblemDto: AssignProblemDTO) {
-    const { problemID, teamID, points, multiplier } = assignProblemDto;
-
+  async assignProblem(problemID, teamID) {
     /** fetch problem by problem ID */
     const problem = await this.problemService.findOne(problemID);
     if (problem === undefined) {
       throw new NotFoundException(`Problem with ID:${problemID} does not exist`);
     }
-    problem.multiplier = multiplier;
-    await problem.save();
 
     /** fetch team by teamID */
     const team = await this.teamRepository.findOne(teamID);
@@ -151,10 +148,9 @@ export class TeamsService {
 
     /** attach problem into team, operate on points */
     team.problems.push(problem);
-    team.points += points;
     await team.save();
 
-    return { problems: team.problems, points: team.points };
+    return { problems: team.problems };
   }
 
   /**
@@ -176,8 +172,8 @@ export class TeamsService {
     }
 
     /** attach problem into team, operate on points */
-    team.assignProblems.push(problem);
-    console.log('team', team.assignProblems);
+    team.problems.push(problem);
+    console.log('team', team.problems);
     return await team.save();
   }
 

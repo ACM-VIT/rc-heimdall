@@ -40,7 +40,7 @@ export class TeamRepository extends Repository<Team> {
   async getAssignedProblems(id: number) {
     const query = await this.createQueryBuilder('team')
       .andWhere('team.id = :id', { id })
-      .leftJoinAndSelect('team.assignProblems', 'problem')
+      .leftJoinAndSelect('team.problems', 'problem')
       .getMany();
 
     return query;

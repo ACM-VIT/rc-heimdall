@@ -94,8 +94,9 @@ export class TeamsController {
    */
   @Post('/problems')
   @UsePipes(ValidationPipe)
-  assignProblem(@Body() assignProblemDTO: AssignProblemDTO) {
-    return this.teamsService.assignProblem(assignProblemDTO);
+  assignProblem(@Request() req, @Body() assignProblemDTO: AssignProblemDTO) {
+    const user: JwtToken = req.user;
+    return this.teamsService.assignProblem(assignProblemDTO.problemID, user.participant.team_id);
   }
 
   /**

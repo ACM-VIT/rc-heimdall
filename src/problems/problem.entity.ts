@@ -122,12 +122,12 @@ export class Problems extends BaseEntity {
   )
   team: Team;
 
-  /** entity representing team which the question is assigned to in round 2 */
-  @ManyToOne(
-    () => Team,
-    (team) => team.assignProblems,
-  )
-  assignteam: Team;
+  // /** entity representing team which the question is assigned to in round 2 */
+  // @ManyToOne(
+  //   () => Team,
+  //   (team) => team.assignProblems,
+  // )
+  // assignteam: Team;
 
   /**
    * data to show while bidding, saved sample responses

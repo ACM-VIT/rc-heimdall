@@ -11,12 +11,6 @@ import { ApiProperty } from '@nestjs/swagger';
  * @category Teams
  */
 export class AssignProblemDTO {
-  /** numeric ID of [[Team]] ([[Team.id]]) to assign */
-  @ApiProperty({ name: 'teamID', description: 'Numeric ID of team to assign problem to', example: 12 })
-  @IsNumber()
-  @IsNotEmpty()
-  teamID: number;
-
   /** uuid of [[Problem]] ([[Problem.id]]) to be assigned to [[Team]] */
   @ApiProperty({
     name: 'problemID',
@@ -26,31 +20,4 @@ export class AssignProblemDTO {
   @IsNotEmpty()
   @IsUUID()
   problemID: string;
-
-  /** points to be deducted in exchange of assigned problem */
-  @ApiProperty({
-    name: 'points',
-    description: 'Points arithmetic related to problem assignment',
-    example: -20,
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  points: number;
-
-  @ApiProperty({
-    name: 'multiplier',
-    description: 'Multiplier for code submission',
-    example: 2,
-    default: 1,
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  multiplier: number;
-
-  @ApiProperty({
-    name: 'phrase',
-    description: 'obvious message',
-    example: 'secure',
-  })
-  token: string;
 }

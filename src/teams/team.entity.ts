@@ -54,17 +54,9 @@ export class Team extends BaseEntity {
   @OneToMany(
     () => Problems,
     (problem) => problem.team,
-    // { eager: true },
-  )
-  problems: Problems[];
-
-  /** store question details of problems assigned to participant in round 2 */
-  @OneToMany(
-    () => Problems,
-    (problem) => problem.assignteam,
     { eager: true },
   )
-  assignProblems: Problems[];
+  problems: Problems[];
 
   /** store timestamp for tie-braking  */
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
