@@ -14,6 +14,7 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
   /** to fetch highest points scored by team on given problem */
   async getHighestPointsFor(problemID: string, teamID: number) {
     const query = await this.createQueryBuilder('submission')
+      .leftJoinAndSelect('submission.problem', 'problem')
       .select('MAX(submission.points)', 'points')
       .andWhere('submission.teamId = :team', { team: teamID })
       .andWhere('submission.problemId = :problem', { problem: problemID })

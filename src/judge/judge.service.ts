@@ -265,6 +265,7 @@ export class JudgeService {
       const problem_id = problem_ids[i];
       const highest = await this.judgeRepository.getHighestPointsFor(problem_id, team_id);
       highest.problem_id = problem_id;
+      highest.problem_name = await this.problemService.getNameFromId(problem_id);
       top_submissions.push(highest);
     }
     console.log(top_submissions);
