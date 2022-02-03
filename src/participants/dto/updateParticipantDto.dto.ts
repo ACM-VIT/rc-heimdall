@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsPhoneNumber, IsString, Length } from 'class-validator';
 
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -13,11 +13,14 @@ import { ApiProperty } from '@nestjs/swagger';
 export class UpdateParticipantDto {
   /** College of the participant */
   @IsNotEmpty()
+  @IsString()
   @ApiProperty({ description: 'College of the participant', example: 'VIT' })
   college: string;
 
   /** Registration Number of the participant */
   @IsNotEmpty()
+  @IsString()
+  @Length(7)
   @ApiProperty({ description: 'Registration Number of the participant', example: '20BCE0999' })
   registrationNumber: string;
 
