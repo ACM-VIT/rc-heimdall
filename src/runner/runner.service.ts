@@ -51,15 +51,21 @@ export class RunnerService {
       // fetch output from task-runner, if error, then return normal string.
       this.logger.verbose(`Requesting runner with data: ${JSON.stringify(executeCode)}`);
 
+      // Check if input size is less than 5KB
+      if (executeCode.input.length > 5000) {
+        throw new Error('Code size is greater than 1KB');
+      }
+
       // fetch question name by uuid
       const problemName = await this.problemService.getNameFromId(executeCode.id);
+      console.log(problemName);
       if (problemName === undefined) {
         throw new NotFoundException(`Question ID Not found`);
       }
 
       /** generate name in format accepted by task-runner */
       const postBody = {
-        id: `${problemName}.out`,
+        id: `${problemName}-linux.lin`,
         input: executeCode.input,
       };
       this.logger.verbose(`Query task runner with ${JSON.stringify(postBody)}`);

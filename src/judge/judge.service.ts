@@ -87,6 +87,14 @@ export class JudgeService {
   async create(createJudgeDto: CreateJudgeDto) {
     const { code, language, problemID, teamID } = createJudgeDto;
     this.logger.setContext(`judge.create.team.${teamID}`);
+
+    /**
+     * Check if code size is less than 5KB
+     */
+    if (code.length > 5000) {
+      throw new BadRequestException('Code size is more than 5KB');
+    }
+
     /**
      * Map string representing submission to object which contains strict representation of language
      */

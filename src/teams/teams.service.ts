@@ -71,15 +71,18 @@ export class TeamsService {
         const filteredResult = problems.map((problem) => {
           const assignedProblem = problem.problems[0];
           console.log('assignedProblem: ', assignedProblem);
+          const trimProblem = {
+            id: assignedProblem.id,
+            name: assignedProblem.name,
+            points: assignedProblem.maxPoints,
+            description: assignedProblem.instructionsText,
+            sampleInput: assignedProblem.sampleInput,
+            sampleOutput: assignedProblem.sampleOutput,
+            windowsFileURL: assignedProblem.windowsFileURL,
+            objectFileURL: assignedProblem.objectFileURL,
+            macFileURL: assignedProblem.macFileURL,
+          };
           return assignedProblem;
-          // return {
-          //   id: problem.id,
-          //   maxPoints: problem.maxPoints,
-          //   instructionsText: problem.instructionsText,
-          //   macFileURL: problem.macFileURL,
-          //   windowsFileURL: problem.windowsFileURL,
-          //   objectFileURL: problem.objectFileURL,
-          // };
         });
         return filteredResult;
       } catch (e) {
@@ -122,7 +125,6 @@ export class TeamsService {
    */
   async getLeaderBoard() {
     const allRanks = await this.teamRepository.getLeaderBoard();
-
     // add ranks to each team
     const teamsWithRanks = allRanks.map((team, index) => {
       return { rank: index + 1, ...team };
