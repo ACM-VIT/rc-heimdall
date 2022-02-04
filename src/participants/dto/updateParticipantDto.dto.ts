@@ -18,9 +18,7 @@ export class UpdateParticipantDto {
   college: string;
 
   /** Registration Number of the participant */
-  @IsNotEmpty()
   @IsString()
-  @Length(9)
   @ApiProperty({ description: 'Registration Number of the participant', example: '20BCE0999' })
   registrationNumber: string;
 
