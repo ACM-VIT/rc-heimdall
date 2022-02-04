@@ -50,7 +50,7 @@ export class Participant extends BaseEntity {
 
   /** phone number of the participant */
   @Column({
-    default: 9876543210,
+    default: '0000000000',
   })
   phoneNumber: string;
 
