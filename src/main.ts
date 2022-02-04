@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
+import { TimeoutInterceptor } from './interceptor/timeout.interceptor';
 
 /**
  * Bootstrap application by attaching middleware and initializing auxillary services
@@ -30,6 +31,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(config.get('api.route'), app, document);
 
+  /** attaching global interveptors */
+  app.useGlobalInterceptors(new TimeoutInterceptor());
+
   /** attaching middleware */
   app.enableCors();
   app.use(helmet());
@@ -48,7 +52,8 @@ async function bootstrap() {
   );
 
   /** binding port to service */
-  await app.listen(config.get('server.port'));
+  const server = await app.listen(config.get('server.port'));
+  server.setTimeout(100);
 }
 
 /** launch the application */

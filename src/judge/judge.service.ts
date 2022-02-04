@@ -121,10 +121,10 @@ export class JudgeService {
     }
 
     /** only allow assigned teams to run problems */
-    // const isAssigned = await this.teamService.isProblemAssignedTo(team, problem);
-    // if (isAssigned === false) {
-    //   throw new ForbiddenException(`Everything comes at a cost, you need to buy the problem`);
-    // }
+    const isAssigned = await this.teamService.isProblemAssignedTo(team, problem);
+    if (isAssigned === false) {
+      throw new ForbiddenException(`You are not assigned with this problem`);
+    }
 
     /** prepare postBody to send to Judge0  */
     const postBody1: JudgeOSubmissionRequest = {
@@ -206,11 +206,11 @@ export class JudgeService {
     // get team and update the points
     const team = await this.teamService.findOneById(team_id);
     const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
+    team.points = points;
     if (team.points !== points) {
-      team.points = points;
       team.timestamp = new Date();
-      await team.save();
     }
+    await team.save();
 
     console.log(top_submissions);
     return top_submissions;

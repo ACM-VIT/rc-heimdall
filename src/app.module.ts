@@ -4,7 +4,7 @@
  * defined modules, then new module would be integrated here.
  * @packageDocumentation
  */
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 
 import { JudgeModule } from './judge/judge.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
@@ -18,6 +18,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
 import { TestCaseModule } from './testCase/testCase.module';
+import { PauseMiddleware } from './middlewares/pause.middleware';
 
 /**
  * Main Application Module
@@ -41,5 +42,10 @@ import { TestCaseModule } from './testCase/testCase.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes(RunnerController);
+    // apply on all POST routes
+    consumer.apply(PauseMiddleware).forRoutes({
+      path: '*',
+      method: RequestMethod.POST,
+    });
   }
 }

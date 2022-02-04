@@ -69,7 +69,7 @@ export class RunnerService {
         input: executeCode.input,
       };
       this.logger.verbose(`Query task runner with ${JSON.stringify(postBody)}`);
-
+      // set post request timeout to 10 seconds
       const reply = await this.http.post(this.endpoint, postBody).toPromise();
       return reply.data.output;
     } catch (err) {

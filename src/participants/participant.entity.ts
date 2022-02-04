@@ -44,7 +44,7 @@ export class Participant extends BaseEntity {
 
   /** registration number of the participant */
   @Column({
-    default: '21BCE0999',
+    default: '20VIT9999',
   })
   registrationNumber: string;
 

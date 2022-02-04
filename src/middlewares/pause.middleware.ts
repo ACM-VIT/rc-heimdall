@@ -16,7 +16,7 @@ export class PauseMiddleware implements NestMiddleware {
         return res.status(503).send('error reading pause file');
       } else {
         // if the event is started, then the app will be paused
-        if (data === 'true') {
+        if (parseInt(data) === 1) {
           return res.status(200).send('The app is paused');
         } else {
           next();

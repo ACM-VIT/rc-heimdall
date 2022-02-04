@@ -147,7 +147,10 @@ export class TeamsService {
     if (team === undefined) {
       throw new NotFoundException(`Team with ID: ${teamID} does not exist`);
     }
-
+    /** Check if team is already assigned with 10 problems */
+    if (team.problems.length > 10) {
+      throw new NotFoundException(`Team already has 10 problems assigned`);
+    }
     /** attach problem into team, operate on points */
     team.problems.push(problem);
     await team.save();
