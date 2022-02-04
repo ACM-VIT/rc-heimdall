@@ -50,7 +50,7 @@ async function bootstrap() {
 
   /** binding port to service */
   const server = await app.listen(config.get('server.port'));
-  server.setTimeout(5000);
+  server.setTimeout(10000);
 }
 
 /** launch the application */
