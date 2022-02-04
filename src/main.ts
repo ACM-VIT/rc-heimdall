@@ -31,9 +31,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(config.get('api.route'), app, document);
 
-  /** attaching global interveptors */
-  app.useGlobalInterceptors(new TimeoutInterceptor());
-
   /** attaching middleware */
   app.enableCors();
   app.use(helmet());
@@ -53,7 +50,7 @@ async function bootstrap() {
 
   /** binding port to service */
   const server = await app.listen(config.get('server.port'));
-  server.setTimeout(100);
+  server.setTimeout(5000);
 }
 
 /** launch the application */

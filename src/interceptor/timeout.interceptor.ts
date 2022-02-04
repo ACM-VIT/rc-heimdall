@@ -6,7 +6,7 @@ import { catchError, timeout } from 'rxjs/operators';
 export class TimeoutInterceptor {
   intercept(context, next) {
     return next.handle().pipe(
-      timeout(15000),
+      timeout(5000),
       catchError((err) => {
         if (err instanceof TimeoutError) {
           return throwError(() => new RequestTimeoutException());

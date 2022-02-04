@@ -1,6 +1,7 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { TimeoutInterceptor } from 'src/interceptor/timeout.interceptor';
 import { ExecuteCodeDto } from './dto/execute-code.dto';
 import { RunnerService } from './runner.service';
 
@@ -17,6 +18,7 @@ import { RunnerService } from './runner.service';
  */
 @ApiTags('Code Runner')
 @ApiBearerAuth('access-token')
+@UseInterceptors(new TimeoutInterceptor())
 @Controller('runner')
 export class RunnerController {
   constructor(private readonly runnerService: RunnerService) {}
