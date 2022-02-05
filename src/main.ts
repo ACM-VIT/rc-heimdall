@@ -18,6 +18,11 @@ async function bootstrap() {
     logger: ['log', 'error', 'warn', 'verbose'],
   });
 
+  /** configuring Sentry */
+  Sentry.init({
+    dsn: config.get('sentry.dsn'),
+  });
+
   /** configuring swaggerUI */
   const options = new DocumentBuilder()
     .setTitle(config.get('api.name'))
