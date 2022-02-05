@@ -29,8 +29,10 @@ export class Problems extends BaseEntity {
   )
   submissions: JudgeSubmissions[];
 
-  /** human read-able string to identify a problem */
-  @Column()
+  /** human read-able string to identify a problem should be unique*/
+  @Column({
+    unique: true,
+  })
   name: string;
 
   /** maximum points that can be assigned to the problem */
@@ -122,7 +124,6 @@ export class Problems extends BaseEntity {
   )
   team: Team;
 
-
   /**
    * data to show, saved sample responses
    */
@@ -140,4 +141,10 @@ export class Problems extends BaseEntity {
     default: 1,
   })
   multiplier: number;
+
+  // to tell if a problem is of round 1 or round 2
+  @Column({
+    default: 1,
+  })
+  round: number;
 }

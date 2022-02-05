@@ -30,7 +30,7 @@ export class ProblemsController {
   // @Post()
   // create(@Body() createProblemDto: CreateProblemDto) {
   //   return this.problemsService.create(createProblemDto);
-    // return [];
+  // return [];
   // }
 
   /**
@@ -46,6 +46,13 @@ export class ProblemsController {
     return this.problemsService.findAll();
     // return [];
   }
+
+  /** Route to get round 2 problems */
+  // @UseGuards(JwtAuthGuard)
+  // @Get('/round2')
+  // getRound2() {
+  //   return this.problemsService.getRound2();
+  // }
 
   /**
    * Responds to: _GET(`/:id`)_
@@ -64,8 +71,8 @@ export class ProblemsController {
    *
    * To delete a problem by ID
    */
-  // @Delete()
-  // remove() {
-  //   return this.problemsService.clear();
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.problemsService.remove(id);
   // }
 }

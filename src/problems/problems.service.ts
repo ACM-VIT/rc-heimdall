@@ -123,8 +123,18 @@ export class ProblemsService {
     return this.problemRepository.delete({ id });
   }
 
-  /** critical function, to clear/delete/remove all problems in storage */
-  clear() {
-    return this.problemRepository.delete({ maxPoints: MoreThanOrEqual(0) });
+  /** to get round 2 problems */
+  async getRound2(){
+   const problems = await this.problemRepository.getRound2Problems();
+   // get problems only if its name is >"20"
+    const refinedProblems = problems.filter((problem) => {
+      return problem.name > "10";
+    });
+    return refinedProblems;
   }
+
+  // /** critical function, to clear/delete/remove all problems in storage */
+  // clear() {
+  //   return this.problemRepository.delete({ maxPoints: MoreThanOrEqual(0) });
+  // }
 }

@@ -61,12 +61,12 @@ export class SyncService {
    * To sync database entries with problems uploaded on cloud storage
    */
   async syncWithCloudStorage() {
-    await this.testCaseService.clear();
-    this.logger.verbose(`Cleared testcases storages`);
-    await this.judgeService.clear();
-    this.logger.verbose(`cleared judge submissions`);
-    await this.problemsService.clear();
-    this.logger.verbose(`cleared problems list`);
+    // await this.testCaseService.clear();
+    // this.logger.verbose(`Cleared testcases storages`);
+    // await this.judgeService.clear();
+    // this.logger.verbose(`cleared judge submissions`);
+    // await this.problemsService.clear();
+    // this.logger.verbose(`cleared problems list`);
     try {
       this.logger.verbose(`connecting to seeding endpoint: ${this.seeder} `);
       const reply = await this.http.get(this.seeder).toPromise();
@@ -83,34 +83,38 @@ export class SyncService {
       /** save problem details locally and return data as string object */
       const parsedData = await this.saveLocally(problems);
       /** clear old storage */
-      const clearOperation = await this.problemsService.clear();
-      this.logger.verbose(`Cleared ${clearOperation.affected} from problem storage`);
+      // const clearOperation = await this.problemsService.clear();
+      this.logger.verbose(`Cleared from problem storage`);
 
       parsedData.forEach((problem) => {
-        this.problemsService.create({
-          name: problem.id,
-          maxPoints: 100,
-          inputText1: problem.inputText1,
-          inputText2: problem.inputText2,
-          inputText3: problem.inputText3,
-          inputText4: problem.inputText4,
-          inputText5: problem.inputText5,
-          outputText1: problem.outputText1,
-          outputText2: problem.outputText2,
-          outputText3: problem.outputText3,
-          outputText4: problem.outputText4,
-          outputText5: problem.outputText5,
-          instructionsText: problem.instructionsText,
-          inputFileURL: problem.input,
-          outputFileURL: problem.output,
-          instructionsFileURL: problem.instructions,
-          windowsFileURL: problem.windows,
-          objectFileURL: problem.object,
-          macFileURL: problem.mac,
-          multiplier: problem.multiplier ? problem.multiplier : 1,
-          sampleInput: problem.sampleInput ? problem.sampleInput : 'sample input',
-          sampleOutput: problem.sampleOutput ? problem.sampleOutput : 'sample output',
-        });
+        this.problemsService
+          .create({
+            name: problem.id,
+            maxPoints: 100,
+            inputText1: problem.inputText1,
+            inputText2: problem.inputText2,
+            inputText3: problem.inputText3,
+            inputText4: problem.inputText4,
+            inputText5: problem.inputText5,
+            outputText1: problem.outputText1,
+            outputText2: problem.outputText2,
+            outputText3: problem.outputText3,
+            outputText4: problem.outputText4,
+            outputText5: problem.outputText5,
+            instructionsText: problem.instructionsText,
+            inputFileURL: problem.input,
+            outputFileURL: problem.output,
+            instructionsFileURL: problem.instructions,
+            windowsFileURL: problem.windows,
+            objectFileURL: problem.object,
+            macFileURL: problem.mac,
+            multiplier: problem.multiplier ? problem.multiplier : 1,
+            sampleInput: problem.sampleInput ? problem.sampleInput : 'sample input',
+            sampleOutput: problem.sampleOutput ? problem.sampleOutput : 'sample output',
+          })
+          .catch((error) => {
+            this.logger.error(`ProblemName ${problem.id} already exists`);
+          });
       });
 
       this.logger.verbose(`Seeded ${parsedData.length} problems into storage`);

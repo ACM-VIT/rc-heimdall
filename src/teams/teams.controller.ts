@@ -102,12 +102,12 @@ export class TeamsController {
    *
    * Assign a problem to team for round 2
    */
-  @Post('/assignproblems')
-  @UsePipes(ValidationPipe)
-  assignProblemRoundTwo(@Request() request, @Body() assignProblemR2DTO: AssignProblemR2DTO) {
-    const user: JwtToken = request.user;
-    return this.teamsService.assignProblemRoundTwo(assignProblemR2DTO.problemID, user.participant.team_id);
-  }
+  // @Post('/assignproblems')
+  // @UsePipes(ValidationPipe)
+  // assignProblemRoundTwo(@Request() request, @Body() assignProblemR2DTO: AssignProblemR2DTO) {
+  //   const user: JwtToken = request.user;
+  //   return this.teamsService.assignProblemRoundTwo(assignProblemR2DTO.problemID, user.participant.team_id);
+  // }
   /**
    * Responds to: _GET(`/:id`)_
    * Get details of [[Team]] by ID

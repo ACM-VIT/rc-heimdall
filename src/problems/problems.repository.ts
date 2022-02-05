@@ -63,4 +63,21 @@ export class ProblemRepository extends Repository<Problems> {
       .getOne();
     return query;
   }
+
+  /** To get round 2 problems i.e problem name should be greater than 20 */
+  async getRound2Problems() {
+    const query = await this.createQueryBuilder()
+      .select([
+        'problems.id',
+        'problems.name',
+        'problems.maxPoints',
+        'problems.windowsFileURL',
+        'problems.objectFileURL',
+        'problems.macFileURL',
+        'problems.instructionsText',
+      ])
+      .from(Problems, 'problems')
+      .getMany();
+    return query;
+  }
 }
