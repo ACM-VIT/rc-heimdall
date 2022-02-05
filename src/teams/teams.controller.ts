@@ -112,14 +112,14 @@ export class TeamsController {
    * Responds to: _GET(`/:id`)_
    * Get details of [[Team]] by ID
    */
-  // @Get(':id')
-  // async findOne(@Request() request, @Param('id') id: number) {
-  //   const user: JwtToken = request.user;
-  //   if (user.participant.team_id != id) {
-  //     throw new UnauthorizedException(`Not your team`);
-  //   }
-  //   /** fetch all team details to display */
-  //   const teamDetails = await this.teamsService.findOneByIdWithRank(id);
+  @Get('/getRank')
+  async findOne(@Request() request) {
+    const user: JwtToken = request.user;
+
+    /** fetch all team details to display */
+    const teamRank = await this.teamsService.findOneByIdWithRank(user.participant.team_id);
+    return teamRank;
+  }
 
   //   /** show only selected details from problems object */
   //   // const problems =
