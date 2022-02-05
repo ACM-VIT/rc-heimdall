@@ -231,11 +231,20 @@ export class JudgeService {
 
   /** To fetch details by team and ID */
   async findOneByTeamAndID(id, team_id) {
-    const query = await this.judgeRepository.findOneByTeamAndID(id, team_id);
-    if (query === undefined) {
+    const judgeSubmission = await this.judgeRepository.findOneByTeamAndID(id, team_id);
+    let points = 0;
+    judgeSubmission.testCase.map((testCase) => {
+      if (testCase.state === 3) {
+        points += 20;
+      }
+    });
+    judgeSubmission.returned_testcases = judgeSubmission.testCase.length;
+    judgeSubmission.points = points;
+    await this.judgeRepository.save(judgeSubmission);
+    if (judgeSubmission === undefined) {
       throw new NotFoundException(`No submission for token ${id}`);
     }
-    return query;
+    return judgeSubmission;
   }
 
   /**

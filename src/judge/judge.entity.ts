@@ -51,6 +51,7 @@ export class JudgeSubmissions extends BaseEntity {
   @OneToMany(
     () => TestCase,
     (testCase) => testCase.submission,
+    { eager: true },
   )
   testCase: TestCase[];
 

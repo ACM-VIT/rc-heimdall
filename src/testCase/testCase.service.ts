@@ -37,13 +37,16 @@ export class TestCaseService {
     console.log('testcase: ', testCaseSubmission);
     const judgeSubmission = testCaseSubmission.submission;
     console.log(`> ${token} :: ${DILUTE[testCaseSubmission.state]}`);
-    judgeSubmission.returned_testcases += 1;
+    console.log('judgeSubmission: ', judgeSubmission);
+    console.log(judgeSubmission.testCase, typeof judgeSubmission.testCase);
+    // if (judgeSubmission.testCase.length === 5) {
+    //   judgeSubmission.returned_testcases = 5;
+    // }
     if (status.description === 'Accepted') {
       judgeSubmission.points += 20;
     }
-    await judgeSubmission.save();
 
-    await testCaseSubmission.save();
+    await this.testCaseRepository.save(testCaseSubmission);
 
     // /** assign points only to CodeStates.{ACCEPTED | WRONG} responses  */
     // const refereeEvaluation = referee(

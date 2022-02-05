@@ -12,11 +12,10 @@ import { TestCase } from './testCase.entity';
 @EntityRepository(TestCase)
 export class TestCaseRepository extends Repository<TestCase> {
   async fetchDetailsByToken(token: string) {
-    const query = this.createQueryBuilder('testcase')
+    const query = await this.createQueryBuilder('testcase')
       .andWhere('testcase.token = :token', { token })
       .leftJoinAndSelect('testcase.submission', 'JudgeSubmissions')
       .getOne();
-
     return query;
   }
 }
