@@ -6,8 +6,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
-import { TimeoutInterceptor } from './interceptor/timeout.interceptor';
-
+import * as Sentry from '@sentry/node';
+import { SentryInterceptor } from 'src/interceptor/sentry.interceptor';
 /**
  * Bootstrap application by attaching middleware and initializing auxillary services
  * @internal
