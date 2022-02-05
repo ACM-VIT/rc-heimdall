@@ -196,19 +196,29 @@ export class SyncService {
 
     for (let i = 0; i < keyArr.length; i += 1) {
       const Problem = problems[keyArr[i]];
-      const testCases = Problem['testcases'];
+      const testCases = Problem['test-cases'];
 
       this.logger.verbose(`Processing id:${keyArr[i]}`);
-      const inputRequest1 = this.http.get(testCases['testcase1']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest2 = this.http.get(testCases['testcase2']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest3 = this.http.get(testCases['testcase3']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest4 = this.http.get(testCases['testcase4']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest5 = this.http.get(testCases['testcase5']['input.txt'], { responseType: 'text' }).toPromise();
-      const outputRequest1 = this.http.get(testCases['testcase1']['output.txt'], { responseType: 'text' }).toPromise();
-      const outputRequest2 = this.http.get(testCases['testcase2']['output.txt'], { responseType: 'text' }).toPromise();
-      const outputRequest3 = this.http.get(testCases['testcase3']['output.txt'], { responseType: 'text' }).toPromise();
-      const outputRequest4 = this.http.get(testCases['testcase4']['output.txt'], { responseType: 'text' }).toPromise();
-      const outputRequest5 = this.http.get(testCases['testcase5']['output.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest1 = this.http.get(testCases['test-cases-1']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest2 = this.http.get(testCases['test-cases-2']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest3 = this.http.get(testCases['test-cases-3']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest4 = this.http.get(testCases['test-cases-4']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest5 = this.http.get(testCases['test-cases-5']['input.txt'], { responseType: 'text' }).toPromise();
+      const outputRequest1 = this.http
+        .get(testCases['test-cases-1']['output.txt'], { responseType: 'text' })
+        .toPromise();
+      const outputRequest2 = this.http
+        .get(testCases['test-cases-2']['output.txt'], { responseType: 'text' })
+        .toPromise();
+      const outputRequest3 = this.http
+        .get(testCases['test-cases-3']['output.txt'], { responseType: 'text' })
+        .toPromise();
+      const outputRequest4 = this.http
+        .get(testCases['test-cases-4']['output.txt'], { responseType: 'text' })
+        .toPromise();
+      const outputRequest5 = this.http
+        .get(testCases['test-cases-5']['output.txt'], { responseType: 'text' })
+        .toPromise();
       const instructionRequest = this.http.get(Problem['description.txt'], { responseType: 'text' }).toPromise();
       const sampleInputRequest = this.http.get(Problem['sample-input.txt'], { responseType: 'text' }).toPromise();
       const sampleOutputRequest = this.http.get(Problem['sample-output.txt'], { responseType: 'text' }).toPromise();
