@@ -37,9 +37,7 @@ export class TestCaseService {
     console.log('testcase: ', testCaseSubmission);
     const judgeSubmission = testCaseSubmission.submission;
     console.log(`> ${token} :: ${DILUTE[testCaseSubmission.state]}`);
-    if (testCaseSubmission.state !== CodeStates.PROCESSING) {
-      judgeSubmission.returned_testcases += 1;
-    }
+    judgeSubmission.returned_testcases += 1;
     if (status.description === 'Accepted') {
       judgeSubmission.points += 20;
     }

@@ -81,9 +81,9 @@ export class ParticipantsController {
    * To delete all participants
    *
    */
-  @UseGuards(JwtAuthGuard)
-  @Delete()
-  deleteAll() {
-    return this.participantsService.clear();
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Delete()
+  // deleteAll() {
+  //   return this.participantsService.clear();
+  // }
 }

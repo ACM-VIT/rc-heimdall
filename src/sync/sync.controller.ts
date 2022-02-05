@@ -9,6 +9,7 @@ import { Controller, Get, HttpCode, UseGuards } from '@nestjs/common';
 
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { SyncService } from './sync.service';
+import { readFileSync } from 'fs';
 
 /**
  * **Sync Controller**
@@ -47,12 +48,22 @@ export class SyncController {
   @UseGuards(JwtAuthGuard)
   @Get('/problems')
   @HttpCode(202)
-  seedProblems() {
-    return this.syncService.syncWithCloudStorage();
+  async seedProblems() {
+    const sync = await readFileSync('sync.txt', 'utf8');
+    if (parseInt(sync) === 1) {
+      return this.syncService.syncWithCloudStorage();
+    } else {
+      return 'Sync is disabled';
+    }
   }
 
   @Get('/participants')
-  seedParticipants() {
-    return this.syncService.syncWithParticipants();
+  async seedParticipants() {
+    const sync = await readFileSync('sync.txt', 'utf8');
+    if (parseInt(sync) === 1) {
+      return this.syncService.syncWithParticipants();
+    } else {
+      return 'Sync is disabled';
+    }
   }
 }

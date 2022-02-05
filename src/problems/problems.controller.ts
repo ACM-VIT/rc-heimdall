@@ -74,8 +74,8 @@ export class ProblemsController {
    *
    * To delete a problem by ID
    */
-  @Delete()
-  remove() {
-    return this.problemsService.clear();
-  }
+  // @Delete()
+  // remove() {
+  //   return this.problemsService.clear();
+  // }
 }

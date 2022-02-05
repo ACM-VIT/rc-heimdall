@@ -111,9 +111,9 @@ export class JudgeController {
    * Responds to: _DELETE(`/:id`)_
    * To delete a submission by id
    */
-  @Delete()
-  @UseGuards(JwtAuthGuard)
-  remove() {
-    return this.judgeService.clear();
-  }
+  // @Delete()
+  // @UseGuards(JwtAuthGuard)
+  // remove() {
+  //   return this.judgeService.clear();
+  // }
 }
