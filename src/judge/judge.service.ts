@@ -237,8 +237,10 @@ export class JudgeService {
       if (testCase.state === 3) {
         points += 20;
       }
+      if (testCase.state >= 3) {
+        judgeSubmission.returned_testcases += 1;
+      }
     });
-    judgeSubmission.returned_testcases = judgeSubmission.testCase.length;
     judgeSubmission.points = points;
     await this.judgeRepository.save(judgeSubmission);
     if (judgeSubmission === undefined) {
