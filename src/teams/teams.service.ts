@@ -82,7 +82,7 @@ export class TeamsService {
             objectFileURL: assignedProblem.objectFileURL,
             macFileURL: assignedProblem.macFileURL,
           };
-          return assignedProblem;
+          return trimProblem;
         });
         return filteredResult;
       } catch (e) {

@@ -1,6 +1,4 @@
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-
-import { CodeStates } from './enum/codeStates.enum';
 import { Problems } from '../problems/problem.entity';
 import { Team } from '../teams/team.entity';
 import { TestCase } from 'src/testCase/testCase.entity';
@@ -49,12 +47,14 @@ export class JudgeSubmissions extends BaseEntity {
   })
   points: number;
 
+  /** testcases for a particular submission */
   @OneToMany(
     () => TestCase,
     (testCase) => testCase.submission,
   )
   testCase: TestCase[];
 
+  /** get the number returned responses of all testcases from Judge0  */
   @Column({
     type: 'int',
     default: 0,

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request, Delete} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request, Delete } from '@nestjs/common';
 import { ProblemsService } from './problems.service';
 import { CreateProblemDto } from './dto/create-problem.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -26,17 +26,18 @@ export class ProblemsController {
    *
    * To create a new problem using [[CreateProblemDto]]
    */
-  @UseGuards(JwtAuthGuard)
-  @Post()
-  create(@Body() createProblemDto: CreateProblemDto) {
-    return this.problemsService.create(createProblemDto);
+  // @UseGuards(JwtAuthGuard)
+  // @Post()
+  // create(@Body() createProblemDto: CreateProblemDto) {
+  //   return this.problemsService.create(createProblemDto);
     // return [];
-  }
+  // }
 
   /**
    * Responds to: _GET(`/`)_
    *
-   * To return list of all problems. This is for internal use only.
+   * To return list of all problems. This does not expose sensitive details
+   * like inputText or outputText
    */
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -56,17 +57,6 @@ export class ProblemsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.problemsService.findOne(id);
-  }
-
-  /**
-   * Responds to: _GET(`demo/:id`)_
-   *
-   * To return details of a particular problem for bidding. This does not expose sensitive details
-   * like inputText or outputText, but only download links and problem details
-   */
-  @Get('/demo/:id')
-  findOneForDemo(@Param('id') id: string) {
-    return this.problemsService.findOneForBidding(id);
   }
 
   /**

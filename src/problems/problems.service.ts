@@ -30,10 +30,13 @@ export class ProblemsService {
   /** to return list of all problems */
   async findAll() {
     const problems = await this.problemRepository.find();
-    return problems.map((problem) => {
+    // dont show sensitive data like input and output texts
+    const refinedProblems = problems.map((problem) => {
       return {
         id: problem.id,
         name: problem.name,
+        sampleInput: problem.sampleInput,
+        sampleOutput: problem.sampleOutput,
         maxPoints: problem.maxPoints,
         windowsFileURL: problem.windowsFileURL,
         objectFileURL: problem.objectFileURL,
@@ -41,6 +44,17 @@ export class ProblemsService {
         instructionsText: problem.instructionsText,
       };
     });
+
+    // sort refinedProblem with name
+    refinedProblems.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      } else if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+    return refinedProblems;
   }
 
   /**
@@ -102,20 +116,6 @@ export class ProblemsService {
     // } catch (e) {
     throw new BadRequestException(`Invalid QuestionID :${id}`);
     // }
-  }
-
-  /**
-   * Data to return to un-protected endpoint
-   */
-  async findOneForBidding(id: string) {
-    try {
-      const problemDetails = await this.problemRepository.findOneForBidding(id);
-      if (problemDetails === undefined) {
-        return new NotFoundException('Problem Not Found');
-      }
-    } catch (e) {
-      return new BadRequestException('Malformed Data Received');
-    }
   }
 
   /** to delete a problem by uuid */

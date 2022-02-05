@@ -29,12 +29,12 @@ export class ParticipantsController {
    *
    * To create a new participant using [[CreateParticipantDto]]
    */
-  @UseGuards(JwtAuthGuard)
-  @Post()
-  @UsePipes(ValidationPipe)
-  create(@Body() createParticipantDto: CreateParticipantDto): Promise<Participant> {
-    return this.participantsService.create(createParticipantDto);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Post()
+  // @UsePipes(ValidationPipe)
+  // create(@Body() createParticipantDto: CreateParticipantDto): Promise<Participant> {
+  //   return this.participantsService.create(createParticipantDto);
+  // }
 
   /**
    * Responds to: _POST(`/`)_
