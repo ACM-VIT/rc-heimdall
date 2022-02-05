@@ -23,12 +23,13 @@ export class TestCaseController {
   @Get()
   @UseGuards(JwtAuthGuard)
   getAll() {
-    return this.testCaseService.getAll();
+    // return this.testCaseService.getAll();
+    return [];
   }
 
-  @Delete()
-  @UseGuards(JwtAuthGuard)
-  deleteAll() {
-    return this.testCaseService.clear();
-  }
+  // @Delete()
+  // @UseGuards(JwtAuthGuard)
+  // deleteAll() {
+  //   return this.testCaseService.clear();
+  // }
 }

@@ -17,10 +17,8 @@ import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { DILUTE } from './enum/codeStates.enum';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { JwtToken } from '../auth/interface/auth.token.interface';
-import { Judge0Callback } from './interface/judge0.interfaces';
 
 /**
  * **Judge Controller**
@@ -85,16 +83,6 @@ export class JudgeController {
     return this.judgeService.findOneByTeamAndID(id, user.participant.team_id);
   }
 
-  /**
-  //  * Responds to: _PUT(`/callback`)_
-  //  *
-  //  * To receive callback from judge0 and initiate points tally
-  //  */
-  // @Put('QAEJCC9JjMfdAQZ4dTTNfVNF9jUHA3UW')
-  // callbackHandler(@Body() judge0Callback: Judge0Callback) {
-  //   this.logger.verbose(`> ${judge0Callback.token} :: ${DILUTE[judge0Callback.status.id]}`);
-  //   return this.judgeService.handleCallback(judge0Callback);
-  // }
 
   /**
    * Responds to: _PUT(`/:id`)_

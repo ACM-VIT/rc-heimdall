@@ -63,25 +63,4 @@ export class ProblemRepository extends Repository<Problems> {
       .getOne();
     return query;
   }
-
-  /**
-   * findOneForBidding provides all the data that is passed during budding. This does not
-   * include anything that can be sensitive as this is provided without tokens
-   */
-  async findOneForBidding(id: string): Promise<Problems> {
-    const query = this.createQueryBuilder()
-      .select([
-        'problems.id',
-        'problems.instructionsText',
-        'problems.name',
-        'problems.maxPoints',
-        'problems.sampleInput',
-        'problems.sampleOutput',
-      ])
-      .from(Problems, 'problems')
-      .andWhere('problems.id = :id', { id })
-      .getOne();
-
-    return query;
-  }
 }
