@@ -7,6 +7,8 @@ typedoc
 .env
 
 config/default.yml
+config/qualifiedteams.json
+config/admins.json
 
 # Logs
 logs

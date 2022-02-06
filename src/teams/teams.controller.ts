@@ -20,7 +20,7 @@ import { AssignProblemR2DTO } from './dto/assign-problem-r2.dto';
 import { mapLanguageIdToObject } from '../judge/minions/language';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { JwtToken } from 'src/auth/interface/auth.token.interface';
-
+import * as Teams from '../../config/qualifiedteams.json';
 /**
  * **Teams Controller**
  *
@@ -49,6 +49,9 @@ export class TeamsController {
   @UsePipes(ValidationPipe)
   findAll(@Request() req) {
     const user: JwtToken = req.user;
+    if (!Teams.teamIds.includes(user.participant.team_id.toString())) {
+      throw new UnauthorizedException(`Team not qualified!`);
+    }
     return this.teamsService.findOne(user.participant.team_id);
     // return [];
   }
@@ -84,6 +87,10 @@ export class TeamsController {
   @UsePipes(ValidationPipe)
   assignProblem(@Request() req, @Body() assignProblemDTO: AssignProblemDTO) {
     const user: JwtToken = req.user;
+    if (!Teams.teamIds.includes(user.participant.team_id.toString())) {
+      throw new UnauthorizedException(`Team not qualified!`);
+    }
+
     return this.teamsService.assignProblem(assignProblemDTO.problemID, user.participant.team_id);
   }
 
@@ -94,6 +101,9 @@ export class TeamsController {
   @Get('/getassignedproblems')
   getAssignedProblems(@Request() request) {
     const user: JwtToken = request.user;
+    if (!Teams.teamIds.includes(user.participant.team_id.toString())) {
+      throw new UnauthorizedException(`Team not qualified!`);
+    }
     return this.teamsService.getAssignedProblems(user.participant.team_id);
   }
 

@@ -205,8 +205,8 @@ export class JudgeService {
     // get team and update the points
     const team = await this.teamService.findOneById(team_id);
     const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
-    team.points = points;
-    if (team.points !== points) {
+    team.pointsR2 = points;
+    if (team.pointsR2 !== points) {
       team.timestamp = new Date();
     }
     await team.save();

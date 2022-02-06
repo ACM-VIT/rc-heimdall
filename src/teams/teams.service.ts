@@ -8,6 +8,8 @@ import { TeamRepository } from './teams.repository';
 import * as config from 'config';
 import { ProblemsService } from '../problems/problems.service';
 import { Problems } from '../problems/problem.entity';
+import * as admins from '../../config/admins.json';
+import * as Teams from '../../config/qualifiedteams.json';
 
 /**
  * **Teams Service**
@@ -127,8 +129,15 @@ export class TeamsService {
    */
   async getLeaderBoard() {
     const allRanks = await this.teamRepository.getLeaderBoard();
+    // remove teams with certain IDs
+    const filteredRanks = allRanks.filter((team) => {
+      if (!admins.teamIds.includes(team.id.toString()) && Teams.teamIds.includes(team.id.toString())) {
+        return team;
+      }
+    });
+
     // add ranks to each team
-    const teamsWithRanks = allRanks.map((team, index) => {
+    const teamsWithRanks = filteredRanks.map((team, index) => {
       return { rank: index + 1, ...team };
     });
     return teamsWithRanks;
@@ -155,6 +164,13 @@ export class TeamsService {
     }
     /** attach problem into team, operate on points */
     console.log('team problems: ', team.problems.length);
+
+    team.problems.forEach((prob) => {
+      if (prob.id === problemID) {
+        throw new NotFoundException(`Problem already assigned to team`);
+      }
+    });
+
     team.problems.push(problem);
 
     console.log('team problems after: ', team.problems.length);

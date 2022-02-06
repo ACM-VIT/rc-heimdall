@@ -124,11 +124,11 @@ export class ProblemsService {
   }
 
   /** to get round 2 problems */
-  async getRound2(){
-   const problems = await this.problemRepository.getRound2Problems();
-   // get problems only if its name is >"20"
+  async getRound2() {
+    const problems = await this.problemRepository.getRound2Problems();
+    // get problems only if its name is >"20"
     const refinedProblems = problems.filter((problem) => {
-      return problem.name > "10";
+      return problem.name > '15';
     });
     return refinedProblems;
   }
