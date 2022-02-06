@@ -134,6 +134,16 @@ export class ProblemsService {
     const refinedProblems = problems.filter((problem) => {
       return problem.name > '15';
     });
+
+    // sort refinedProblem with name
+    refinedProblems.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      } else if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
     return refinedProblems;
   }
 
