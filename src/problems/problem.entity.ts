@@ -143,8 +143,8 @@ export class Problems extends BaseEntity {
   multiplier: number;
 
   // to tell if a problem is of round 1 or round 2
-  @Column({
-    default: 1,
-  })
-  round: number;
+  // @Column({
+  //   default: 1,
+  // })
+  // round: number;
 }

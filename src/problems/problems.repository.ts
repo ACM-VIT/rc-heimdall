@@ -22,6 +22,8 @@ export class ProblemRepository extends Repository<Problems> {
       .select([
         'problems.id',
         'problems.name',
+        'problems.sampleInput',
+        'problems.sampleOutput',
         'problems.maxPoints',
         'problems.windowsFileURL',
         'problems.objectFileURL',

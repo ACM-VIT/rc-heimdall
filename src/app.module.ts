@@ -44,7 +44,7 @@ export class AppModule implements NestModule {
     consumer.apply(LoggerMiddleware).forRoutes(RunnerController);
     // apply on all POST routes
     consumer.apply(PauseMiddleware).forRoutes({
-      path: '*',
+      path: '/judge',
       method: RequestMethod.POST,
     });
   }

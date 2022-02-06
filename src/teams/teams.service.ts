@@ -66,11 +66,13 @@ export class TeamsService {
   async getAssignedProblems(id: number) {
     if (config.get('application.assignProblemToTeams') === true) {
       try {
-        const problems = await this.teamRepository.getAssignedProblems(id);
-        // console.log('problems: ', problems);
+        const team = await this.teamRepository.find({ id });
+        const problems = team[0].problems;
+        console.log('problems', problems.length);
+        const assignedProblems = [];
         const filteredResult = problems.map((problem) => {
-          const assignedProblem = problem.problems[0];
-          console.log('assignedProblem: ', assignedProblem);
+          const assignedProblem = problem;
+          // console.log('assignedProblem: ', assignedProblem);
           const trimProblem = {
             id: assignedProblem.id,
             name: assignedProblem.name,
@@ -82,9 +84,9 @@ export class TeamsService {
             objectFileURL: assignedProblem.objectFileURL,
             macFileURL: assignedProblem.macFileURL,
           };
-          return trimProblem;
+          assignedProblems.push(trimProblem);
         });
-        return filteredResult;
+        return assignedProblems;
       } catch (e) {
         console.log(e);
         throw new NotFoundException(`No Problems assigned to this team`);
@@ -152,10 +154,13 @@ export class TeamsService {
       throw new NotFoundException(`Team already has 10 problems assigned`);
     }
     /** attach problem into team, operate on points */
+    console.log('team problems: ', team.problems.length);
     team.problems.push(problem);
+
+    console.log('team problems after: ', team.problems.length);
     await team.save();
 
-    return { problems: team.problems };
+    return { ...problem };
   }
 
   /**

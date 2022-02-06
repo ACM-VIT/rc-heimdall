@@ -43,7 +43,7 @@ export class TeamRepository extends Repository<Team> {
       .andWhere('team.id = :id', { id })
       .leftJoinAndSelect('team.problems', 'problem')
       .getMany();
-
+    console.log(query.length);
     return query;
   }
 
