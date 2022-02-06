@@ -49,9 +49,6 @@ export class TeamsController {
   @UsePipes(ValidationPipe)
   findAll(@Request() req) {
     const user: JwtToken = req.user;
-    if (!Teams.teamIds.includes(user.participant.team_id.toString())) {
-      throw new UnauthorizedException(`Team not qualified!`);
-    }
     return this.teamsService.findOne(user.participant.team_id);
     // return [];
   }
