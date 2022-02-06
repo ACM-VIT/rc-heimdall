@@ -48,11 +48,11 @@ export class ProblemsController {
   }
 
   /** Route to get round 2 problems */
-  // @UseGuards(JwtAuthGuard)
-  // @Get('/round2')
-  // getRound2() {
-  //   return this.problemsService.getRound2();
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Get('/round2')
+  getRound2() {
+    return this.problemsService.getRound2();
+  }
 
   /**
    * Responds to: _GET(`/:id`)_
