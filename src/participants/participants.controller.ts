@@ -84,13 +84,6 @@ export class ParticipantsController {
   @Get()
   findOne(@Request() req) {
     const googleID: JwtToken = req.user.participant.googleID;
-    const user: JwtToken = req.user;
-    if (
-      !Teams.teamIds.includes(user.participant.team_id.toString()) ||
-      !admins.teamIds.includes(user.participant.team_id.toString())
-    ) {
-      throw new UnauthorizedException(`Team not qualified!`);
-    }
     return this.participantsService.findOneByEmailAndID(googleID.toString());
   }
 
