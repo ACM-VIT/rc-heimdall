@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, UsePipes, ValidationPipe, Delete, UseGuards, Request, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UsePipes,
+  ValidationPipe,
+  Delete,
+  UseGuards,
+  Request,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Participant } from './participant.entity';
 import { ParticipantsService } from './participants.service';
 import { CreateParticipantDto } from './dto/create-participant.dto';
@@ -7,6 +18,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { JwtToken } from 'src/auth/interface/auth.token.interface';
 import * as Teams from '../../config/qualifiedteams.json';
+import * as admins from '../../config/admins.json';
 
 /**
  * **Participants Controller**
@@ -73,7 +85,10 @@ export class ParticipantsController {
   findOne(@Request() req) {
     const googleID: JwtToken = req.user.participant.googleID;
     const user: JwtToken = req.user;
-    if (!Teams.teamIds.includes(user.participant.team_id.toString())) {
+    if (
+      !Teams.teamIds.includes(user.participant.team_id.toString()) ||
+      !admins.teamIds.includes(user.participant.team_id.toString())
+    ) {
       throw new UnauthorizedException(`Team not qualified!`);
     }
     return this.participantsService.findOneByEmailAndID(googleID.toString());
