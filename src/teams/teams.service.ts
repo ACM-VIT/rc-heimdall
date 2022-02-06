@@ -131,7 +131,7 @@ export class TeamsService {
     const allRanks = await this.teamRepository.getLeaderBoard();
     // remove teams with certain IDs
     const filteredRanks = allRanks.filter((team) => {
-      if (!admins.teamIds.includes(team.id.toString()) && Teams.teamIds.includes(team.id.toString())) {
+      if (Teams.teamIds.includes(team.id.toString())) {
         return team;
       }
     });

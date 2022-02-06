@@ -32,9 +32,9 @@ export class TeamRepository extends Repository<Team> {
       .select('team.name')
       .addSelect('team.id')
       .addSelect('team.pointsR2')
-      .limit(600)
+      // .limit(600)
       .getMany();
-
+    console.log(query);
     return query;
   }
 
