@@ -210,8 +210,6 @@ export class JudgeService {
       team.timestamp = new Date();
     }
     await team.save();
-
-    console.log(top_submissions);
     return top_submissions;
   }
 

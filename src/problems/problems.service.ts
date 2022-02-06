@@ -99,7 +99,11 @@ export class ProblemsService {
   /** To get problem ID's for all problems */
   async getProblemIDs() {
     const problemIDs = await this.problemRepository.find();
-    return problemIDs.map((problem) => {
+    // filter with problem_name>15
+    const refinedProblems = problemIDs.filter((problem) => {
+      return problem.name > '15';
+    });
+    return refinedProblems.map((problem) => {
       return problem.id;
     });
   }
