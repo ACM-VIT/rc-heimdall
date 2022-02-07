@@ -138,12 +138,18 @@ export class TeamsService {
     });
 
     // sort teams based on timestamp
-    const sortedRanks = filteredRanks.sort((a, b) => {
-      return a.timestamp.getTime() - b.timestamp.getTime();
+    const sortedByPoints = filteredRanks.sort((a, b) => {
+      if (b.pointsR2 - a.pointsR2 !== 0) {
+        return b.pointsR2 - a.pointsR2;
+      }
+
+      const aTime = (new Date(a.timestamp) as unknown) as number;
+      const bTime = (new Date(b.timestamp) as unknown) as number;
+      return bTime - aTime;
     });
 
     // add ranks to each team
-    const teamsWithRanks = sortedRanks.map((team, index) => {
+    const teamsWithRanks = sortedByPoints.map((team, index) => {
       return { rank: index + 1, ...team };
     });
     return teamsWithRanks;
