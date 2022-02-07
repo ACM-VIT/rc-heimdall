@@ -39,6 +39,7 @@ async function bootstrap() {
   /** attaching middleware */
   app.enableCors();
   app.use(helmet());
+  app.useGlobalInterceptors(new SentryInterceptor());
 
   /**
    * windowMs : time interval

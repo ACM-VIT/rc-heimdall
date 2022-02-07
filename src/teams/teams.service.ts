@@ -136,8 +136,13 @@ export class TeamsService {
       }
     });
 
+    // sort teams based on timestamp
+    const sortedRanks = filteredRanks.sort((a, b) => {
+      return a.timestamp.getTime() - b.timestamp.getTime();
+    });
+
     // add ranks to each team
-    const teamsWithRanks = filteredRanks.map((team, index) => {
+    const teamsWithRanks = sortedRanks.map((team, index) => {
       return { rank: index + 1, ...team };
     });
     return teamsWithRanks;
