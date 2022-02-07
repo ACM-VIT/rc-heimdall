@@ -34,10 +34,8 @@ export class TestCaseService {
     testCaseSubmission.state = status.id;
     testCaseSubmission.dateUpdated = new Date();
     console.log('state: ', status);
-    console.log('testcase: ', testCaseSubmission);
     const judgeSubmission = testCaseSubmission.submission;
     console.log(`> ${token} :: ${DILUTE[testCaseSubmission.state]}`);
-    console.log('judgeSubmission: ', judgeSubmission);
     console.log(judgeSubmission.testCase, typeof judgeSubmission.testCase);
     // if (judgeSubmission.testCase.length === 5) {
     //   judgeSubmission.returned_testcases = 5;

@@ -50,7 +50,6 @@ export class JudgeController {
   async create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
     const user: JwtToken = req.user;
     console.log('user: ', user);
-    console.log('judge: ', createJudgeDto);
     if (user.participant.team_id != createJudgeDto.teamID) {
       return new UnauthorizedException('who art thou');
     }

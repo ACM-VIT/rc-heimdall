@@ -60,7 +60,6 @@ export class ParticipantsController {
   @UsePipes(ValidationPipe)
   updateParticipant(@Request() req, @Body() updateParticipantDto: UpdateParticipantDto): Promise<Participant> {
     const user: JwtToken = req.user;
-    console.log(user.participant.id);
     return this.participantsService.update(user.participant.googleID, updateParticipantDto);
   }
 

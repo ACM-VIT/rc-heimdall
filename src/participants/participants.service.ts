@@ -49,10 +49,8 @@ export class ParticipantsService {
    * Updating the participant details using participant ID
    */
   async update(id, updateParticipantDto: UpdateParticipantDto) {
-    console.log('id: ', id);
     try {
       const participant = await this.participantRepository.findOneByEmailAndGoogleID(id);
-      console.log(participant);
       if (participant) {
         participant.phoneNumber = updateParticipantDto.phoneNumber;
         participant.registrationNumber = updateParticipantDto.registrationNumber;

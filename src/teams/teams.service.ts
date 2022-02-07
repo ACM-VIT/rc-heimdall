@@ -71,11 +71,9 @@ export class TeamsService {
       try {
         const team = await this.teamRepository.find({ id });
         const problems = team[0].problems;
-        console.log('problems', problems.length);
         const assignedProblems = [];
         const filteredResult = problems.map((problem) => {
           const assignedProblem = problem;
-          // console.log('assignedProblem: ', assignedProblem);
           const trimProblem = {
             id: assignedProblem.id,
             name: assignedProblem.name,
@@ -104,7 +102,6 @@ export class TeamsService {
    */
   async findOneById(id: number) {
     const teamData = await this.teamRepository.findOne({ id });
-    console.log('team data', teamData);
     return teamData;
   }
   /**
@@ -175,8 +172,6 @@ export class TeamsService {
       throw new NotFoundException(`Team already has 10 problems assigned`);
     }
     /** attach problem into team, operate on points */
-    console.log('team problems: ', team.problems.length);
-
     team.problems.forEach((prob) => {
       if (prob.id === problemID) {
         throw new NotFoundException(`Problem already assigned to team`);
@@ -185,8 +180,7 @@ export class TeamsService {
 
     team.problems.push(problem);
 
-    console.log('team problems after: ', team.problems.length);
-    await team.save();
+    await this.teamRepository.save(team);
 
     return { ...problem };
   }
@@ -195,7 +189,6 @@ export class TeamsService {
    * To assign a [[Problem]] to [[Team]] for round 2
    */
   async assignProblemRoundTwo(problemID, teamID): Promise<{ problems: Array<Problems> }> {
-    console.log('Inside assignProblemRoundTwo');
     /** fetch problem by problem ID */
     const problem = await this.problemService.findOne(problemID);
     if (problem === undefined) {
@@ -211,7 +204,6 @@ export class TeamsService {
 
     /** attach problem into team, operate on points */
     team.problems.push(problem);
-    console.log('team', team.problems);
     return await team.save();
   }
 

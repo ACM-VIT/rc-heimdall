@@ -226,9 +226,6 @@ export class SyncService {
       const instructionRequest = this.http.get(Problem['description.txt'], { responseType: 'text' }).toPromise();
       const sampleInputRequest = this.http.get(Problem['sample-input.txt'], { responseType: 'text' }).toPromise();
       const sampleOutputRequest = this.http.get(Problem['sample-output.txt'], { responseType: 'text' }).toPromise();
-      console.log(`${keyArr[i]}-windows.exe`);
-      console.log(`${keyArr[i]}-linux.lin`);
-      console.log(`${keyArr[i]}-mac.mac`);
       await Promise.all([
         inputRequest1,
         inputRequest2,

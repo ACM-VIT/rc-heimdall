@@ -98,7 +98,6 @@ export class JudgeService {
      * Map string representing submission to object which contains strict representation of language
      */
     const codeLanguage: LanguageStruct = mapLanguageStringToObject(language);
-    console.log('codelanguage: ', codeLanguage);
     if (codeLanguage.id === -1) {
       this.logger.verbose(`sent code in unacceptable language`);
       throw new BadRequestException('Code language not accepted');
@@ -205,9 +204,9 @@ export class JudgeService {
     // get team and update the points
     const team = await this.teamService.findOneById(team_id);
     const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
-    team.pointsR2 = points;
-    if (team.pointsR2 !== points) {
+    if (team.pointsR2 < points) {
       team.timestamp = new Date();
+      team.pointsR2 = points;
     }
     await team.save();
     return top_submissions;

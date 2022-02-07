@@ -96,12 +96,14 @@ export class TeamsController {
    * Get list of problems assigned to team
    */
   @Get('/getassignedproblems')
-  getAssignedProblems(@Request() request) {
+  async getAssignedProblems(@Request() request) {
     const user: JwtToken = request.user;
     if (!Teams.teamIds.includes(user.participant.team_id.toString())) {
       throw new UnauthorizedException(`Team not qualified!`);
     }
-    return this.teamsService.getAssignedProblems(user.participant.team_id);
+    const assignedProblems = await this.teamsService.getAssignedProblems(user.participant.team_id);
+    console.log('assignedProblems: ', assignedProblems);
+    return assignedProblems;
   }
 
   /**

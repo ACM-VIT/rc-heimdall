@@ -34,12 +34,9 @@ export class AuthService {
   async tokenExchanger(tokenExchangeDTO: TokenExchangeDTO): Promise<string> {
     try {
       const { token } = tokenExchangeDTO;
-      console.log('after token: ', token);
       const isValidToken: AuthToken = await this.jwtService.verifyAsync(token, oldJWTConstants);
-      console.log('after isValidToken: ', isValidToken);
       const { googleID } = isValidToken;
       const userDetails = await this.participantService.findOneByEmailAndID(googleID);
-      console.log('after userDetails: ', userDetails);
       if (userDetails === undefined) {
         throw new NotFoundException({
           error: 'as-nf-002',
