@@ -8,8 +8,9 @@ import { TeamRepository } from './teams.repository';
 import * as config from 'config';
 import { ProblemsService } from '../problems/problems.service';
 import { Problems } from '../problems/problem.entity';
-import * as admins from '../../config/admins.json';
 import * as Teams from '../../config/qualifiedteams.json';
+
+const qualifiedTeams = ['2148', '1983', '2344', '2343', '2302', '2245', '1336', '2356', '646', '874'];
 
 /**
  * **Teams Service**
@@ -131,7 +132,7 @@ export class TeamsService {
     const allRanks = await this.teamRepository.getLeaderBoard();
     // remove teams with certain IDs
     const filteredRanks = allRanks.filter((team) => {
-      if (Teams.teamIds.includes(team.id.toString())) {
+      if (qualifiedTeams.includes(team.id.toString())) {
         return team;
       }
     });
