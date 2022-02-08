@@ -106,8 +106,8 @@ export class TeamsService {
         });
         return sortedProblems;
       } catch (e) {
-        console.log(e);
-        throw new NotFoundException(`No Problems assigned to this team`);
+        console.log('No problems assigned');
+        return [];
       }
     } else {
       throw new MethodNotAllowedException('question assignment not enabled');
