@@ -19,7 +19,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { JwtToken } from 'src/auth/interface/auth.token.interface';
 import * as Teams from '../../config/qualifiedteams.json';
 
-const qualifiedTeams = ['2148', '1983', '2344', '2343', '2302', '2245', '1336', '2356', '646', '874'];
+const qualifiedTeams = ['2148', '1983', '2344', '2343', '2302', '2245', '1336', '2356', '646', '874', '2060'];
 
 /**
  * **Participants Controller**

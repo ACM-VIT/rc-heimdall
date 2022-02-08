@@ -49,7 +49,6 @@ export class JudgeController {
   @UsePipes(ValidationPipe)
   async create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
     const user: JwtToken = req.user;
-    console.log('user: ', user);
     if (user.participant.team_id != createJudgeDto.teamID) {
       return new UnauthorizedException('who art thou');
     }

@@ -42,7 +42,6 @@ export class ProblemsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Request() req) {
-    console.log(req.user);
     return this.problemsService.findAll();
     // return [];
   }

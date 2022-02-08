@@ -111,7 +111,6 @@ export class JudgeService {
     }
 
     /** fetch details of the team who made the submission */
-    console.log('teamid: ', teamID);
     const team = await this.teamService.findOneById(teamID);
     if (team === undefined) {
       this.logger.verbose(`is an invalid team ID`);

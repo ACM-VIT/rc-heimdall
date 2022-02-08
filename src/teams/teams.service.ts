@@ -10,7 +10,7 @@ import { ProblemsService } from '../problems/problems.service';
 import { Problems } from '../problems/problem.entity';
 import * as Teams from '../../config/qualifiedteams.json';
 
-const qualifiedTeams = ['2148', '1983', '2344', '2343', '2302', '2245', '1336', '2356', '646', '874'];
+const qualifiedTeams = ['2148', '1983', '2344', '2343', '2302', '2245', '1336', '2356', '646', '874', '2060'];
 
 /**
  * **Teams Service**
@@ -152,7 +152,7 @@ export class TeamsService {
 
       const aTime = (new Date(a.timestamp) as unknown) as number;
       const bTime = (new Date(b.timestamp) as unknown) as number;
-      return bTime - aTime;
+      return aTime - bTime;
     });
 
     // add ranks to each team
@@ -206,7 +206,6 @@ export class TeamsService {
       throw new NotFoundException(`Problem with ID:${problemID} does not exist`);
     }
 
-    console.log('problem', problem);
     /** fetch team by teamID */
     const team = await this.teamRepository.findOne(teamID);
     if (team === undefined) {

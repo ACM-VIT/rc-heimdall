@@ -16,9 +16,11 @@ export enum CodeStates {
   WRONG,
   TLE,
   COMPILATION_ERROR,
-  RUNTIME_ERROR,
-  INTERNAL_ERROR,
+  RUNTIME_ERROR_1,
+  INTERNAL_ERROR_1,
   CODE_ERROR,
+  INTERNAL_ERROR_2,
+  RUNTIME_ERROR_2,
 }
 
 /**
@@ -38,13 +40,13 @@ export const CODE_STATES: Array<CodeStates> = [
   CodeStates.WRONG,
   CodeStates.TLE,
   CodeStates.COMPILATION_ERROR,
-  CodeStates.RUNTIME_ERROR,
-  CodeStates.RUNTIME_ERROR,
-  CodeStates.RUNTIME_ERROR,
-  CodeStates.RUNTIME_ERROR,
-  CodeStates.RUNTIME_ERROR,
-  CodeStates.RUNTIME_ERROR,
-  CodeStates.INTERNAL_ERROR,
+  CodeStates.RUNTIME_ERROR_1,
+  CodeStates.RUNTIME_ERROR_1,
+  CodeStates.RUNTIME_ERROR_1,
+  CodeStates.RUNTIME_ERROR_1,
+  CodeStates.RUNTIME_ERROR_2,
+  CodeStates.RUNTIME_ERROR_1,
+  CodeStates.INTERNAL_ERROR_1,
   CodeStates.CODE_ERROR,
 ];
 
