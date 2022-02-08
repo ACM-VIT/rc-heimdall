@@ -124,6 +124,9 @@ export class TeamsController {
       '2245',
       '1336',
       '2356',
+      '7',
+      '6',
+      '8',
     ];
     console.log('allowed_teams', allowedTeams);
     console.log('user.team_id', user.participant.team_id);

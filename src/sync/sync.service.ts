@@ -29,6 +29,9 @@ const qualifiedTeams = [
   '2060',
   '2051',
   '679',
+  '7',
+  '6',
+  '8',
 ];
 
 /**
@@ -166,8 +169,8 @@ export class SyncService {
       .toPromise();
     data.forEach(async (item) => {
       try {
-        this.logger.verbose(`adding ${item.name} with ${item.googleID}`);
-        if (qualifiedTeams.includes(item.team_id)) {
+        if (qualifiedTeams.includes(item.team_id.toString())) {
+          this.logger.verbose(`adding ${item.name} with ${item.team_id}`);
           await this.participantService.create({
             email: item.email,
             googleID: item.googleID,
@@ -176,6 +179,8 @@ export class SyncService {
             team: item.team,
             team_id: item.team_id,
           });
+        } else {
+          this.logger.verbose(`${item.name} with ${item.team_id} is not qualified`);
         }
       } catch (e) {
         console.log(e);

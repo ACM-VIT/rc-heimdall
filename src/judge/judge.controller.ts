@@ -19,6 +19,7 @@ import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { JwtToken } from '../auth/interface/auth.token.interface';
+import * as config from 'config';
 
 /**
  * **Judge Controller**
@@ -66,6 +67,9 @@ export class JudgeController {
   @UseGuards(JwtAuthGuard)
   findAll(@Request() req) {
     const user: JwtToken = req.user;
+    if (config.get('application.assignProblemToTeams')) {
+      return this.judgeService.findAssignedSubmissions(user.participant.team_id);
+    }
     return this.judgeService.findWithTeamID(user.participant.team_id);
   }
 
@@ -80,7 +84,6 @@ export class JudgeController {
     const user: JwtToken = req.user;
     return this.judgeService.findOneByTeamAndID(id, user.participant.team_id);
   }
-
 
   /**
    * Responds to: _PUT(`/:id`)_
