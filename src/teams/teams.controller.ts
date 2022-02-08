@@ -10,6 +10,7 @@ import {
   UseGuards,
   UnauthorizedException,
   Delete,
+  HttpService,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -20,7 +21,7 @@ import { AssignProblemR2DTO } from './dto/assign-problem-r2.dto';
 import { mapLanguageIdToObject } from '../judge/minions/language';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { JwtToken } from 'src/auth/interface/auth.token.interface';
-import * as Teams from '../../config/qualifiedteams.json';
+import * as qualifiedTeams from '../../config/qualifiedteams.json';
 /**
  * **Teams Controller**
  *
@@ -38,7 +39,7 @@ import * as Teams from '../../config/qualifiedteams.json';
 @Controller('teams')
 export class TeamsController {
   /** initiate controller  */
-  constructor(private readonly teamsService: TeamsService) {}
+  constructor(private readonly teamsService: TeamsService, private readonly http: HttpService) {}
 
   /**
    * Responds to: _GET(`/`)_
@@ -84,7 +85,7 @@ export class TeamsController {
   @UsePipes(ValidationPipe)
   assignProblem(@Request() req, @Body() assignProblemDTO: AssignProblemDTO) {
     const user: JwtToken = req.user;
-    if (!Teams.teamIds.includes(user.participant.team_id.toString())) {
+    if (!qualifiedTeams.teamIds.includes(user.participant.team_id.toString())) {
       throw new UnauthorizedException(`Team not qualified!`);
     }
 
@@ -99,41 +100,13 @@ export class TeamsController {
   async getAssignedProblems(@Request() request) {
     const user: JwtToken = request.user;
     console.log('user', user);
-    const allowedTeams = [
-      '921',
-      '1903',
-      '660',
-      '692',
-      '900',
-      '745',
-      '2256',
-      '2147',
-      '666',
-      '975',
-      '1942',
-      '1161',
-      '716',
-      '865',
-      '1197',
-      '1259',
-      '2148',
-      '1983',
-      '2344',
-      '2343',
-      '2302',
-      '2245',
-      '1336',
-      '2356',
-      '7',
-      '6',
-      '8',
-    ];
+    const allowedTeams = qualifiedTeams.teamIds;
     console.log('allowed_teams', allowedTeams);
     console.log('user.team_id', user.participant.team_id);
 
-    if (!allowedTeams.includes(String(user.participant.team_id))) {
-      throw new UnauthorizedException(`Team not qualified!`);
-    }
+    // if (!allowedTeams.includes(String(user.participant.team_id))) {
+    //   throw new UnauthorizedException(`Team not qualified!`);
+    // }
 
     const assignedProblems = await this.teamsService.getAssignedProblems(user.participant.team_id);
     console.log('assigned_problems', assignedProblems);

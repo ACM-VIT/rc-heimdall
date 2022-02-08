@@ -17,26 +17,8 @@ import { UpdateParticipantDto } from './dto/updateParticipantDto.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { JwtToken } from 'src/auth/interface/auth.token.interface';
-import * as Teams from '../../config/qualifiedteams.json';
+import * as qualifiedTeams from '../../config/qualifiedteams.json';
 
-const qualifiedTeams = [
-  '2148',
-  '1983',
-  '2344',
-  '2343',
-  '2302',
-  '2245',
-  '1336',
-  '2356',
-  '646',
-  '874',
-  '2060',
-  '2051',
-  '679',
-  '7',
-  '6',
-  '8',
-];
 
 /**
  * **Participants Controller**
@@ -102,7 +84,7 @@ export class ParticipantsController {
   findOne(@Request() req) {
     const googleID: JwtToken = req.user.participant.googleID;
     const user: JwtToken = req.user;
-    if (!qualifiedTeams.includes(user.participant.team_id.toString())) {
+    if (!qualifiedTeams.teamIds.includes(user.participant.team_id.toString())) {
       throw new UnauthorizedException(`Team not qualified!`);
     }
     return this.participantsService.findOneByEmailAndID(googleID.toString());
