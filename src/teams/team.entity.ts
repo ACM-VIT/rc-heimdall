@@ -36,7 +36,7 @@ export class Team extends BaseEntity {
   pointsR2: number;
 
   /** 1:N relation between [[Team]] and [[Participant]]. One team can include any number of participants */
-  @ManyToMany(
+  @OneToMany(
     () => Participant,
     (participant) => participant.team,
   )

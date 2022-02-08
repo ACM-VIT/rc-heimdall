@@ -160,7 +160,7 @@ export class SyncService {
           team_id: item.team_id,
         });
       } catch (e) {
-        // console.log(e);
+        console.log(e);
         this.logger.error(`Error adding ${item.name} / ${item.googleID}`);
       }
     });

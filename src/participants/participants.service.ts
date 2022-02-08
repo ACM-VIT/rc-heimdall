@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logger } from 'typedoc/dist/lib/utils';
 import { MoreThanOrEqual } from 'typeorm';
@@ -35,11 +35,15 @@ export class ParticipantsService {
   async create(createParticipantDto: CreateParticipantDto) {
     const participantTeam = await this.teamService.findOne(createParticipantDto.team_id);
     if (participantTeam === undefined) {
-      const newTeam = await this.teamService.create({
-        name: createParticipantDto.team.name,
-        id: createParticipantDto.team_id,
-      });
-      return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, newTeam);
+      try {
+        const newTeam = await this.teamService.create({
+          name: createParticipantDto.team.name,
+          id: createParticipantDto.team_id,
+        });
+        return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, newTeam);
+      } catch (error) {
+        throw new BadRequestException('Team name already exists');
+      }
     }
     return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, participantTeam);
   }
