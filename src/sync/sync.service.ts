@@ -15,6 +15,22 @@ import { TeamsService } from 'src/teams/teams.service';
 import { ProblemsService } from '../problems/problems.service';
 import { ProblemMetadata } from './interface/problem.interface';
 
+const qualifiedTeams = [
+  '2148',
+  '1983',
+  '2344',
+  '2343',
+  '2302',
+  '2245',
+  '1336',
+  '2356',
+  '646',
+  '874',
+  '2060',
+  '2051',
+  '679',
+];
+
 /**
  * **Sync  Service**
  *
@@ -151,14 +167,16 @@ export class SyncService {
     data.forEach(async (item) => {
       try {
         this.logger.verbose(`adding ${item.name} with ${item.googleID}`);
-        await this.participantService.create({
-          email: item.email,
-          googleID: item.googleID,
-          isAdmin: item.isAdmin,
-          name: item.name,
-          team: item.team,
-          team_id: item.team_id,
-        });
+        if (qualifiedTeams.includes(item.team_id)) {
+          await this.participantService.create({
+            email: item.email,
+            googleID: item.googleID,
+            isAdmin: item.isAdmin,
+            name: item.name,
+            team: item.team,
+            team_id: item.team_id,
+          });
+        }
       } catch (e) {
         console.log(e);
         this.logger.error(`Error adding ${item.name} / ${item.googleID}`);
