@@ -11,7 +11,7 @@ import * as config from 'config';
 import { JudgeService } from 'src/judge/judge.service';
 import { ParticipantsService } from 'src/participants/participants.service';
 import { TestCaseService } from 'src/testCase/testCase.service';
-// import { TeamsService } from 'src/teams/teams.service';
+import { TeamsService } from 'src/teams/teams.service';
 import { ProblemsService } from '../problems/problems.service';
 import { ProblemMetadata } from './interface/problem.interface';
 
@@ -50,6 +50,9 @@ export class SyncService {
 
     @Inject(JudgeService)
     private readonly judgeService: JudgeService,
+
+    @Inject(TeamsService)
+    private readonly teamService: TeamsService,
   ) {
     this.seeder = config.get('seeder.endpoint');
     this.taskRunner = config.get('runner.seedEndpoint');
@@ -137,6 +140,8 @@ export class SyncService {
     this.logger.verbose(`cleared judge submissions`);
     await this.participantService.clear();
     this.logger.verbose(`cleared participants list`);
+    await this.teamService.clear();
+    this.logger.verbose(`cleared teams list`);
 
     const { data } = await this.http
       .post(this.registrationEndpoint, {

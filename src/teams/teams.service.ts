@@ -197,7 +197,7 @@ export class TeamsService {
     /** attach problem into team, operate on points */
     problemList.forEach((probID) => {
       if (probID === problemID) {
-        throw new NotFoundException(`Problem already assigned to team`);
+        throw new NotFoundException(`Problem already assigned to the team, please spin again!`);
       }
     });
     problemList.push(problemID);
@@ -252,7 +252,7 @@ export class TeamsService {
   /**
    * To remove all teams
    */
-  removeAll() {
+  clear() {
     return this.teamRepository.removeAll();
   }
 }
