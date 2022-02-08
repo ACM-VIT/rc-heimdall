@@ -9,6 +9,7 @@ import * as config from 'config';
 import { ProblemsService } from '../problems/problems.service';
 import { Problems } from '../problems/problem.entity';
 import * as qualifiedTeams from '../../config/qualifiedteams.json';
+import * as admins from '../../config/admins.json';
 
 /**
  * **Teams Service**
@@ -127,7 +128,7 @@ export class TeamsService {
     const allRanks = await this.teamRepository.getLeaderBoard();
     // remove teams with certain IDs
     const filteredRanks = allRanks.filter((team) => {
-      if (qualifiedTeams.teamIds.includes(team.id.toString())) {
+      if (qualifiedTeams.teamIds.includes(team.id.toString()) && !admins.teamIds.includes(team.id.toString())) {
         return team;
       }
     });
