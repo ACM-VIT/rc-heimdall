@@ -147,8 +147,9 @@ export class ProblemsService {
     return refinedProblems;
   }
 
+  /** clea */
   // /** critical function, to clear/delete/remove all problems in storage */
-  // clear() {
-  //   return this.problemRepository.delete({ maxPoints: MoreThanOrEqual(0) });
-  // }
+  clear() {
+    return this.problemRepository.delete({ maxPoints: MoreThanOrEqual(0) });
+  }
 }
