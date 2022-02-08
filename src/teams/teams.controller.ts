@@ -84,7 +84,26 @@ export class TeamsController {
   @UsePipes(ValidationPipe)
   assignProblem(@Request() req, @Body() assignProblemDTO: AssignProblemDTO) {
     const user: JwtToken = req.user;
-    if (!Teams.teamIds.includes(user.participant.team_id.toString())) {
+    const qualifiedTeams = [
+      '921',
+      '1903',
+      '660',
+      '692',
+      '900',
+      '745',
+      '2256',
+      '2147',
+      '666',
+      '975',
+      '1942',
+      '1161',
+      '716',
+      '865',
+      '1197',
+      '1259',
+      '646',
+    ];
+    if (!qualifiedTeams.includes(user.participant.team_id.toString())) {
       throw new UnauthorizedException(`Team not qualified!`);
     }
 
@@ -116,17 +135,7 @@ export class TeamsController {
       '865',
       '1197',
       '1259',
-      '2148',
-      '1983',
-      '2344',
-      '2343',
-      '2302',
-      '2245',
-      '1336',
-      '2356',
-      '7',
-      '6',
-      '8',
+      '646',
     ];
     console.log('allowed_teams', allowedTeams);
     console.log('user.team_id', user.participant.team_id);
