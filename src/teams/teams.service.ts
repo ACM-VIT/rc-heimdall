@@ -107,7 +107,7 @@ export class TeamsService {
         throw new NotFoundException(`No Problems assigned to this team`);
       }
     } else {
-      throw new MethodNotAllowedException(`Not allowed to view assigned problems`);
+      throw new MethodNotAllowedException('question assignment not enabled');
     }
   }
 
