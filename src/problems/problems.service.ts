@@ -62,12 +62,12 @@ export class ProblemsService {
    * [[findAndFilter]] method of [[ProblemRepository]] to hide sensitive details of the problem
    */
   async findOne(id: string) {
-    // try {
+    try {
     const problem = await this.problemRepository.findAndFilter(id);
     return problem;
-    // } catch (e) {
-    //   throw new NotFoundException(`Invalid QuestionID :${id}`);
-    // }
+    } catch (e) {
+      throw new NotFoundException(`Invalid QuestionID :${id}`);
+    }
   }
 
   /**
@@ -114,12 +114,12 @@ export class ProblemsService {
    * download links.
    */
   async findOneForJudge(id: string) {
-    // try {
+    try {
     const problem = await this.problemRepository.findOneForJudge(id);
     return problem;
-    // } catch (e) {
+    } catch (e) {
     throw new BadRequestException(`Invalid QuestionID :${id}`);
-    // }
+    }
   }
 
   /** to delete a problem by uuid */

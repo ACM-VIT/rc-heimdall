@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { JudgeSubmissions } from '../judge/judge.entity';
 import { Team } from '../teams/team.entity';
@@ -118,11 +118,10 @@ export class Problems extends BaseEntity {
   instructionsText: string;
 
   /** entity representing team which the question is assigned to */
-  @ManyToOne(
-    () => Team,
-    (team) => team.problems,
-  )
-  team: Team;
+  // @Column({
+  //   default: [],
+  // })
+  // teamId: number[];
 
   /**
    * data to show, saved sample responses
