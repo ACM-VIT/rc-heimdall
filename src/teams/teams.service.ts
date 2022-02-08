@@ -72,12 +72,12 @@ export class TeamsService {
         const team = await this.teamRepository.find({ id });
         const problems = team[0].problems;
         const assignedProblems = [];
-        const filteredResult = problems.map((problem) => {
+        problems.map((problem) => {
           const assignedProblem = problem;
           const trimProblem = {
             id: assignedProblem.id,
             name: assignedProblem.name,
-            points: assignedProblem.maxPoints,
+            maxPoints: assignedProblem.maxPoints,
             description: assignedProblem.instructionsText,
             sampleInput: assignedProblem.sampleInput,
             sampleOutput: assignedProblem.sampleOutput,
@@ -87,7 +87,17 @@ export class TeamsService {
           };
           assignedProblems.push(trimProblem);
         });
-        return assignedProblems;
+        // sort assigned problems based on name
+        const sortedProblems = assignedProblems.sort((a, b) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+        return sortedProblems;
       } catch (e) {
         console.log(e);
         throw new NotFoundException(`No Problems assigned to this team`);
@@ -168,7 +178,8 @@ export class TeamsService {
       throw new NotFoundException(`Team with ID: ${teamID} does not exist`);
     }
     /** Check if team is already assigned with 10 problems */
-    if (team.problems.length > 10) {
+    console.log('problems already assigned: ', team.problems);
+    if (team.problems.length >= 10) {
       throw new NotFoundException(`Team already has 10 problems assigned`);
     }
     /** attach problem into team, operate on points */
