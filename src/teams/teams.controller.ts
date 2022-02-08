@@ -98,11 +98,42 @@ export class TeamsController {
   @Get('/getassignedproblems')
   async getAssignedProblems(@Request() request) {
     const user: JwtToken = request.user;
-    if (!Teams.teamIds.includes(user.participant.team_id.toString())) {
+    console.log('user', user);
+    const allowedTeams = [
+      '921',
+      '1903',
+      '660',
+      '692',
+      '900',
+      '745',
+      '2256',
+      '2147',
+      '666',
+      '975',
+      '1942',
+      '1161',
+      '716',
+      '865',
+      '1197',
+      '1259',
+      '2148',
+      '1983',
+      '2344',
+      '2343',
+      '2302',
+      '2245',
+      '1336',
+      '2356',
+    ];
+    console.log('allowed_teams', allowedTeams);
+    console.log('user.team_id', user.participant.team_id);
+
+    if (!allowedTeams.includes(String(user.participant.team_id))) {
       throw new UnauthorizedException(`Team not qualified!`);
     }
+
     const assignedProblems = await this.teamsService.getAssignedProblems(user.participant.team_id);
-    console.log('assignedProblems: ', assignedProblems);
+    console.log('assigned_problems', assignedProblems);
     return assignedProblems;
   }
 

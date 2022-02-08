@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, MethodNotAllowedException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { AssignProblemDTO } from './dto/assign-problem.dto';
@@ -103,7 +103,7 @@ export class TeamsService {
         throw new NotFoundException(`No Problems assigned to this team`);
       }
     } else {
-      return [];
+      throw new MethodNotAllowedException('question assignment not enabled');
     }
   }
 
