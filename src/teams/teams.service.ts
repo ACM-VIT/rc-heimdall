@@ -8,27 +8,8 @@ import { TeamRepository } from './teams.repository';
 import * as config from 'config';
 import { ProblemsService } from '../problems/problems.service';
 import { Problems } from '../problems/problem.entity';
-import * as Teams from '../../config/qualifiedteams.json';
-
-const qualifiedTeams = [
-  '921',
-  '1903',
-  '660',
-  '692',
-  '900',
-  '745',
-  '2256',
-  '2147',
-  '666',
-  '975',
-  '1942',
-  '1161',
-  '716',
-  '865',
-  '1197',
-  '1259',
-  '646',
-];
+import * as qualifiedTeams from '../../config/qualifiedteams.json';
+import * as admins from '../../config/admins.json';
 
 /**
  * **Teams Service**
@@ -145,9 +126,10 @@ export class TeamsService {
    */
   async getLeaderBoard() {
     const allRanks = await this.teamRepository.getLeaderBoard();
+    console.log('allRanks', allRanks.length);
     // remove teams with certain IDs
     const filteredRanks = allRanks.filter((team) => {
-      if (qualifiedTeams.includes(team.id.toString())) {
+      if (qualifiedTeams.teamIds.includes(team.id.toString()) && !admins.teamIds.includes(team.id.toString())) {
         return team;
       }
     });

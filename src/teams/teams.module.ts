@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { ProblemsModule } from '../problems/problems.module';
 import { TeamRepository } from './teams.repository';
 import { TeamsController } from './teams.controller';
@@ -13,7 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
  * @category Teams
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([TeamRepository]), ProblemsModule],
+  imports: [TypeOrmModule.forFeature([TeamRepository]), ProblemsModule, HttpModule],
   controllers: [TeamsController],
   providers: [TeamsService],
   exports: [TeamsService],

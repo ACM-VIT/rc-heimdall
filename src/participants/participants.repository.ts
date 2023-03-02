@@ -24,11 +24,9 @@ export class ParticipantRepository extends Repository<Participant> {
     const { email, googleID, name, isAdmin, team_id } = createParticipantDto;
     const participant = this.create();
     participant.email = email;
-    participant.googleID = googleID;
     participant.name = name;
-    participant.isAdmin = isAdmin;
+    participant.teamLeader = isAdmin;
     participant.team = team;
-    participant.team_id = team_id;
 
     await participant.save();
     return participant;

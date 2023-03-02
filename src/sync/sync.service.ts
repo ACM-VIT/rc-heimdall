@@ -14,26 +14,8 @@ import { TestCaseService } from 'src/testCase/testCase.service';
 import { TeamsService } from 'src/teams/teams.service';
 import { ProblemsService } from '../problems/problems.service';
 import { ProblemMetadata } from './interface/problem.interface';
-
-const qualifiedTeams = [
-  '921',
-  '1903',
-  '660',
-  '692',
-  '900',
-  '745',
-  '2256',
-  '2147',
-  '666',
-  '975',
-  '1942',
-  '1161',
-  '716',
-  '865',
-  '1197',
-  '1259',
-  '646',
-];
+import * as admins from '../../config/admins.json';
+import * as qualifiedTeams from '../../config/qualifiedteams.json';
 
 /**
  * **Sync  Service**
@@ -170,7 +152,10 @@ export class SyncService {
       .toPromise();
     data.forEach(async (item) => {
       try {
-        if (qualifiedTeams.includes(item.team_id.toString())) {
+        if (
+          qualifiedTeams.teamIds.includes(item.team_id.toString()) &&
+          admins.teamIds.includes(item.team_id.toString())
+        ) {
           this.logger.verbose(`adding ${item.name} with ${item.team_id}`);
           await this.participantService.create({
             email: item.email,

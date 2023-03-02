@@ -1,3 +1,4 @@
+import { type } from 'os';
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Team } from '../teams/team.entity';
@@ -16,43 +17,42 @@ export class Participant extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  /** googleID obtained after OAuth */
-  @Column()
-  googleID: string;
+  // /** googleID obtained after OAuth */
+  // @Column()
+  // googleID: string;
 
   /** name of the participant */
   @Column()
   name: string;
 
   /** email using which OAuth was performed */
-  @Column({
-    nullable: true,
-  })
+  @Column({ unique: true })
   email: string;
 
   /** whether participant is admin of his/her team */
-  @Column({
-    default: false,
-  })
-  isAdmin: boolean;
+  @Column({ default: false })
+  teamLeader: boolean;
 
   /** college of the participant */
   @Column({
-    default: 'VIT',
+    nullable: true,
   })
-  college: string;
+  uniName: string;
 
   /** registration number of the participant */
   @Column({
-    default: '20VIT9999',
+    nullable: true,
+    length: 9,
+    type: 'char',
   })
-  registrationNumber: string;
+  regNum: string;
 
   /** phone number of the participant */
   @Column({
-    default: '9000000000',
+    nullable: true,
+    type: 'bigint',
   })
-  phoneNumber: string;
+  phone: number;
 
   /** To check if participant is a fresher from VIT */
   @Column({
@@ -64,12 +64,13 @@ export class Participant extends BaseEntity {
   @ManyToOne(
     () => Team,
     (team) => team.participants,
+    { cascade: true },
   )
   team: Team;
 
-  /** team_id of the participant, references [[Team]] by [[Team.id]] */
-  @Column({
-    default: null,
-  })
-  team_id: number;
+  // /** team_id of the participant, references [[Team]] by [[Team.id]] */
+  // @Column({
+  //   default: null,
+  // })
+  // team_id: number;
 }

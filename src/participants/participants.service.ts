@@ -56,9 +56,9 @@ export class ParticipantsService {
     try {
       const participant = await this.participantRepository.findOneByEmailAndGoogleID(id);
       if (participant) {
-        participant.phoneNumber = updateParticipantDto.phoneNumber;
-        participant.registrationNumber = updateParticipantDto.registrationNumber;
-        participant.college = updateParticipantDto.college;
+        participant.phone = updateParticipantDto.phoneNumber;
+        participant.regNum = updateParticipantDto.registrationNumber;
+        participant.uniName = updateParticipantDto.college;
         participant.fresher = updateParticipantDto.fresher;
         return await this.participantRepository.save(participant);
       }
@@ -98,4 +98,10 @@ export class ParticipantsService {
   clear() {
     return this.participantRepository.delete({ id: MoreThanOrEqual(0) });
   }
+
+  async findOneByEmail(email: string){
+    return await this.participantRepository.findOne({where: {email}}) 
+  }
+
+
 }
