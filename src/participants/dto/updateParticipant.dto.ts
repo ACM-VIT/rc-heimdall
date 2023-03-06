@@ -11,10 +11,10 @@ import { ApiProperty } from '@nestjs/swagger';
  * @category Participants
  */
 export class UpdateParticipantDto {
-         /** College of the participant */
+         /** University of the participant */
          @IsNotEmpty()
          @IsString()
-         @ApiProperty({ description: 'College of the participant', example: 'VIT' })
+         @ApiProperty({ description: 'University of the participant', example: 'VIT' })
          uniName: string;
 
          /** Registration Number of the participant */

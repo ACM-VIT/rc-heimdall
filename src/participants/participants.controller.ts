@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, UsePipes, ValidationPipe, UseGuards, Request } from '@nestjs/common';
 import { Participant } from './participant.entity';
 import { ParticipantsService } from './participants.service';
-import { UpdateParticipantDto } from './dto/updateParticipantDto.dto';
+import { UpdateParticipantDto } from './dto/updateParticipant.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { User } from '../auth/auth.interface';
@@ -19,8 +19,9 @@ import { User } from '../auth/auth.interface';
  */
 @ApiTags('Participants')
 @ApiBearerAuth('access-token')
-@Controller('participants')
 @UseGuards(JwtAuthGuard)
+@UsePipes(ValidationPipe)
+@Controller('participant')
 export class ParticipantsController {
   constructor(private readonly participantsService: ParticipantsService) {}
 
@@ -30,7 +31,6 @@ export class ParticipantsController {
    * To update a the details of participant
    */
   @Post('update')
-  @UsePipes(ValidationPipe)
   async updateParticipant(@Request() req, @Body() updateParticipantDto: UpdateParticipantDto): Promise<Participant> {
     const user: User = req.user;
     return await this.participantsService.update(user.id, updateParticipantDto);
@@ -39,36 +39,11 @@ export class ParticipantsController {
   /**
    * Responds to: _GET(`/`)_
    *
-   * To list all the participants
-   */
-  // @UseGuards(JwtAuthGuard)
-  // @Get()
-  // findAll() {
-  //   return this.participantsService.findAll();
-  //   return [];
-  // }
-
-  /**
-   * Responds to: _GET(`/`)_
-   *
    * To display all details of particular participant
    */
   @Get()
-  @UsePipes(ValidationPipe)
   getParticipant(@Request() req) {
     const user: User = req.user;
     return this.participantsService.getParticipant(user.id);
   }
-
-  /**
-   * Responds to: _DELETE(`/`)_
-   *
-   * To delete all participants
-   *
-   */
-  // @UseGuards(JwtAuthGuard)
-  // @Delete()
-  // deleteAll() {
-  //   return this.participantsService.clear();
-  // }
 }

@@ -4,7 +4,7 @@ import { ParticipantsService } from './participants.service';
 import { TeamsModule } from '../teams/teams.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Participant } from './participant.entity';
-import { JudgeModule } from 'src/judge/judge.module';
+import { JudgeModule } from '../judge/judge.module';
 
 /**
  * **Participants Module**

@@ -28,13 +28,13 @@ export class Participant {
   @Column({ default: false })
   teamLeader: boolean;
 
-  /** college of the participant */
+  /** University Name of the participant */
   @Column({
     nullable: true,
   })
   uniName: string;
 
-  /** registration number of the participant */
+  /** Registration number of the participant */
   @Column({
     nullable: true,
     length: 9,
@@ -42,7 +42,7 @@ export class Participant {
   })
   regNum: string;
 
-  /** phone number of the participant */
+  /** Phone Number of the participant */
   @Column({
     nullable: true,
     type: 'bigint',
@@ -62,10 +62,4 @@ export class Participant {
     { cascade: true },
   )
   team: Team;
-
-  // /** team_id of the participant, references [[Team]] by [[Team.id]] */
-  // @Column({
-  //   default: null,
-  // })
-  // team_id: number;
 }

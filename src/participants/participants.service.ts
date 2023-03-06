@@ -1,11 +1,10 @@
 import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../auth/auth.interface';
-import { MoreThanOrEqual, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { TeamsService } from '../teams/teams.service';
-import { UpdateParticipantDto } from './dto/updateParticipantDto.dto';
+import { UpdateParticipantDto } from './dto/updateParticipant.dto';
 import { Participant } from './participant.entity';
-import { JudgeService } from 'src/judge/judge.service';
+import { JudgeService } from '../judge/judge.service';
 
 /**
  * **Participants Service**
@@ -72,31 +71,9 @@ export class ParticipantsService {
   }
 
   /**
-   * To return list of all participants
-   */
-  findAll() {
-    return this.participantRepository.find();
-  }
-  /**
-   * To Delete a participant by ID
-   */
-  remove(id: number) {
-    return this.participantRepository.delete({ id });
-  }
-
-  /**
-   * clear the participant storages
-   */
-  clear() {
-    return this.participantRepository.delete({ id: MoreThanOrEqual(0) });
-  }
-
-  /**
    * To return details of particular participant by email
    */
   async findOneByEmail(email: string) {
     return await this.participantRepository.findOne({ where: { email }, relations: { team: true } });
   }
-
-  as;
 }
