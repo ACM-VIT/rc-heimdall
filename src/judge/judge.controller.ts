@@ -18,7 +18,7 @@ import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { JwtToken } from '../auth/interface/auth.token.interface';
+import { User } from '../auth/auth.interface'
 import * as config from 'config';
 
 /**
@@ -49,8 +49,8 @@ export class JudgeController {
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
   async create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
-    const user: JwtToken = req.user;
-    if (user.participant.team_id != createJudgeDto.teamID) {
+    const user: User = req.user;
+    if (user.teamId != createJudgeDto.teamID) {
       return new UnauthorizedException('who art thou');
     }
 
@@ -66,11 +66,11 @@ export class JudgeController {
   @Get()
   @UseGuards(JwtAuthGuard)
   findAll(@Request() req) {
-    const user: JwtToken = req.user;
+    const user: User = req.user;
     if (config.get('application.assignProblemToTeams')) {
-      return this.judgeService.findAssignedSubmissions(user.participant.team_id);
+      return this.judgeService.findAssignedSubmissions(user.teamId);
     }
-    return this.judgeService.findWithTeamID(user.participant.team_id);
+    return this.judgeService.findWithTeamID(user.teamId);
   }
 
   /**
@@ -81,8 +81,8 @@ export class JudgeController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   findOne(@Request() req, @Param('id') id: string) {
-    const user: JwtToken = req.user;
-    return this.judgeService.findOneByTeamAndID(id, user.participant.team_id);
+    const user: User = req.user;
+    return this.judgeService.findOneByTeamAndID(id, user.teamId);
   }
 
   /**

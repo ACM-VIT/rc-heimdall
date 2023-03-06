@@ -1,5 +1,4 @@
-import { type } from 'os';
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Team } from '../teams/team.entity';
 
@@ -12,14 +11,10 @@ import { Team } from '../teams/team.entity';
  * @category Participants
  */
 @Entity()
-export class Participant extends BaseEntity {
+export class Participant {
   /** unique id of the participant, auto-generated */
   @PrimaryGeneratedColumn()
   id: number;
-
-  // /** googleID obtained after OAuth */
-  // @Column()
-  // googleID: string;
 
   /** name of the participant */
   @Column()

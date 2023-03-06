@@ -4,7 +4,7 @@ import { CodeStates } from './enum/codeStates.enum';
 import { JudgeSubmissions } from '../judge/judge.entity';
 
 @Entity()
-export class TestCase extends BaseEntity {
+export class TestCase {
   /** token from judge0 to be indexed */
   @PrimaryColumn()
   token: string;

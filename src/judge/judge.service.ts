@@ -7,12 +7,13 @@ import {
   BadRequestException,
   Dependencies,
   ForbiddenException,
-  HttpService,
   Inject,
   Injectable,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+
+import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateJudgeDto } from './dto/create-judge.dto';
@@ -85,7 +86,7 @@ export class JudgeService {
    */
   async create(createJudgeDto: CreateJudgeDto) {
     const { code, language, problemID, teamID } = createJudgeDto;
-    this.logger.setContext(`judge.create.team.${teamID}`);
+    //this.logger.setContext(`judge.create.team.${teamID}`);
 
     /**
      * Check if code size is less than 5KB

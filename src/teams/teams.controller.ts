@@ -10,7 +10,6 @@ import {
   UseGuards,
   UnauthorizedException,
   Delete,
-  HttpService,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -20,7 +19,7 @@ import { AssignProblemDTO } from './dto/assign-problem.dto';
 import { AssignProblemR2DTO } from './dto/assign-problem-r2.dto';
 import { mapLanguageIdToObject } from '../judge/minions/language';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { JwtToken } from 'src/auth/interface/auth.token.interface';
+import { User } from '../auth/auth.interface';
 import * as qualifiedTeams from '../../config/qualifiedteams.json';
 /**
  * **Teams Controller**
@@ -39,7 +38,7 @@ import * as qualifiedTeams from '../../config/qualifiedteams.json';
 @Controller('teams')
 export class TeamsController {
   /** initiate controller  */
-  constructor(private readonly teamsService: TeamsService, private readonly http: HttpService) {}
+  constructor(private readonly teamsService: TeamsService) {}
 
   /**
    * Responds to: _GET(`/`)_
@@ -49,8 +48,8 @@ export class TeamsController {
   @Get()
   @UsePipes(ValidationPipe)
   findAll(@Request() req) {
-    const user: JwtToken = req.user;
-    return this.teamsService.findOne(user.participant.team_id);
+    const user: User = req.user;
+    return this.teamsService.findOne(user.teamId);
     // return [];
   }
 
@@ -69,8 +68,8 @@ export class TeamsController {
    */
   @Get('/:id/problems')
   getProblems(@Request() request, @Param('id') id: number) {
-    const user: JwtToken = request.user;
-    if (user.participant.team_id !== id) {
+    const user: User = request.user;
+    if (user.teamId !== id) {
       throw new UnauthorizedException(`who art thou? eff u!`);
     }
     return this.teamsService.getAssignedProblems(id);
@@ -84,12 +83,12 @@ export class TeamsController {
   @Post('/problems')
   @UsePipes(ValidationPipe)
   assignProblem(@Request() req, @Body() assignProblemDTO: AssignProblemDTO) {
-    const user: JwtToken = req.user;
-    if (!qualifiedTeams.teamIds.includes(user.participant.team_id.toString())) {
+    const user: User = req.user;
+    if (!qualifiedTeams.teamIds.includes(user.teamId.toString())) {
       throw new UnauthorizedException(`Team not qualified!`);
     }
 
-    return this.teamsService.assignProblem(assignProblemDTO.problemID, user.participant.team_id);
+    return this.teamsService.assignProblem(assignProblemDTO.problemID, user.teamId);
   }
 
   /**
@@ -98,7 +97,7 @@ export class TeamsController {
    */
   @Get('/getassignedproblems')
   async getAssignedProblems(@Request() request) {
-    const user: JwtToken = request.user;
+    const user: User = request.user;
     console.log('user', user);
     const allowedTeams = qualifiedTeams.teamIds;
     //         maxPoints: submission.problem.maxPoints,

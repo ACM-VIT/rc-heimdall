@@ -1,6 +1,5 @@
 import { Controller, Post, UsePipes, ValidationPipe, Body, UseGuards, Get, Redirect, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { TokenExchangeDTO } from './dto/token-exchange.dto';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 
 @UseGuards(GoogleAuthGuard)
@@ -17,10 +16,4 @@ export class AuthController {
   googleAuthRedirect(@Req() req) {
     return this.authService.googleLogin(req);
   }
-
-  // @Post('token/exchange')
-  // @UsePipes(ValidationPipe)
-  // async login(@Body() tokenExchangeDTO: TokenExchangeDTO): Promise<any> {
-  //   return this.authService.tokenExchanger(tokenExchangeDTO);
-  // }
 }

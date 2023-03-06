@@ -1,6 +1,7 @@
 import * as config from 'config';
 
-import { Dependencies, HttpService, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Dependencies, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 
 import { ExecuteCodeDto } from './dto/execute-code.dto';
 import { ProblemsService } from '../problems/problems.service';

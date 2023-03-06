@@ -1,12 +1,12 @@
 import {
   Dependencies,
-  HttpService,
   Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
   ServiceUnavailableException,
 } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import * as config from 'config';
 import { JudgeService } from 'src/judge/judge.service';
 import { ParticipantsService } from 'src/participants/participants.service';
@@ -14,6 +14,7 @@ import { TestCaseService } from 'src/testCase/testCase.service';
 import { TeamsService } from 'src/teams/teams.service';
 import { ProblemsService } from '../problems/problems.service';
 import { ProblemMetadata } from './interface/problem.interface';
+import { lastValueFrom } from 'rxjs';
 import * as admins from '../../config/admins.json';
 import * as qualifiedTeams from '../../config/qualifiedteams.json';
 
@@ -74,7 +75,7 @@ export class SyncService {
     this.logger.verbose(`cleared problems list`);
     try {
       this.logger.verbose(`connecting to seeding endpoint: ${this.seeder} `);
-      const reply = await this.http.get(this.seeder).toPromise();
+      const reply = await lastValueFrom(this.http.get(this.seeder));
 
       if (reply.status !== 200) {
         this.logger.error(`connecting to seeding endpoint: ${this.seeder}`);
@@ -83,6 +84,7 @@ export class SyncService {
 
       /** transform object into array */
       const problems = reply.data.payload;
+      console.log(problems);
       this.logger.verbose('Displaying problem details');
 
       /** save problem details locally and return data as string object */
@@ -133,51 +135,51 @@ export class SyncService {
     }
   }
 
-  async syncWithParticipants() {
-    // try {
-    this.logger.verbose(`Updating participant storages`);
-    await this.testCaseService.clear();
-    this.logger.verbose(`Cleared testcases storages`);
-    await this.judgeService.clear();
-    this.logger.verbose(`cleared judge submissions`);
-    await this.participantService.clear();
-    this.logger.verbose(`cleared participants list`);
-    await this.teamService.clear();
-    this.logger.verbose(`cleared teams list`);
+  // async syncWithParticipants() {
+  //   // try {
+  //   this.logger.verbose(`Updating participant storages`);
+  //   await this.testCaseService.clear();
+  //   this.logger.verbose(`Cleared testcases storages`);
+  //   await this.judgeService.clear();
+  //   this.logger.verbose(`cleared judge submissions`);
+  //   await this.participantService.clear();
+  //   this.logger.verbose(`cleared participants list`);
+  //   await this.teamService.clear();
+  //   this.logger.verbose(`cleared teams list`);
 
-    const { data } = await this.http
-      .post(this.registrationEndpoint, {
-        secret: config.get('roundone.secret'),
-      })
-      .toPromise();
-    data.forEach(async (item) => {
-      try {
-        if (
-          qualifiedTeams.teamIds.includes(item.team_id.toString()) &&
-          admins.teamIds.includes(item.team_id.toString())
-        ) {
-          this.logger.verbose(`adding ${item.name} with ${item.team_id}`);
-          await this.participantService.create({
-            email: item.email,
-            googleID: item.googleID,
-            isAdmin: item.isAdmin,
-            name: item.name,
-            team: item.team,
-            team_id: item.team_id,
-          });
-        } else {
-          this.logger.verbose(`${item.name} with ${item.team_id} is not qualified`);
-        }
-      } catch (e) {
-        console.log(e);
-        this.logger.error(`Error adding ${item.name} / ${item.googleID}`);
-      }
-    });
-    // } catch (e) {
-    //   // console.log(e);
-    //   this.logger.error('Error seeding participants');
-    // }
-  }
+  //   const { data } = await this.http
+  //     .post(this.registrationEndpoint, {
+  //       secret: config.get('roundone.secret'),
+  //     })
+  //     .toPromise();
+  //   data.forEach(async (item) => {
+  //     try {
+  //       if (
+  //         qualifiedTeams.teamIds.includes(item.team_id.toString()) &&
+  //         admins.teamIds.includes(item.team_id.toString())
+  //       ) {
+  //         this.logger.verbose(`adding ${item.name} with ${item.team_id}`);
+  //         await this.participantService.create({
+  //           email: item.email,
+  //           googleID: item.googleID,
+  //           isAdmin: item.isAdmin,
+  //           name: item.name,
+  //           team: item.team,
+  //           team_id: item.team_id,
+  //         });
+  //       } else {
+  //         this.logger.verbose(`${item.name} with ${item.team_id} is not qualified`);
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //       this.logger.error(`Error adding ${item.name} / ${item.googleID}`);
+  //     }
+  //   });
+  // } catch (e) {
+  //   // console.log(e);
+  //   this.logger.error('Error seeding participants');
+  // }
+  //}
 
   /**
    * Function to shoot a request to task-runner so that it updates it's arsenal of
@@ -214,28 +216,28 @@ export class SyncService {
 
     for (let i = 0; i < keyArr.length; i += 1) {
       const Problem = problems[keyArr[i]];
-      const testCases = Problem['test-cases'];
+      const testCases = Problem['testcases'];
 
       this.logger.verbose(`Processing id:${keyArr[i]}`);
-      const inputRequest1 = this.http.get(testCases['test-case-1']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest2 = this.http.get(testCases['test-case-2']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest3 = this.http.get(testCases['test-case-3']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest4 = this.http.get(testCases['test-case-4']['input.txt'], { responseType: 'text' }).toPromise();
-      const inputRequest5 = this.http.get(testCases['test-case-5']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest1 = this.http.get(testCases['testcase1']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest2 = this.http.get(testCases['testcase2']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest3 = this.http.get(testCases['testcase3']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest4 = this.http.get(testCases['testcase4']['input.txt'], { responseType: 'text' }).toPromise();
+      const inputRequest5 = this.http.get(testCases['testcase5']['input.txt'], { responseType: 'text' }).toPromise();
       const outputRequest1 = this.http
-        .get(testCases['test-case-1']['output.txt'], { responseType: 'text' })
+        .get(testCases['testcase1']['output.txt'], { responseType: 'text' })
         .toPromise();
       const outputRequest2 = this.http
-        .get(testCases['test-case-2']['output.txt'], { responseType: 'text' })
+        .get(testCases['testcase2']['output.txt'], { responseType: 'text' })
         .toPromise();
       const outputRequest3 = this.http
-        .get(testCases['test-case-3']['output.txt'], { responseType: 'text' })
+        .get(testCases['testcase3']['output.txt'], { responseType: 'text' })
         .toPromise();
       const outputRequest4 = this.http
-        .get(testCases['test-case-4']['output.txt'], { responseType: 'text' })
+        .get(testCases['testcase4']['output.txt'], { responseType: 'text' })
         .toPromise();
       const outputRequest5 = this.http
-        .get(testCases['test-case-5']['output.txt'], { responseType: 'text' })
+        .get(testCases['testcase5']['output.txt'], { responseType: 'text' })
         .toPromise();
       const instructionRequest = this.http.get(Problem['description.txt'], { responseType: 'text' }).toPromise();
       const sampleInputRequest = this.http.get(Problem['sample-input.txt'], { responseType: 'text' }).toPromise();

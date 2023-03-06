@@ -2,7 +2,6 @@ import { Controller, Body, Put, Logger, Get, Delete, UseGuards } from '@nestjs/c
 import { TestCaseService } from './testCase.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { JwtToken } from '../auth/interface/auth.token.interface';
 import { Judge0Callback } from './interface/judge0.interfaces';
 import { DILUTE } from './enum/codeStates.enum';
 

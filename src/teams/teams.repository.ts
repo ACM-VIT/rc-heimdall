@@ -1,4 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateTeamDto } from './dto/create-team.dto';
 import { Team } from './team.entity';
@@ -10,8 +12,12 @@ import { Team } from './team.entity';
  *
  * @category Teams
  */
-@EntityRepository(Team)
+@Injectable()
 export class TeamRepository extends Repository<Team> {
+  constructor(@InjectRepository(Team) repository: Repository<Team>) {
+    super(repository.target, repository.manager, repository.queryRunner);
+  }
+
   /** to create a team  */
   async createWithJoins(createTeamDto: CreateTeamDto): Promise<Team> {
     const { name, id } = createTeamDto;
@@ -56,9 +62,7 @@ export class TeamRepository extends Repository<Team> {
 
   /** to remove all teams */
   async removeAll() {
-    const query = await this.createQueryBuilder('team')
-      .delete()
-      .execute();
+    const query = await this.createQueryBuilder('team').delete().execute();
     return query;
   }
 }

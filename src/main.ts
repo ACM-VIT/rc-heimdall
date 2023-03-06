@@ -1,6 +1,5 @@
 import * as config from 'config';
-import * as helmet from 'helmet';
-import * as rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 import * as bodyParser from 'body-parser';
 
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -42,19 +41,6 @@ async function bootstrap() {
   app.use(helmet());
   app.useGlobalInterceptors(new SentryInterceptor());
   app.use(bodyParser.json({ limit: '50mb' }));
-
-  /**
-   * windowMs : time interval
-   * max: number of requests
-   *
-   * this will allow max number of requests every windowMs seconds
-   */
-  app.use(
-    rateLimit({
-      windowMs: 1000 * 1,
-      max: 10,
-    }),
-  );
 
   /** binding port to service */
   await app.listen(config.get('server.port'));

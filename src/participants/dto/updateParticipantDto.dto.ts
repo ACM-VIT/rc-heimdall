@@ -15,19 +15,19 @@ export class UpdateParticipantDto {
          @IsNotEmpty()
          @IsString()
          @ApiProperty({ description: 'College of the participant', example: 'VIT' })
-         college: string;
+         uniName: string;
 
          /** Registration Number of the participant */
          @IsString()
          @ApiProperty({ description: 'Registration Number of the participant', example: '20BCE0999' })
-         registrationNumber: string;
+         regNum: string;
 
          /** Phone Number of the participant */
          @ApiProperty({ description: 'Phone Number of the participant', example: 9876543210 })
          @IsNumber()
          @Min(0)
          @Max(922337203685477)
-         phoneNumber: number;
+         phone: number;
 
          /** Check if the participant is fresher or not */
          @IsBoolean()

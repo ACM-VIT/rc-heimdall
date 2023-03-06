@@ -76,7 +76,7 @@ export class ProblemsService {
    */
   async getNameFromId(id: string): Promise<string> {
     try {
-      const problem = await this.problemRepository.findOne(id);
+      const problem = await this.problemRepository.findOneBy({id});
       return problem.name;
     } catch (e) {
       throw new NotFoundException(`No Problems found with given id ${id}`);
@@ -89,7 +89,7 @@ export class ProblemsService {
    */
   async getNameDescriptionFromId(id: string) {
     try {
-      const problem = await this.problemRepository.findOne(id);
+      const problem = await this.problemRepository.findOneBy({id});
       return { problem_name: problem.name, description: problem.instructionsText };
     } catch (e) {
       throw new NotFoundException(`No Problems found with given id ${id}`);

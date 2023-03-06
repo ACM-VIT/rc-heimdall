@@ -68,7 +68,7 @@ export class TeamsService {
   async getAssignedProblems(id: number) {
     if (config.get('application.assignProblemToTeams') === true) {
       try {
-        const team = await this.teamRepository.findOne(id);
+        const team = await this.teamRepository.findOneBy({ id });
         console.log(team);
         const problemIDs = team.problems.split(',');
         const assignedProblems = [];
@@ -100,14 +100,27 @@ export class TeamsService {
    * To fetch details of [[Team]] by [[Team.id]]
    */
   async findOneById(id: number) {
-    const teamData = await this.teamRepository.findOne({ id });
+    const teamData = await this.teamRepository.findOneBy({ id });
+    return teamData;
+  }
+
+  async findOneByIdWithSubmissions(id: number) {
+    const teamData = await this.teamRepository.findOne({
+      where: { id },
+      relations: {
+        judgeSubmissions: {
+          problem: true,
+        },
+        participants: true,
+      },
+    });
     return teamData;
   }
   /**
    * To fetch details of [[Team]] by [[Team.id]]
    */
   async findOneByIdWithRank(id: number) {
-    const teamData = await this.teamRepository.findOne(id);
+    const teamData = await this.teamRepository.findOneBy({ id });
     const allRanks = await this.teamRepository.getLeaderBoard();
     const teamRank = allRanks.findIndex((team) => team.id == id) + 1;
 
@@ -140,8 +153,8 @@ export class TeamsService {
         return b.pointsR2 - a.pointsR2;
       }
 
-      const aTime = (new Date(a.timestamp) as unknown) as number;
-      const bTime = (new Date(b.timestamp) as unknown) as number;
+      const aTime = new Date(a.timestamp) as unknown as number;
+      const bTime = new Date(b.timestamp) as unknown as number;
       return aTime - bTime;
     });
 

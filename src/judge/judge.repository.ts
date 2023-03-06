@@ -1,4 +1,6 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { JudgeSubmissions } from './judge.entity';
 
@@ -9,8 +11,11 @@ import { JudgeSubmissions } from './judge.entity';
  *
  * @category Judge
  */
-@EntityRepository(JudgeSubmissions)
+@Injectable()
 export class JudgeRepository extends Repository<JudgeSubmissions> {
+  constructor(@InjectRepository(JudgeSubmissions) repository: Repository<JudgeSubmissions>) {
+    super(repository.target, repository.manager, repository.queryRunner);
+  }
   /** to fetch highest points scored by team on given problem */
   async getHighestPointsFor(problemID: string, teamID: number) {
     const query = await this.createQueryBuilder('submission')

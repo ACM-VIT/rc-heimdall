@@ -14,7 +14,7 @@ import { Team } from '../teams/team.entity';
  * @category Problems
  */
 @Entity()
-export class Problems extends BaseEntity {
+export class Problems {
   /** randomly generated uuid to avoid numeric questions ids that are predictable */
   @PrimaryGeneratedColumn('uuid')
   id: string;

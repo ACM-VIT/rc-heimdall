@@ -1,4 +1,5 @@
-import { HttpModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 
 import { JudgeController } from './judge.controller';
 import { JudgeRepository } from './judge.repository';
@@ -7,6 +8,7 @@ import { ProblemsModule } from '../problems/problems.module';
 import { TeamsModule } from '../teams/teams.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TestCaseModule } from 'src/testCase/testCase.module';
+import { JudgeSubmissions } from './judge.entity';
 
 /**
  * **Judge Module**
@@ -16,9 +18,9 @@ import { TestCaseModule } from 'src/testCase/testCase.module';
  * @category Judge
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([JudgeRepository]), HttpModule, ProblemsModule, TeamsModule, TestCaseModule],
+  imports: [TypeOrmModule.forFeature([JudgeSubmissions]), HttpModule, ProblemsModule, TeamsModule, TestCaseModule],
   controllers: [JudgeController],
-  providers: [JudgeService],
+  providers: [JudgeService, JudgeRepository],
   exports: [JudgeService],
 })
 export class JudgeModule {}

@@ -5,6 +5,8 @@
  * @packageDocumentation
  */
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 import { JudgeModule } from './judge/judge.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
@@ -26,6 +28,10 @@ import { PauseMiddleware } from './middlewares/pause.middleware';
  */
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 15,
+    }),
     TypeOrmModule.forRoot(typeOrmConfig),
     RunnerModule,
     TeamsModule,
@@ -35,6 +41,12 @@ import { PauseMiddleware } from './middlewares/pause.middleware';
     JudgeModule,
     SyncModule,
     AuthModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 

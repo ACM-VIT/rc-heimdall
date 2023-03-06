@@ -3,6 +3,7 @@ import { ProblemRepository } from './problems.repository';
 import { ProblemsController } from './problems.controller';
 import { ProblemsService } from './problems.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Problems } from './problem.entity';
 
 /**
  * **Problems Module**
@@ -13,9 +14,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
  */
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProblemRepository])],
+  imports: [TypeOrmModule.forFeature([Problems])],
   controllers: [ProblemsController],
-  providers: [ProblemsService],
+  providers: [ProblemsService, ProblemRepository],
   exports: [ProblemsService],
 })
 export class ProblemsModule {}

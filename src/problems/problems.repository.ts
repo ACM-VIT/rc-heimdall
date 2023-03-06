@@ -1,4 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { Problems } from './problem.entity';
 
@@ -9,8 +11,11 @@ import { Problems } from './problem.entity';
  *
  * @category Problems
  */
-@EntityRepository(Problems)
+@Injectable()
 export class ProblemRepository extends Repository<Problems> {
+  constructor(@InjectRepository(Problems) private repository: Repository<Problems>) {
+    super(repository.target, repository.manager, repository.queryRunner);
+  }
   /**
    * findAndFilter provides data to be passed to participants (clients). Since this response
    * need not contain the inputText or outputText, this is implemented as a custom query using
