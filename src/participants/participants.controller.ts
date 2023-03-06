@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, UsePipes, ValidationPipe, UseGuards, Request } from '@nestjs/common';
-import { Participant } from './participant.entity';
+import { Participant } from './participants.entity';
 import { ParticipantsService } from './participants.service';
 import { UpdateParticipantDto } from './dto/updateParticipant.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';

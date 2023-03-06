@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TeamsService } from '../teams/teams.service';
 import { UpdateParticipantDto } from './dto/updateParticipant.dto';
-import { Participant } from './participant.entity';
+import { Participant } from './participants.entity';
 import { JudgeService } from '../judge/judge.service';
 
 /**

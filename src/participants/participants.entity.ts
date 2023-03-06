@@ -56,10 +56,6 @@ export class Participant {
   fresher: boolean;
 
   /** entity representing team which the participant is a member of */
-  @ManyToOne(
-    () => Team,
-    (team) => team.participants,
-    { cascade: true },
-  )
+  @ManyToOne(() => Team, (team) => team.participants, { cascade: true })
   team: Team;
 }

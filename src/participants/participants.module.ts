@@ -3,7 +3,7 @@ import { ParticipantsController } from './participants.controller';
 import { ParticipantsService } from './participants.service';
 import { TeamsModule } from '../teams/teams.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Participant } from './participant.entity';
+import { Participant } from './participants.entity';
 import { JudgeModule } from '../judge/judge.module';
 
 /**

@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm';
 
 import { JudgeSubmissions } from '../judge/judge.entity';
-import { Participant } from '../participants/participant.entity';
+import { Participant } from '../participants/participants.entity';
 import { Problems } from '../problems/problem.entity';
 
 /**
@@ -36,10 +36,7 @@ export class Team extends BaseEntity {
   pointsR2: number;
 
   /** 1:N relation between [[Team]] and [[Participant]]. One team can include any number of participants */
-  @OneToMany(
-    () => Participant,
-    (participant) => participant.team,
-  )
+  @OneToMany(() => Participant, (participant) => participant.team)
   participants: Participant[];
 
   /** 1:N relation between [[Team]] and [[JudgeSubmissions]] made.*/
