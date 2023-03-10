@@ -82,9 +82,9 @@ export class ProblemsService {
           where: { id },
           select: { windowsFileURL: true, objectFileURL: true, macFileURL: true, instructionsText: true },
         });
-        return problem;
+        return {problem};
       }
-      return submission;
+      return submission[0];
     } catch (err) {
       return err;
     }
