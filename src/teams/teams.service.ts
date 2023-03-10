@@ -140,15 +140,9 @@ export class TeamsService {
   async getLeaderBoard() {
     const allRanks = await this.teamRepository.getLeaderBoard();
     console.log('allRanks', allRanks.length);
-    // remove teams with certain IDs
-    const filteredRanks = allRanks.filter((team) => {
-      if (qualifiedTeams.teamIds.includes(team.id.toString()) && !admins.teamIds.includes(team.id.toString())) {
-        return team;
-      }
-    });
 
     // sort teams based on timestamp
-    const sortedByPoints = filteredRanks.sort((a, b) => {
+    const sortedByPoints = allRanks.sort((a, b) => {
       if (b.pointsR2 - a.pointsR2 !== 0) {
         return b.pointsR2 - a.pointsR2;
       }
@@ -162,6 +156,8 @@ export class TeamsService {
     const teamsWithRanks = sortedByPoints.map((team, index) => {
       return { rank: index + 1, ...team };
     });
+
+    
     return teamsWithRanks;
   }
 
