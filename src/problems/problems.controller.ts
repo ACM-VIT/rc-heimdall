@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request, Delete, Req } from '@nestjs/common';
 import { ProblemsService } from './problems.service';
 import { CreateProblemDto } from './dto/create-problem.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -61,9 +61,11 @@ export class ProblemsController {
    */
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.problemsService.findOne(id);
+  findOne(@Request() req, @Param('id') id: string) {
+    const teamId: number = req.user.teamId;
+    return this.problemsService.getProblem(teamId, id);
   }
+
 
   /**
    * Responds to: _DELETE(`/:id`)_

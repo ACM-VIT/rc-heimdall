@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { CodeStates } from './enum/codeStates.enum';
 import { JudgeSubmissions } from '../judge/judge.entity';
@@ -9,10 +9,7 @@ export class TestCase {
   @PrimaryColumn()
   token: string;
 
-  @ManyToOne(
-    () => JudgeSubmissions,
-    (submission) => submission.testCase,
-  )
+  @ManyToOne(() => JudgeSubmissions, (submission) => submission.testCase, { cascade: true })
   submission: JudgeSubmissions;
 
   /** testcase number can be from 1 to 5 */

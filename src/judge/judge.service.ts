@@ -11,6 +11,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 
 import { HttpService } from '@nestjs/axios';
@@ -57,7 +58,7 @@ export class JudgeService {
     private readonly judgeRepository: JudgeRepository,
 
     /** injecting [[ProblemsService]] to perform operations on Problems */
-    @Inject(ProblemsService)
+    @Inject(forwardRef(() => ProblemsService))
     private readonly problemService: ProblemsService,
 
     /** injecting [[TeamsService]] to perform operations on Teams */
@@ -118,11 +119,11 @@ export class JudgeService {
       throw new BadRequestException(`No team with id:${teamID}`);
     }
 
-    /** only allow assigned teams to run problems */
-    const isAssigned = await this.teamService.isProblemAssignedTo(team, problem);
-    if (isAssigned === false) {
-      throw new ForbiddenException(`You are not assigned with this problem`);
-    }
+    // /** only allow assigned teams to run problems */
+    // const isAssigned = await this.teamService.isProblemAssignedTo(team, problem);
+    // if (isAssigned === false) {
+    //   throw new ForbiddenException(`You are not assigned with this problem`);
+    // }
 
     /** prepare postBody to send to Judge0  */
     const postBody1: JudgeOSubmissionRequest = {
@@ -271,6 +272,10 @@ export class JudgeService {
       throw new NotFoundException(`No submission for token ${id}`);
     }
     return judgeSubmission;
+  }
+
+  async findOneWithMaxPoints(teamId: number, problemId: string) {
+    return await this.judgeRepository.findOneWithMaxPoints(teamId, problemId);
   }
 
   /**

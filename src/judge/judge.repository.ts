@@ -28,6 +28,27 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
     return query;
   }
 
+
+  async findOneWithMaxPoints(teamId: number, problemId: string) {
+    const query = await this.createQueryBuilder('submission')
+      .innerJoin('submission.testCase', 'testcases')
+      .innerJoin('submission.problem', 'problem')
+      .select('submission.points')
+      .addSelect('testcases.state')
+      .addSelect('testcases.testCaseNumber')
+      .addSelect('problem.instructionsText')
+      .addSelect('problem.windowsFileURL')
+      .addSelect('problem.objectFileURL')
+      .addSelect('problem.macFileURL')
+      .where('submission.teamId = :team', { team: teamId })
+      .andWhere('submission.problemId = :problem', { problem: problemId })
+      .andWhere('submission.points = :points', { points: (await this.getHighestPointsFor(problemId, teamId)).points })
+      .orderBy('submission.created_at', 'DESC')
+      .limit(5)
+      .getMany();
+    return query;
+  }
+
   /** to fetch selected details of submission for client / participant */
   async findOneForClientByJudge0Token(token: string) {
     const query = await this.createQueryBuilder('submission')
