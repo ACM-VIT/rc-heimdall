@@ -49,6 +49,7 @@ export class TestCaseService {
     }
     judgeSubmission.returned_testcases += 1;
     if (judgeSubmission.returned_testcases == 5) {
+      console.log('yes');
       this.judgeService.savePointsForTeam(judgeSubmission.id, judgeSubmission.points);
     }
 

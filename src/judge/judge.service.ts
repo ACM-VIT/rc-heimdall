@@ -198,13 +198,13 @@ export class JudgeService {
       top_submissions.push(highest);
     }
     // get team and update the points
-    const team = await this.teamService.findOneById(team_id);
-    const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
-    if (team.pointsR2 < points) {
-      team.timestamp = new Date();
-      team.pointsR2 = points;
-    }
-    await team.save();
+    // const team = await this.teamService.findOneById(team_id);
+    // const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
+    // if (team.pointsR2 < points) {
+    //   team.timestamp = new Date();
+    //   team.pointsR2 = points;
+    // }
+    // await team.save();
     return top_submissions;
   }
 
@@ -262,7 +262,15 @@ export class JudgeService {
     return await this.judgeRepository.findOneWithMaxPoints(teamId, problemId);
   }
 
-  async savePointsForTeam(id: number, points: number) {
+  async savePointsForTeam(id: number, newPoints: number) {
+    console.log(await this.judgeRepository.findTeamIdAndMaxPoints(id));
+    const { points, created_at, team } = await this.judgeRepository.findTeamIdAndMaxPoints(id);
+    if (newPoints > points) {
+      team.points += newPoints - points;
+      team.timestamp = created_at;
+      team.save();
+      //this.teamService.updatePoints(team);
+    }
     return await this.judgeRepository.findOne({ where: { id } });
   }
 

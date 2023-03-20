@@ -48,6 +48,31 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
     return query;
   }
 
+  async findTeamIdAndMaxPoints(id: number) {
+    const { teamId, problemId } = await this.createQueryBuilder('submission')
+      .innerJoin('submission.team', 'team')
+      .innerJoin('submission.problem', 'problem')
+      .select('team.id', 'teamId')
+      .addSelect('problem.id', 'problemId')
+      .where('submission.id = :id', { id })
+      .getRawOne();
+
+    console.log(teamId, problemId);
+
+    const query = await this.createQueryBuilder('submission')
+      .innerJoin('submission.team', 'team')
+      .innerJoin('submission.problem', 'problem')
+      .select('submission.points')
+      .addSelect('submission.created_at')
+      .addSelect('team')
+      .where('submission.teamId = :teamId', { teamId })
+      .andWhere('submission.problemId = :problemId', { problemId })
+      .andWhere('submission.points = :points', { points: (await this.getHighestPointsFor(problemId, teamId)).points })
+      .getOne();
+
+    return query;
+  }
+
   //async findMaxPointsOfSameProblem(id: number)
 
   /** to fetch selected details of submission for client / participant */

@@ -44,6 +44,10 @@ export class TeamsService {
     return this.teamRepository.createWithJoins(createTeamDto);
   }
 
+  async updatePoints(team: Team) {
+    await this.teamRepository.save(Team);
+  }
+
   /**
    * To list details of all [[Team]]
    */
@@ -160,7 +164,7 @@ export class TeamsService {
   //   }
   //   const problemList = team.problems.split(',');
 
-    /** Check if team is already assigned with 10 problems */
+  /** Check if team is already assigned with 10 problems */
   //   console.log('problems already assigned: ', team.problems);
   //   if (problemList.length >= 10) {
   //     throw new NotFoundException(`Team already has 10 problems assigned`);
