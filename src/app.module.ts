@@ -4,10 +4,9 @@
  * defined modules, then new module would be integrated here.
  * @packageDocumentation
  */
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod, CacheModule } from '@nestjs/common';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-
 import { JudgeModule } from './judge/judge.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { ParticipantsModule } from './participants/participants.module';
@@ -21,6 +20,7 @@ import { typeOrmConfig } from './config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
 import { TestCaseModule } from './testCase/testCase.module';
 import { PauseMiddleware } from './middlewares/pause.middleware';
+import { AdminModule } from './admin/admin.module';
 
 /**
  * Main Application Module
@@ -32,6 +32,10 @@ import { PauseMiddleware } from './middlewares/pause.middleware';
       ttl: 60,
       limit: 15,
     }),
+    CacheModule.register({
+      ttl: 0,
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot(typeOrmConfig),
     RunnerModule,
     TeamsModule,
@@ -41,6 +45,7 @@ import { PauseMiddleware } from './middlewares/pause.middleware';
     JudgeModule,
     SyncModule,
     AuthModule,
+    AdminModule,
   ],
   providers: [
     {
