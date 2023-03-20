@@ -18,7 +18,7 @@ import { JudgeSubmissions } from './judge.entity';
  * @category Judge
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([JudgeSubmissions]), HttpModule, forwardRef(() => ProblemsModule), TeamsModule, TestCaseModule],
+  imports: [TypeOrmModule.forFeature([JudgeSubmissions]), HttpModule, forwardRef(() => ProblemsModule), TeamsModule, forwardRef(() => TestCaseModule)],
   controllers: [JudgeController],
   providers: [JudgeService, JudgeRepository],
   exports: [JudgeService],

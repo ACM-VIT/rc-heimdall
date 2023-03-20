@@ -25,6 +25,7 @@ import { JudgeRepository } from './judge.repository';
 import { mapLanguageStringToObject } from './minions/language';
 import { MoreThanOrEqual } from 'typeorm';
 import { TestCaseService } from 'src/testCase/testCase.service';
+import { lastValueFrom } from 'rxjs';
 // import { TestCaseService } from 'src/testCase/testCase.service';
 /**
  * **Judge Service**
@@ -50,7 +51,7 @@ export class JudgeService {
     private readonly logger = new Logger('judge'),
 
     /** injecting [[TestCasesService]] to perform operations on TestCases */
-    @Inject(TestCaseService)
+    @Inject(forwardRef(() => TestCaseService))
     private readonly testCaseService: TestCaseService,
 
     /** injecting [[JudgeRepository]] as a persistence layer */
@@ -85,14 +86,15 @@ export class JudgeService {
    * - Persist the response from Judge0 into [[JudgeRepository]]
    * - Return submission details back to client with Judge0 token to ping for results
    */
-  async create(createJudgeDto: CreateJudgeDto) {
-    const { code, language, problemID, teamID } = createJudgeDto;
+  async create(teamId: number, createJudgeDto: CreateJudgeDto) {
+    const { code, language, problemID } = createJudgeDto;
     //this.logger.setContext(`judge.create.team.${teamID}`);
 
     /**
      * Check if code size is less than 5KB
+     * use 6828 since 5KB characters generate a base64 string of 6828
      */
-    if (code.length > 5000) {
+    if (code.length > 6828) {
       throw new BadRequestException('Code size is more than 5KB');
     }
 
@@ -113,17 +115,11 @@ export class JudgeService {
     }
 
     /** fetch details of the team who made the submission */
-    const team = await this.teamService.findOneById(teamID);
+    const team = await this.teamService.findOneById(teamId);
     if (team === undefined) {
       this.logger.verbose(`is an invalid team ID`);
-      throw new BadRequestException(`No team with id:${teamID}`);
+      throw new BadRequestException(`No team with id:${teamId}`);
     }
-
-    // /** only allow assigned teams to run problems */
-    // const isAssigned = await this.teamService.isProblemAssignedTo(team, problem);
-    // if (isAssigned === false) {
-    //   throw new ForbiddenException(`You are not assigned with this problem`);
-    // }
 
     /** prepare postBody to send to Judge0  */
     const postBody1: JudgeOSubmissionRequest = {
@@ -167,7 +163,7 @@ export class JudgeService {
     const body = {
       submissions: [postBody1, postBody2, postBody3, postBody4, postBody5],
     };
-    const { data } = await this.http.post(this.endpoint, body).toPromise();
+    const { data } = await lastValueFrom(this.http.post(this.endpoint, body));
     // console.log(data);
 
     this.logger.verbose(`made submission, judge0 token`);
@@ -177,7 +173,6 @@ export class JudgeService {
       problem,
       team,
       language: codeLanguage.id,
-      points: 0,
       code,
     });
     this.logger.verbose(` submission saved into database`);
@@ -265,6 +260,10 @@ export class JudgeService {
 
   async findOneWithMaxPoints(teamId: number, problemId: string) {
     return await this.judgeRepository.findOneWithMaxPoints(teamId, problemId);
+  }
+
+  async savePointsForTeam(id: number, points: number) {
+    return await this.judgeRepository.findOne({ where: { id } });
   }
 
   /**

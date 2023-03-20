@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 
 import { TestCaseController } from './testCase.controller';
 import { TestCaseRepository } from './testCase.repository';
@@ -17,9 +17,9 @@ import { TestCase } from './testCase.entity';
  * @category Judge
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([TestCase]), ProblemsModule, TeamsModule],
+  imports: [TypeOrmModule.forFeature([TestCase]), ProblemsModule, TeamsModule, forwardRef(() => JudgeModule)],
   controllers: [TestCaseController],
   providers: [TestCaseService, TestCaseRepository],
-  exports: [TestCaseService]
+  exports: [TestCaseService],
 })
 export class TestCaseModule {}

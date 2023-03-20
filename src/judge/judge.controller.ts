@@ -18,7 +18,7 @@ import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { User } from '../auth/auth.interface'
+import { User } from '../auth/auth.interface';
 import * as config from 'config';
 
 /**
@@ -49,13 +49,13 @@ export class JudgeController {
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
   async create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
-    const user: User = req.user;
-    if (user.teamId != createJudgeDto.teamID) {
-      return new UnauthorizedException('who art thou');
+    try {
+      const teamId: number = req.user.teamId;
+      this.logger.verbose(`New submission from ${teamId}`);
+      return await this.judgeService.create(teamId, createJudgeDto);
+    } catch (err) {
+      return err;
     }
-
-    this.logger.verbose(`New submission from ${createJudgeDto.teamID}`);
-    return await this.judgeService.create(createJudgeDto);
   }
 
   /**

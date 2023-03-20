@@ -48,6 +48,8 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
     return query;
   }
 
+  //async findMaxPointsOfSameProblem(id: number)
+
   /** to fetch selected details of submission for client / participant */
   async findOneForClientByJudge0Token(token: string) {
     const query = await this.createQueryBuilder('submission')

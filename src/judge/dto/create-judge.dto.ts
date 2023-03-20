@@ -16,11 +16,6 @@ export class CreateJudgeDto {
   @ApiProperty({ description: 'uuid of the problem', example: '4b7e09cb-90a5-4d9a-92d9-28662489f851' })
   problemID: string;
 
-  /** TeamID who made the submission, references [[Team]] via [[Team.id]] */
-  @IsNumber()
-  @ApiProperty({ description: 'ID of the team making the submission', example: 2 })
-  teamID: number;
-
   /** Language in which the submission is made */
   @IsNotEmpty()
   @ApiProperty({

@@ -33,12 +33,11 @@ export class TeamRepository extends Repository<Team> {
     // show top 10 teams based on points and timestamp
     const query = await this.createQueryBuilder('team')
       .orderBy('team.points', 'DESC')
-      .addOrderBy('team.timestamp', 'DESC')
+      .addOrderBy('team.timestamp', 'ASC')
       .select('team.name')
       .addSelect('team.id')
       .addSelect('team.points')
       .addSelect('team.timestamp')
-      // .limit(600)
       .getMany();
     return query;
   }

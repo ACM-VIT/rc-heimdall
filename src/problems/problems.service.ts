@@ -82,10 +82,13 @@ export class ProblemsService {
           where: { id },
           select: { windowsFileURL: true, objectFileURL: true, macFileURL: true, instructionsText: true },
         });
-        return {problem};
+        return { problem };
       }
       return submission[0];
     } catch (err) {
+      if (err.code == '22P02') {
+        return { error: "Problem Doesn't exist", message: `Problem of id ${id} doesn't exist!` };
+      }
       return err;
     }
   }

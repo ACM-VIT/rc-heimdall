@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Judge0Callback } from './interface/judge0.interfaces';
 import { TestCaseRepository } from './testCase.repository';
@@ -6,6 +6,7 @@ import { TeamsService } from '../teams/teams.service';
 import { TestCase } from './testCase.entity';
 import { CodeStates, DILUTE } from 'src/testCase/enum/codeStates.enum';
 import { JudgeRepository } from 'src/judge/judge.repository';
+import { JudgeService } from 'src/judge/judge.service';
 
 @Injectable()
 export class TestCaseService {
@@ -17,14 +18,18 @@ export class TestCaseService {
     /** injecting [[ProblemRepository]] as a persistence layer */
     @InjectRepository(TestCaseRepository)
     private readonly testCaseRepository: TestCaseRepository,
+
+    @Inject(forwardRef(() => JudgeService))
+    private readonly judgeService: JudgeService,
   ) {}
 
   async handleCallback(callbackJudgeDto: Judge0Callback) {
-    const { status, stdout, token }: Judge0Callback = callbackJudgeDto;
+    const { status, token }: Judge0Callback = callbackJudgeDto;
     // this.logger.setContext('judge.callback');
 
     /** update state of submission in database */
     const testCaseSubmission = await this.testCaseRepository.fetchDetailsByToken(token);
+    console.log(testCaseSubmission);
 
     if (testCaseSubmission === undefined) {
       // this.logger.verbose(`Invalid token received ${token}`);
@@ -38,8 +43,13 @@ export class TestCaseService {
     // if (judgeSubmission.testCase.length === 5) {
     //   judgeSubmission.returned_testcases = 5;
     // }
-    if (status.description === 'Accepted') {
+    if (status.id === 3) {
       judgeSubmission.points += 20;
+      judgeSubmission.team;
+    }
+    judgeSubmission.returned_testcases += 1;
+    if (judgeSubmission.returned_testcases == 5) {
+      this.judgeService.savePointsForTeam(judgeSubmission.id, judgeSubmission.points);
     }
 
     await this.testCaseRepository.save(testCaseSubmission);
