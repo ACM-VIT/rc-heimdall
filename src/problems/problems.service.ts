@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { JudgeService } from 'src/judge/judge.service';
 import { MoreThanOrEqual } from 'typeorm';
 import { CreateProblemDto } from './dto/create-problem.dto';
+import { Difficulty } from './problem.entity';
 import { ProblemRepository } from './problems.repository';
 
 /**
@@ -59,6 +60,19 @@ export class ProblemsService {
       return 0;
     });
     return refinedProblems;
+  }
+
+  async findAssigned(teamId: number) {
+    const problems = await this.problemRepository.findAssigned(teamId);
+    if (problems.length != 0) {
+      return problems;
+    } else {
+      throw new BadRequestException('No problems Assigned');
+    }
+  }
+
+  async findRound2(difficulty: Difficulty.HARD | Difficulty.EASY | Difficulty.MEDIUM, count: number) {
+    const problems = await this.problemRepository.find({ where: { difficulty }, take: count});
   }
 
   /**

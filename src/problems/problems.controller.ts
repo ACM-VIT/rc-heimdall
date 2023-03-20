@@ -49,8 +49,13 @@ export class ProblemsController {
   /** Route to get round 2 problems */
   @UseGuards(JwtAuthGuard)
   @Get('/round2')
-  getRound2() {
-    return this.problemsService.getRound2();
+  findAssigned(@Req() req) {
+    try {
+      console.log('yes');
+      return this.problemsService.findAssigned(req.user.teamId);
+    } catch (error) {
+      return error;
+    }
   }
 
   /**
@@ -65,7 +70,6 @@ export class ProblemsController {
     const teamId: number = req.user.teamId;
     return this.problemsService.getProblem(teamId, id);
   }
-
 
   /**
    * Responds to: _DELETE(`/:id`)_

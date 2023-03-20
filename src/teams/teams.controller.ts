@@ -80,26 +80,31 @@ export class TeamsController {
    *
    * Assign a problem to team
    */
-  @Post('/problems')
-  @UsePipes(ValidationPipe)
-  assignProblem(@Request() req, @Body() assignProblemDTO: AssignProblemDTO) {
-    const user: User = req.user;
-    if (!qualifiedTeams.teamIds.includes(user.teamId.toString())) {
-      throw new UnauthorizedException(`Team not qualified!`);
-    }
+  // @Post('/problems')
+  // @UsePipes(ValidationPipe)
+  // assignProblem(@Request() req, @Body() assignProblemDTO: AssignProblemDTO) {
+  //   const user: User = req.user;
+  //   if (!qualifiedTeams.teamIds.includes(user.teamId.toString())) {
+  //     throw new UnauthorizedException(`Team not qualified!`);
+  //   }
 
-    return this.teamsService.assignProblem(assignProblemDTO.problemID, user.teamId);
-  }
+  //   return this.teamsService.assignProblem(assignProblemDTO.problemID, user.teamId);
+  // }
 
   /**
    * Responds to: _GET(`/getassignedproblems`)_
    * Get list of problems assigned to team
    */
   @Get('/getassignedproblems')
-  async getAssignedProblems(@Request() request) {
-    const user: User = request.user;
-    console.log('user', user);
-    const allowedTeams = qualifiedTeams.teamIds;
+  async getAssignedProblems(@Request() req) {
+    try {
+      const teamId: number = req.user.teamId;
+      return this.teamsService.getAssignedProblems(teamId);
+    } catch (error) {
+      return error;
+    }
+    const teamId: number = req.user.teamId;
+
     //         maxPoints: submission.problem.maxPoints,
     //     };
     //   });

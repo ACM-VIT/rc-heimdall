@@ -63,15 +63,15 @@ export class JudgeController {
    *
    * Returns list of all submissions
    */
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  findAll(@Request() req) {
-    const user: User = req.user;
-    if (config.get('application.assignProblemToTeams')) {
-      return this.judgeService.findAssignedSubmissions(user.teamId);
-    }
-    return this.judgeService.findWithTeamID(user.teamId);
-  }
+  // @Get()
+  // @UseGuards(JwtAuthGuard)
+  // findAll(@Request() req) {
+  //   const user: User = req.user;
+  //   if (config.get('application.assignProblemToTeams')) {
+  //     return this.judgeService.findAssignedSubmissions(user.teamId);
+  //   }
+  //   return this.judgeService.findWithTeamID(user.teamId);
+  // }
 
   /**
    * Responds to: _GET(`/:id`)_

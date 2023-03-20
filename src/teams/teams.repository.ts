@@ -42,13 +42,16 @@ export class TeamRepository extends Repository<Team> {
     return query;
   }
 
-  async getAssignedProblems(id: number) {
-    const query = await this.createQueryBuilder('team')
-      .leftJoinAndSelect('team.problems', 'problem')
-      // .andWhere('team.id = :id', { id })
-      .getMany();
-    return query;
-  }
+  // async getAssignedProblems(id: number) {
+  //   const query = await this.createQueryBuilder('team')
+  //     .leftJoin('team.problems', 'problem')
+  //     .select('problem.id')
+  //     .addSelect()
+  //     .addSelect('problem.difficulty')
+  //     .addSelect('')
+  //     .getMany();
+  //   return query;
+  // }
 
   /** to get team details with participants */
   async findWithParticipants(id: number): Promise<Team> {

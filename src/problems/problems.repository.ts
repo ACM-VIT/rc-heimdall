@@ -42,6 +42,26 @@ export class ProblemRepository extends Repository<Problems> {
     return query;
   }
 
+  async findAssigned(teamId) {
+    const query = await this.createQueryBuilder('problems')
+      .leftJoin('problems.teams', 'teams')
+      .select([
+        'problems.id',
+        'problems.name',
+        'problems.sampleInput',
+        'problems.sampleOutput',
+        'problems.maxPoints',
+        'problems.windowsFileURL',
+        'problems.objectFileURL',
+        'problems.macFileURL',
+        'problems.instructionsText',
+      ])
+      .where('teams.id = :teamId', { teamId })
+      .getMany();
+
+    return query;
+  }
+
   /**
    * findOneForJudge provides all the data required by [[JudgeService]] to evaluate a
    * submission. This includes the input, output and instructions in plainText format.

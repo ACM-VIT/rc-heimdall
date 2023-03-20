@@ -209,31 +209,31 @@ export class JudgeService {
   }
 
   /** To find details of all assigned submissions */
-  async findAssignedSubmissions(team_id) {
-    // problem ids of all problems
-    const top_submissions = [];
-    const problems = await this.teamService.getAssignedProblems(team_id);
-    const problem_ids = [];
-    problems.map((problem) => problem_ids.push(problem.id));
-    for (let i = 0; i < problem_ids.length; i++) {
-      const problem_id = problem_ids[i];
-      const highest = await this.judgeRepository.getHighestPointsFor(problem_id, team_id);
-      highest.problem_id = problem_id;
-      const problem = await this.problemService.getNameDescriptionFromId(problem_id);
-      highest.problem_name = problem.problem_name;
-      highest.instructionsText = problem.description;
-      top_submissions.push(highest);
-    }
-    // get team and update the points
-    const team = await this.teamService.findOneById(team_id);
-    const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
-    if (team.pointsR2 < points) {
-      team.timestamp = new Date();
-      team.pointsR2 = points;
-    }
-    await team.save();
-    return top_submissions;
-  }
+  // async findAssignedSubmissions(team_id) {
+  //   // problem ids of all problems
+  //   const top_submissions = [];
+  //   const problems = await this.teamService.getAssignedProblems(team_id);
+  //   const problem_ids = [];
+  //   problems.map((problem) => problem_ids.push(problem.id));
+  //   for (let i = 0; i < problem_ids.length; i++) {
+  //     const problem_id = problem_ids[i];
+  //     const highest = await this.judgeRepository.getHighestPointsFor(problem_id, team_id);
+  //     highest.problem_id = problem_id;
+  //     const problem = await this.problemService.getNameDescriptionFromId(problem_id);
+  //     highest.problem_name = problem.problem_name;
+  //     highest.instructionsText = problem.description;
+  //     top_submissions.push(highest);
+  //   }
+  //   // get team and update the points
+  //   const team = await this.teamService.findOneById(team_id);
+  //   const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
+  //   if (team.pointsR2 < points) {
+  //     team.timestamp = new Date();
+  //     team.pointsR2 = points;
+  //   }
+  //   await team.save();
+  //   return top_submissions;
+  // }
 
   /**
    * To fetch details of submission made by Judge0 Token.

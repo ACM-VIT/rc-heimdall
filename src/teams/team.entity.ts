@@ -48,11 +48,9 @@ export class Team extends BaseEntity {
   judgeSubmissions: JudgeSubmissions[];
 
   /** store question details of problems assigned to participant */
-  @Column({
-    default: '',
-    nullable: true,
-  })
-  problems: string;
+  @ManyToMany(() => Problems, (problems) => problems.teams, { cascade: true })
+  @JoinTable()
+  problems: Problems[];
 
   /** store timestamp for tie-braking  */
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
