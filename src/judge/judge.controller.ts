@@ -1,22 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Put,
-  Param,
-  Request,
-  Logger,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Request, Logger, UseGuards, Req } from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { User } from '../auth/auth.interface';
-import * as config from 'config';
+import { Throttle } from '@nestjs/throttler';
 import { DisableAfterRound1Guard } from 'src/auth/guards/disable.guard';
 
 /**
@@ -45,6 +33,7 @@ export class JudgeController {
    * Creates a new submission based on data from [[CreateJudgeDto]].
    */
   @UseGuards(DisableAfterRound1Guard)
+  @Throttle(3, 60)
   @Post()
   async create(@Req() req, @Body() createJudgeDto: CreateJudgeDto) {
     const teamId: number = req.user.teamId;
@@ -72,6 +61,7 @@ export class JudgeController {
    *
    * returns details of particular submission
    */
+  @Throttle(30, 15)
   @Get(':id')
   findOne(@Req() req, @Param('id') id: string) {
     return this.judgeService.findOneByTeamAndID(id, req.user.teamId);
