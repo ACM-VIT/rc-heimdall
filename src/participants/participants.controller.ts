@@ -32,8 +32,12 @@ export class ParticipantsController {
    */
   @Post('update')
   async updateParticipant(@Request() req, @Body() updateParticipantDto: UpdateParticipantDto): Promise<Participant> {
-    const user: User = req.user;
-    return await this.participantsService.update(user.id, updateParticipantDto);
+    try {
+      const user: User = req.user;
+      return await this.participantsService.update(user.id, updateParticipantDto);
+    } catch (error) {
+      return error;
+    }
   }
 
   /**
@@ -43,7 +47,11 @@ export class ParticipantsController {
    */
   @Get()
   getParticipant(@Request() req) {
-    const user: User = req.user;
-    return this.participantsService.getParticipant(user.id);
+    try {
+      const user: User = req.user;
+      return this.participantsService.getParticipant(user.id);
+    } catch (error) {
+      return error;
+    }
   }
 }

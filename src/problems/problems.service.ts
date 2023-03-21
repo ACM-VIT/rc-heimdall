@@ -72,7 +72,7 @@ export class ProblemsService {
   }
 
   async findRound2(difficulty: Difficulty.HARD | Difficulty.EASY | Difficulty.MEDIUM, count: number) {
-    const problems = await this.problemRepository.find({ where: { difficulty }, take: count});
+    const problems = await this.problemRepository.find({ where: { difficulty }, take: count });
   }
 
   /**
@@ -136,11 +136,7 @@ export class ProblemsService {
   /** To get problem ID's for all problems */
   async getProblemIDs() {
     const problemIDs = await this.problemRepository.find();
-    // filter with problem_name>15
-    const refinedProblems = problemIDs.filter((problem) => {
-      return problem.name > '15';
-    });
-    return refinedProblems.map((problem) => {
+    return problemIDs.map((problem) => {
       return problem.id;
     });
   }

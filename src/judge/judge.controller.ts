@@ -53,8 +53,8 @@ export class JudgeController {
       const teamId: number = req.user.teamId;
       this.logger.verbose(`New submission from ${teamId}`);
       return await this.judgeService.create(teamId, createJudgeDto);
-    } catch (err) {
-      return err;
+    } catch (error) {
+      return error;
     }
   }
 
@@ -81,8 +81,12 @@ export class JudgeController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   findOne(@Request() req, @Param('id') id: string) {
-    const user: User = req.user;
-    return this.judgeService.findOneByTeamAndID(id, user.teamId);
+    try {
+      const user: User = req.user;
+      return this.judgeService.findOneByTeamAndID(id, user.teamId);
+    } catch (error) {
+      return error;
+    }
   }
 
   /**

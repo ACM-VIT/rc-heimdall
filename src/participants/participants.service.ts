@@ -5,6 +5,7 @@ import { TeamsService } from '../teams/teams.service';
 import { UpdateParticipantDto } from './dto/updateParticipant.dto';
 import { Participant } from './participants.entity';
 import { JudgeService } from '../judge/judge.service';
+import { symbolName } from 'typescript';
 
 /**
  * **Participants Service**

@@ -42,7 +42,11 @@ export class ProblemsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Request() req) {
-    return this.problemsService.findAll();
+    try {
+      return this.problemsService.findAll();
+    } catch (error) {
+      return error;
+    }
     // return [];
   }
 
