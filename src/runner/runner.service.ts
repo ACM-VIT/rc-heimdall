@@ -59,8 +59,7 @@ export class RunnerService {
 
       // fetch question name by uuid
       const problemName = await this.problemService.getNameFromId(executeCode.id);
-      console.log(problemName);
-      if (problemName === undefined) {
+      if (problemName === null) {
         throw new NotFoundException(`Question ID Not found`);
       }
 

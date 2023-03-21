@@ -42,7 +42,7 @@ export class TestCaseService {
     }
     console.log(testCaseSubmission);
 
-    if (testCaseSubmission === undefined) {
+    if (testCaseSubmission === null) {
       // this.logger.verbose(`Invalid token received ${token}`);
       throw new BadRequestException(`submission with token ${token} not found`);
     }

@@ -10,8 +10,7 @@ import {
   ValidationPipe,
   Logger,
   UseGuards,
-  UnauthorizedException,
-  Delete,
+  Req
 } from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
@@ -34,6 +33,7 @@ import * as config from 'config';
  */
 @ApiTags('Judge')
 @ApiBearerAuth('access-token')
+@UseGuards(JwtAuthGuard)
 @Controller('judge')
 export class JudgeController {
   /** initialize the logger with judge context */
@@ -46,16 +46,11 @@ export class JudgeController {
    * Creates a new submission based on data from [[CreateJudgeDto]].
    */
   @Post()
-  @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
-  async create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
-    try {
-      const teamId: number = req.user.teamId;
-      this.logger.verbose(`New submission from ${teamId}`);
-      return await this.judgeService.create(teamId, createJudgeDto);
-    } catch (error) {
-      return error;
-    }
+  async create(@Req() req, @Body() createJudgeDto: CreateJudgeDto) {
+    const teamId: number = req.user.teamId;
+    this.logger.verbose(`New submission from ${teamId}`);
+    return await this.judgeService.create(teamId, createJudgeDto);
   }
 
   /**
@@ -79,14 +74,8 @@ export class JudgeController {
    * returns details of particular submission
    */
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  findOne(@Request() req, @Param('id') id: string) {
-    try {
-      const user: User = req.user;
-      return this.judgeService.findOneByTeamAndID(id, user.teamId);
-    } catch (error) {
-      return error;
-    }
+  findOne(@Req() req, @Param('id') id: string) {
+      return this.judgeService.findOneByTeamAndID(id, req.user.teamId);
   }
 
   /**

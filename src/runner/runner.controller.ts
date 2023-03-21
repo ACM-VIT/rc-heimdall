@@ -19,6 +19,7 @@ import { RunnerService } from './runner.service';
 @ApiTags('Code Runner')
 @ApiBearerAuth('access-token')
 @UseInterceptors(new TimeoutInterceptor())
+@UseGuards(JwtAuthGuard)
 @Controller('runner')
 export class RunnerController {
   constructor(private readonly runnerService: RunnerService) {}
@@ -28,9 +29,9 @@ export class RunnerController {
    *
    * To execute problem binary with given input in [[ExecuteCodeDto]]
    */
-  @UseGuards(JwtAuthGuard)
   @Post()
   executeCode(@Body() requestDetails: ExecuteCodeDto) {
+    console.log('dine');
     return this.runnerService.execute(requestDetails);
   }
 }

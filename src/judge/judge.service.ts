@@ -109,14 +109,14 @@ export class JudgeService {
 
     /** fetch question details about question for which the submission is made */
     const problem = await this.problemService.findOneForJudge(problemID);
-    if (problem === undefined) {
+    if (problem === null) {
       this.logger.verbose(`sent invalid problem id ${problemID}`);
       throw new BadRequestException(`No problem with id:${problemID}`);
     }
 
     /** fetch details of the team who made the submission */
     const team = await this.teamService.findOneById(teamId);
-    if (team === undefined) {
+    if (team === null) {
       this.logger.verbose(`is an invalid team ID`);
       throw new BadRequestException(`No team with id:${teamId}`);
     }
@@ -197,14 +197,6 @@ export class JudgeService {
       highest.instructionsText = problem.description;
       top_submissions.push(highest);
     }
-    // get team and update the points
-    // const team = await this.teamService.findOneById(team_id);
-    // const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
-    // if (team.pointsR2 < points) {
-    //   team.timestamp = new Date();
-    //   team.pointsR2 = points;
-    // }
-    // await team.save();
     return top_submissions;
   }
 
@@ -243,7 +235,7 @@ export class JudgeService {
    */
   async findOne(id: string) {
     const query = await this.judgeRepository.findOneForClientByJudge0Token(id);
-    if (query === undefined) {
+    if (query === null) {
       throw new NotFoundException(`No submission for token ${id}`);
     }
     return query;
@@ -252,7 +244,7 @@ export class JudgeService {
   /** To fetch details by team and ID */
   async findOneByTeamAndID(id, team_id) {
     const judgeSubmission = await this.judgeRepository.findOneByTeamAndID(id, team_id);
-    if (judgeSubmission === undefined) {
+    if (judgeSubmission === null) {
       throw new NotFoundException(`No submission for token ${id} by this team`);
     }
     return judgeSubmission;
