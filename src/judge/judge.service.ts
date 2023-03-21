@@ -191,11 +191,13 @@ export class JudgeService {
     for (let i = 0; i < problem_ids.length; i++) {
       const problem_id = problem_ids[i];
       const highest = await this.judgeRepository.getHighestPointsFor(problem_id, team_id);
-      highest.problem_id = problem_id;
-      const problem = await this.problemService.getNameDescriptionFromId(problem_id);
-      highest.problem_name = problem.problem_name;
-      highest.instructionsText = problem.description;
-      top_submissions.push(highest);
+      if (highest.points != null) {
+        highest.problem_id = problem_id;
+        const problem = await this.problemService.getNameDescriptionFromId(problem_id);
+        highest.problem_name = problem.problem_name;
+        highest.instructionsText = problem.description;
+        top_submissions.push(highest);
+      }
     }
     return top_submissions;
   }
