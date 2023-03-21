@@ -31,7 +31,6 @@ export class RunnerController {
    */
   @Post()
   executeCode(@Body() requestDetails: ExecuteCodeDto) {
-    console.log('dine');
     return this.runnerService.execute(requestDetails);
   }
 }

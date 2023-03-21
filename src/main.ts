@@ -8,6 +8,7 @@ import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import * as Sentry from '@sentry/node';
 import { SentryInterceptor } from 'src/interceptor/sentry.interceptor';
+import { ValidationPipe } from '@nestjs/common';
 /**
  * Bootstrap application by attaching middleware and initializing auxillary services
  * @internal
@@ -40,6 +41,7 @@ async function bootstrap() {
   app.enableCors();
   app.use(helmet());
   app.useGlobalInterceptors(new SentryInterceptor());
+  app.useGlobalPipes(new ValidationPipe());
   app.use(bodyParser.json({ limit: '50mb' }));
 
   /** binding port to service */

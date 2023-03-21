@@ -6,8 +6,6 @@ import {
   Put,
   Param,
   Request,
-  UsePipes,
-  ValidationPipe,
   Logger,
   UseGuards,
   Req,
@@ -48,7 +46,6 @@ export class JudgeController {
    */
   @UseGuards(DisableAfterRound1Guard)
   @Post()
-  @UsePipes(ValidationPipe)
   async create(@Req() req, @Body() createJudgeDto: CreateJudgeDto) {
     const teamId: number = req.user.teamId;
     this.logger.verbose(`New submission from ${teamId}`);
@@ -86,7 +83,6 @@ export class JudgeController {
    * To update individual submission particulars
    */
   @Put(':id')
-  @UsePipes(ValidationPipe)
   update(@Request() req, @Param('id') id: string, @Body() updateJudgeDto: UpdateJudgeDto) {
     return this.judgeService.update(+id, updateJudgeDto);
   }

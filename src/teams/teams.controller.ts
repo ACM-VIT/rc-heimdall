@@ -1,12 +1,8 @@
 import {
   Controller,
   Get,
-  Post,
   Request,
-  Body,
   Param,
-  ValidationPipe,
-  UsePipes,
   UseGuards,
   UnauthorizedException,
   Delete,
@@ -46,7 +42,6 @@ export class TeamsController {
    * Get list of all [[Team]] along-with their [[JudgeSubmissions]].
    */
   @Get()
-  @UsePipes(ValidationPipe)
   findAll(@Request() req) {
     const user: User = req.user;
     return this.teamsService.findOne(user.teamId);

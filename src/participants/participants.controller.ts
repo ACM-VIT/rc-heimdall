@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UsePipes, ValidationPipe, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { Participant } from './participants.entity';
 import { ParticipantsService } from './participants.service';
 import { UpdateParticipantDto } from './dto/updateParticipant.dto';
@@ -20,7 +20,6 @@ import { User } from '../auth/auth.interface';
 @ApiTags('Participants')
 @ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard)
-@UsePipes(ValidationPipe)
 @Controller('participant')
 export class ParticipantsController {
   constructor(private readonly participantsService: ParticipantsService) {}
