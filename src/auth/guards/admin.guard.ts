@@ -9,6 +9,6 @@ export class AdminGuard implements CanActivate {
   readonly admins = <string[]>config.get('admins');
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    return this.admins.includes(request.user.email);
+    return this.admins.includes(request.user.id);
   }
 }
