@@ -34,11 +34,11 @@ export class TestCaseService {
 
     /** update state of submission in database */
     const testCaseSubmission = await this.testCaseRepository.fetchDetailsByToken(token);
-    let returned_testcases = await this.cacheManager.get(`judge${testCaseSubmission.submission.id}`);
+    let returned_testcases = await this.cacheManager.get(`judge-${testCaseSubmission.submission.id}`);
     if (returned_testcases == null) {
-      await this.cacheManager.set(`judge${testCaseSubmission.submission.id}`, 0);
+      await this.cacheManager.set(`judge-${testCaseSubmission.submission.id}`, 1);
     } else {
-      await this.cacheManager.set(`judge${testCaseSubmission.submission.id}`, <number>returned_testcases + 1);
+      await this.cacheManager.set(`judge-${testCaseSubmission.submission.id}`, <number>returned_testcases + 1);
     }
     console.log(testCaseSubmission);
 
@@ -51,18 +51,21 @@ export class TestCaseService {
     testCaseSubmission.dateUpdated = new Date();
     const judgeSubmission = testCaseSubmission.submission;
     console.log(`> ${token} :: ${DILUTE[testCaseSubmission.state]}`);
-    // if (judgeSubmission.testCase.length === 5) {
-    //   judgeSubmission.returned_testcases = 5;
-    // }
+
+    let points = <number>await this.cacheManager.get(`judge-${testCaseSubmission.submission.id}-points`);
+    points ??= 0;
     if (status.id === 3) {
-      judgeSubmission.points += 20;
-      judgeSubmission.team;
+      points += 20;
     }
-    judgeSubmission.returned_testcases += 1;
-    testCaseNumber += 1;
+    await this.cacheManager.set(`judge-${testCaseSubmission.submission.id}-points`, points);
+    console.log(returned_testcases);
     if (returned_testcases == 4) {
       console.log('all Done');
+      judgeSubmission.points = points;
+      judgeSubmission.returned_testcases = 5;
       await this.judgeService.savePointsForTeam(judgeSubmission.id, judgeSubmission.points);
+      await this.cacheManager.del(`judge-${testCaseSubmission.submission.id}`);
+      await this.cacheManager.del(`judge-${testCaseSubmission.submission.id}-points`);
     }
     await this.testCaseRepository.save(testCaseSubmission);
 
