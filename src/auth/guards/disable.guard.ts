@@ -11,6 +11,7 @@ export class DisableAfterRound1Guard implements CanActivate {
   }
 
   async validateStatus() {
-    return (await this.cacheManager.get('round')) == 1;
+    const round = await this.cacheManager.get('round');
+    return round == 1 || round == null;
   }
 }
