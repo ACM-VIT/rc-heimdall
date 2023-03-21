@@ -10,7 +10,7 @@ import {
   ValidationPipe,
   Logger,
   UseGuards,
-  Req
+  Req,
 } from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
@@ -19,6 +19,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { User } from '../auth/auth.interface';
 import * as config from 'config';
+import { DisableAfterRound1Guard } from 'src/auth/guards/disable.guard';
 
 /**
  * **Judge Controller**
@@ -45,6 +46,7 @@ export class JudgeController {
    *
    * Creates a new submission based on data from [[CreateJudgeDto]].
    */
+  @UseGuards(DisableAfterRound1Guard)
   @Post()
   @UsePipes(ValidationPipe)
   async create(@Req() req, @Body() createJudgeDto: CreateJudgeDto) {
@@ -75,7 +77,7 @@ export class JudgeController {
    */
   @Get(':id')
   findOne(@Req() req, @Param('id') id: string) {
-      return this.judgeService.findOneByTeamAndID(id, req.user.teamId);
+    return this.judgeService.findOneByTeamAndID(id, req.user.teamId);
   }
 
   /**
