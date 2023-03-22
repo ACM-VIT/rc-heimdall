@@ -150,14 +150,17 @@ export class TeamsService {
 
   async assignProblem(assignProblemDTO: AssignProblemDTO, teamId: number) {
     const { hard, medium, easy } = assignProblemDTO;
-    if (hard + medium + easy > 6) {
-      throw new BadRequestException('More than 6 problems chosen');
+    if (hard + medium + easy != 6) {
+      throw new BadRequestException('More Or less than 6 problems chosen');
+    }
+    const team = await this.teamRepository.findOne({ where: { id: teamId }, relations: { problems: true } });
+    if(team.problems.length != 0){
+      throw new BadRequestException('Problems already assigned')
     }
 
     const easyProblems = await this.problemService.findRound2(Difficulty.EASY, easy);
     const mediumProblems = await this.problemService.findRound2(Difficulty.MEDIUM, medium);
     const hardProblems = await this.problemService.findRound2(Difficulty.HARD, hard);
-    const team = await this.teamRepository.findOne({ where: { id: teamId }, relations: { problems: true } });
     team.problems.push.apply(team.problems, easyProblems);
     team.problems.push.apply(team.problems, mediumProblems);
     team.problems.push.apply(team.problems, hardProblems);

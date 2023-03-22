@@ -78,7 +78,6 @@ export class ProblemsService {
       return first.teams.length - second.teams.length;
     });
     const finalProbllems = sortedProblems.slice(0, count);
-    ////console.log(finalProbllems);
     return finalProbllems;
   }
 
