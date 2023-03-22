@@ -2,6 +2,7 @@ import { Controller, Get, Param, UseGuards, Req } from '@nestjs/common';
 import { ProblemsService } from './problems.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { Round2Guard } from 'src/auth/guards/round2.guard';
 
 /**
  * **Problems Controller**
@@ -33,6 +34,7 @@ export class ProblemsController {
   }
 
   /** Route to get round 2 problems */
+  @UseGuards(Round2Guard)
   @Get('/round2')
   findAssigned(@Req() req) {
     return this.problemsService.findAssigned(req.user.teamId);

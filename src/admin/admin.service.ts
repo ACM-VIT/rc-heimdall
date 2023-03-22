@@ -11,4 +11,10 @@ export class AdminService {
     fs.writeFileSync('./config/round.txt', String(round));
     return 'Status updated successfully';
   }
+
+  async updateQualifiedTeams(qualifiedTeams: number[]) {
+    await this.cacheManager.set('qualifiedTeams', qualifiedTeams);
+    fs.writeFileSync('./config/qualifiedTeams.txt', String(qualifiedTeams));
+    return 'Status updated successfully';
+  }
 }

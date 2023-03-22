@@ -191,7 +191,10 @@ export class JudgeService {
   async findWithTeamID(team_id) {
     // problem ids of all problems
     const top_submissions = [];
-    const problem_ids = await this.problemService.getProblemIDs();
+    const problems = await this.problemService.findAssigned(team_id);
+    const problem_ids = problems.map((problem) => {
+      return problem.id;
+    });
     for (let i = 0; i < problem_ids.length; i++) {
       const problem_id = problem_ids[i];
       const highest = await this.judgeRepository.getHighestPointsFor(problem_id, team_id);

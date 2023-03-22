@@ -65,7 +65,7 @@ export class ParticipantsService {
       name: user.name,
       team: team.name,
       participants: participants,
-      score: team.points,
+      score: team.pointsR2,
       submissions: submissions,
     };
     return data;

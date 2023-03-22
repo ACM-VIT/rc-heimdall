@@ -6,6 +6,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { Throttle } from '@nestjs/throttler';
 import { DisableAfterRound1Guard } from 'src/auth/guards/disable.guard';
+import { Round2Guard } from 'src/auth/guards/round2.guard';
 
 /**
  * **Judge Controller**
@@ -32,7 +33,7 @@ export class JudgeController {
    *
    * Creates a new submission based on data from [[CreateJudgeDto]].
    */
-  @UseGuards(DisableAfterRound1Guard)
+  @UseGuards(Round2Guard)
   @Throttle(3, 60)
   @Post()
   async create(@Req() req, @Body() createJudgeDto: CreateJudgeDto) {
