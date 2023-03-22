@@ -169,6 +169,7 @@ export class TeamsService {
     if (hard + medium + easy != 6) {
       throw new BadRequestException('More Or less than 6 problems chosen');
     }
+    console.log(hard, medium, easy);
     const team = await this.teamRepository.findOne({ where: { id: teamId }, relations: { problems: true } });
     if (team.problems.length != 0) {
       throw new BadRequestException('Problems already assigned');
