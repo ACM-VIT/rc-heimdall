@@ -181,7 +181,7 @@ export class TeamsService {
     team.problems.push.apply(team.problems, easyProblems);
     team.problems.push.apply(team.problems, mediumProblems);
     team.problems.push.apply(team.problems, hardProblems);
-    team.save();
+    await team.save();
     const newTeam = await this.teamRepository.findOne({ where: { id: teamId }, relations: { problems: true } });
     console.log(newTeam.problems);
     return { message: 'Assignment Successful' };
