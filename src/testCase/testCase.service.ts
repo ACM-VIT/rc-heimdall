@@ -63,10 +63,13 @@ export class TestCaseService {
       //console.log('all Done');
       judgeSubmission.points = points;
       judgeSubmission.returned_testcases = 5;
+      await this.testCaseRepository.save(testCaseSubmission);
       await this.judgeService.savePointsForTeam(judgeSubmission.id, judgeSubmission.points);
       await this.cacheManager.del(`judge-${testCaseSubmission.submission.id}`);
       await this.cacheManager.del(`judge-${testCaseSubmission.submission.id}-points`);
+      return;
     }
+
     await this.testCaseRepository.save(testCaseSubmission);
 
     // /** assign points only to CodeStates.{ACCEPTED | WRONG} responses  */

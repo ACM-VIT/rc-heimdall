@@ -283,11 +283,13 @@ export class JudgeService {
     //await this.judgeRepository.updatePoints(id, newPoints);
     const submission = await this.judgeRepository.findOne({
       where: { id },
-      relations: { testCase: false, problem: false },
     });
     submission.points = newPoints;
     console.log(submission.points);
     await this.judgeRepository.save(submission);
+    console.log('saved');
+    const news = await this.judgeRepository.findOne({ where: { id } });
+    console.log(news.points);
 
     return await this.judgeRepository.findOne({ where: { id } });
   }
