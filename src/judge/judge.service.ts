@@ -12,6 +12,7 @@ import {
   Logger,
   NotFoundException,
   forwardRef,
+  CACHE_MANAGER,
 } from '@nestjs/common';
 
 import { HttpService } from '@nestjs/axios';
@@ -26,6 +27,7 @@ import { mapLanguageStringToObject } from './minions/language';
 import { MoreThanOrEqual } from 'typeorm';
 import { TestCaseService } from 'src/testCase/testCase.service';
 import { lastValueFrom } from 'rxjs';
+import { Cache } from 'cache-manager';
 // import { TestCaseService } from 'src/testCase/testCase.service';
 /**
  * **Judge Service**
@@ -65,6 +67,8 @@ export class JudgeService {
     /** injecting [[TeamsService]] to perform operations on Teams */
     @Inject(TeamsService)
     private readonly teamService: TeamsService,
+
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {
     this.logger.verbose('service initialized');
     this.callbackURL = config.get('judge.callback');
@@ -258,13 +262,30 @@ export class JudgeService {
 
   async savePointsForTeam(id: number, newPoints: number) {
     //console.log(await this.judgeRepository.findTeamIdAndMaxPoints(id));
-    const { points, created_at, team } = await this.judgeRepository.findTeamIdAndMaxPoints(id);
+
+    const { points, created_at, team, problem } = await this.judgeRepository.findTeamIdAndMaxPoints(id);
+    console.log(await this.judgeRepository.findTeamIdAndMaxPoints(id));
+    newPoints = (newPoints * problem.maxPoints) / 100;
     if (newPoints > points) {
-      team.points += newPoints - points;
+      const round = await this.cacheManager.get('round');
+      console.log(round);
+      if (round > 1) {
+        team.pointsR2 += newPoints - points;
+      } else {
+        team.points += newPoints - points;
+      }
       team.timestamp = created_at;
       team.save();
-      //this.teamService.updatePoints(team);
     }
+    //await this.judgeRepository.updatePoints(id, newPoints);
+    const submission = await this.judgeRepository.findOne({
+      where: { id },
+      relations: { testCase: false, problem: false },
+    });
+    submission.points = newPoints;
+    console.log(submission.points);
+    await this.judgeRepository.save(submission);
+
     return await this.judgeRepository.findOne({ where: { id } });
   }
 

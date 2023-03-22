@@ -48,6 +48,15 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
     return query;
   }
 
+  async updatePoints(id: number, points: number) {
+    const query = await this.createQueryBuilder()
+      .update(JudgeSubmissions)
+      .set({ points })
+      .where('id= :id', { id })
+      .execute();
+    return query;
+  }
+
   async findTeamIdAndMaxPoints(id: number) {
     const { teamId, problemId } = await this.createQueryBuilder('submission')
       .innerJoin('submission.team', 'team')
@@ -65,6 +74,7 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
       .select('submission.points')
       .addSelect('submission.created_at')
       .addSelect('team')
+      .addSelect('problem.maxPoints')
       .where('submission.teamId = :teamId', { teamId })
       .andWhere('submission.problemId = :problemId', { problemId })
       .andWhere('submission.points = :points', { points: (await this.getHighestPointsFor(problemId, teamId)).points })

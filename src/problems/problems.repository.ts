@@ -55,6 +55,7 @@ export class ProblemRepository extends Repository<Problems> {
         'problems.objectFileURL',
         'problems.macFileURL',
         'problems.instructionsText',
+        'problems.difficulty',
       ])
       .where('teams.id = :teamId', { teamId })
       .getMany();
