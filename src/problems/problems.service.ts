@@ -72,7 +72,9 @@ export class ProblemsService {
   }
 
   async findRound2(difficulty: Difficulty.HARD | Difficulty.EASY | Difficulty.MEDIUM, count: number) {
-    const problems = await this.problemRepository.find({ where: { difficulty }, take: count });
+    const problems = await this.problemRepository.findLeastAssigned(difficulty, count);
+    console.log(problems);
+    return problems;
   }
 
   /**

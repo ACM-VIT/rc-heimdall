@@ -107,4 +107,16 @@ export class ProblemRepository extends Repository<Problems> {
       .getMany();
     return query;
   }
+
+  async findLeastAssigned(difficulty, count) {
+    const query = await this.createQueryBuilder('problems')
+      .leftJoin('problems.teams', 'teams')
+      .where('problems.difficulty = :difficulty', { difficulty })
+      .andWhere('problems.round2 = true')
+      .orderBy('LENGTH(problems.teams)', 'ASC')
+      .limit(count)
+      .getMany();
+
+    return query;
+  }
 }
