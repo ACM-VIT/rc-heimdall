@@ -1,9 +1,10 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, CACHE_MANAGER } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateTeamDto } from './dto/create-team.dto';
 import { Team } from './team.entity';
+import { Cache } from 'cache-manager';
 
 /**
  * **Teams Repository**
@@ -14,7 +15,10 @@ import { Team } from './team.entity';
  */
 @Injectable()
 export class TeamRepository extends Repository<Team> {
-  constructor(@InjectRepository(Team) repository: Repository<Team>) {
+  constructor(
+    @InjectRepository(Team) repository: Repository<Team>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {
     super(repository.target, repository.manager, repository.queryRunner);
   }
 
@@ -31,6 +35,17 @@ export class TeamRepository extends Repository<Team> {
   /** to generate the [[Team]] leaderBoard based on [[Team.points]] */
   async getLeaderBoard() {
     // show top 10 teams based on points and timestamp
+    if ((await this.cacheManager.get('round')) > 1) {
+      const query = await this.createQueryBuilder('team')
+        .orderBy('team.pointsR2', 'DESC')
+        .addOrderBy('team.timestamp', 'ASC')
+        .select('team.name')
+        .addSelect('team.id')
+        .addSelect('team.pointsR2')
+        .addSelect('team.timestamp')
+        .getMany();
+      return query;
+    }
     const query = await this.createQueryBuilder('team')
       .orderBy('team.points', 'DESC')
       .addOrderBy('team.timestamp', 'ASC')

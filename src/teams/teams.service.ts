@@ -5,6 +5,7 @@ import {
   Logger,
   MethodNotAllowedException,
   NotFoundException,
+  CACHE_MANAGER,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -17,6 +18,7 @@ import { ProblemsService } from '../problems/problems.service';
 import { Difficulty, Problems } from '../problems/problem.entity';
 import * as qualifiedTeams from '../../config/qualifiedteams.json';
 import * as admins from '../../config/admins.json';
+import { Cache } from 'cache-manager';
 
 /**
  * **Teams Service**
@@ -39,6 +41,8 @@ export class TeamsService {
 
     @Inject(ProblemsService)
     private problemService: ProblemsService,
+
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {
     this.logger.verbose('service initialized');
     this.logger.verbose(`Assigning Questions to teams : ${config.get('application.assignProblemToTeams')}`);
@@ -130,9 +134,16 @@ export class TeamsService {
     //console.log('allRanks', allRanks.length);
 
     // sort teams based on timestamp
+    const round = await this.cacheManager.get('round');
     const sortedByPoints = allRanks.sort((a, b) => {
-      if (b.pointsR2 - a.pointsR2 !== 0) {
-        return b.pointsR2 - a.pointsR2;
+      if (round > 1) {
+        if (b.pointsR2 - a.pointsR2 !== 0) {
+          return b.pointsR2 - a.pointsR2;
+        }
+      } else {
+        if (b.points - a.points !== 0) {
+          return b.points - a.points;
+        }
       }
 
       const aTime = new Date(a.timestamp) as unknown as number;
@@ -140,8 +151,13 @@ export class TeamsService {
       return aTime - bTime;
     });
 
+    const qualifiedTeamIds = <number[]>await this.cacheManager.get('qualifiedTeams');
+    const qualifiedTeams = sortedByPoints.filter((team) => {
+      return qualifiedTeamIds.includes(team.id);
+    });
+
     // add ranks to each team
-    const teamsWithRanks = sortedByPoints.map((team, index) => {
+    const teamsWithRanks = qualifiedTeams.map((team, index) => {
       return { rank: index + 1, ...team };
     });
 
@@ -154,8 +170,8 @@ export class TeamsService {
       throw new BadRequestException('More Or less than 6 problems chosen');
     }
     const team = await this.teamRepository.findOne({ where: { id: teamId }, relations: { problems: true } });
-    if(team.problems.length != 0){
-      throw new BadRequestException('Problems already assigned')
+    if (team.problems.length != 0) {
+      throw new BadRequestException('Problems already assigned');
     }
 
     const easyProblems = await this.problemService.findRound2(Difficulty.EASY, easy);
