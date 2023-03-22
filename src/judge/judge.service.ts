@@ -102,6 +102,17 @@ export class JudgeService {
       throw new BadRequestException('Code size is more than 5KB');
     }
 
+    const round = await this.cacheManager.get('round');
+    if (round > 1) {
+      const problems = await this.problemService.findAssigned(teamId);
+      const problem_ids = problems.map((problem) => {
+        return problem.id;
+      });
+      if (!problem_ids.includes(problemID)) {
+        throw new BadRequestException('This question isnt assigned to you');
+      }
+    }
+
     /**
      * Map string representing submission to object which contains strict representation of language
      */
