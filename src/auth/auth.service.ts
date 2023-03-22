@@ -19,7 +19,7 @@ export class AuthService {
       }
 
       const participant = await this.participantService.findOneByEmail(req.user.email);
-      console.log(participant);
+      //console.log(participant);
       if (!participant) {
         throw new BadRequestException("user_doesn't_exist");
       }
@@ -32,7 +32,7 @@ export class AuthService {
       const url = config.get<string>('redirectUrl') + '?token=' + token;
       return { url };
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       const url = config.get<string>('redirectUrl') + '?error=' + error.message;
       return { url };
     }

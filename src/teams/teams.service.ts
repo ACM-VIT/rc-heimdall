@@ -1,4 +1,11 @@
-import { Inject, Injectable, Logger, MethodNotAllowedException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+  MethodNotAllowedException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { AssignProblemDTO } from './dto/assign-problem.dto';
@@ -7,7 +14,7 @@ import { Team } from './team.entity';
 import { TeamRepository } from './teams.repository';
 import * as config from 'config';
 import { ProblemsService } from '../problems/problems.service';
-import { Problems } from '../problems/problem.entity';
+import { Difficulty, Problems } from '../problems/problem.entity';
 import * as qualifiedTeams from '../../config/qualifiedteams.json';
 import * as admins from '../../config/admins.json';
 
@@ -120,7 +127,7 @@ export class TeamsService {
    */
   async getLeaderBoard() {
     const allRanks = await this.teamRepository.getLeaderBoard();
-    console.log('allRanks', allRanks.length);
+    //console.log('allRanks', allRanks.length);
 
     // sort teams based on timestamp
     const sortedByPoints = allRanks.sort((a, b) => {
@@ -139,6 +146,23 @@ export class TeamsService {
     });
 
     return teamsWithRanks;
+  }
+
+  async assignProblem(assignProblemDTO: AssignProblemDTO, teamId: number) {
+    const { hard, medium, easy } = assignProblemDTO;
+    if (hard + medium + easy > 6) {
+      throw new BadRequestException('More than 6 problems chosen');
+    }
+
+    const easyProblems = await this.problemService.findRound2(Difficulty.EASY, easy);
+    const mediumProblems = await this.problemService.findRound2(Difficulty.MEDIUM, medium);
+    const hardProblems = await this.problemService.findRound2(Difficulty.HARD, hard);
+    const team = await this.teamRepository.findOne({ where: { id: teamId }, relations: { problems: true } });
+    team.problems.push.apply(team.problems, easyProblems);
+    team.problems.push.apply(team.problems, mediumProblems);
+    team.problems.push.apply(team.problems, hardProblems);
+    team.save();
+    return { message: 'Assignment Successful' };
   }
 
   /**
@@ -165,7 +189,7 @@ export class TeamsService {
   //   const problemList = team.problems.split(',');
 
   /** Check if team is already assigned with 10 problems */
-  //   console.log('problems already assigned: ', team.problems);
+  //   //console.log('problems already assigned: ', team.problems);
   //   if (problemList.length >= 10) {
   //     throw new NotFoundException(`Team already has 10 problems assigned`);
   //   }

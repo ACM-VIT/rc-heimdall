@@ -164,7 +164,7 @@ export class JudgeService {
       submissions: [postBody1, postBody2, postBody3, postBody4, postBody5],
     };
     const { data } = await lastValueFrom(this.http.post(this.endpoint, body));
-    // console.log(data);
+    // //console.log(data);
 
     this.logger.verbose(`made submission, judge0 token`);
 
@@ -257,7 +257,7 @@ export class JudgeService {
   }
 
   async savePointsForTeam(id: number, newPoints: number) {
-    console.log(await this.judgeRepository.findTeamIdAndMaxPoints(id));
+    //console.log(await this.judgeRepository.findTeamIdAndMaxPoints(id));
     const { points, created_at, team } = await this.judgeRepository.findTeamIdAndMaxPoints(id);
     if (newPoints > points) {
       team.points += newPoints - points;

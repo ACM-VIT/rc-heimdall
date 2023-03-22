@@ -1,5 +1,6 @@
 import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { safeJoin } from '@sentry/utils';
 import { JudgeService } from 'src/judge/judge.service';
 import { MoreThanOrEqual } from 'typeorm';
 import { CreateProblemDto } from './dto/create-problem.dto';
@@ -72,9 +73,13 @@ export class ProblemsService {
   }
 
   async findRound2(difficulty: Difficulty.HARD | Difficulty.EASY | Difficulty.MEDIUM, count: number) {
-    const problems = await this.problemRepository.findLeastAssigned(difficulty, count);
-    console.log(problems);
-    return problems;
+    const problems = await this.problemRepository.findLeastAssigned(difficulty);
+    const sortedProblems = problems.sort((first, second) => {
+      return first.teams.length - second.teams.length;
+    });
+    const finalProbllems = sortedProblems.slice(0, count);
+    ////console.log(finalProbllems);
+    return finalProbllems;
   }
 
   /**

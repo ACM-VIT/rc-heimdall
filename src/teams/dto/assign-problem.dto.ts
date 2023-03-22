@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsUUID, Max, Min } from 'class-validator';
 
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -11,13 +11,18 @@ import { ApiProperty } from '@nestjs/swagger';
  * @category Teams
  */
 export class AssignProblemDTO {
-  /** uuid of [[Problem]] ([[Problem.id]]) to be assigned to [[Team]] */
-  @ApiProperty({
-    name: 'problemID',
-    description: 'UUID of problem to be assigned to team',
-    example: '7702312b-eb3d-42cf-a40d-9fd3d8a4dc8e',
-  })
-  @IsNotEmpty()
-  @IsUUID()
-  problemID: string;
+  @IsNumber()
+  @Max(6)
+  @Min(0)
+  hard: number;
+
+  @IsNumber()
+  @Max(6)
+  @Min(0)
+  medium: number;
+
+  @IsNumber()
+  @Max(6)
+  @Min(0)
+  easy: number;
 }

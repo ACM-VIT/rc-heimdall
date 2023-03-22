@@ -6,6 +6,8 @@ import {
   UseGuards,
   UnauthorizedException,
   Delete,
+  Post,
+  Body,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -75,16 +77,12 @@ export class TeamsController {
    *
    * Assign a problem to team
    */
-  // @Post('/problems')
-  // @UsePipes(ValidationPipe)
-  // assignProblem(@Request() req, @Body() assignProblemDTO: AssignProblemDTO) {
-  //   const user: User = req.user;
-  //   if (!qualifiedTeams.teamIds.includes(user.teamId.toString())) {
-  //     throw new UnauthorizedException(`Team not qualified!`);
-  //   }
+  @Post('/problems')
+  assignProblem(@Request() req, @Body() assignProblemDTO: AssignProblemDTO) {
 
-  //   return this.teamsService.assignProblem(assignProblemDTO.problemID, user.teamId);
-  // }
+    return this.teamsService.assignProblem(assignProblemDTO, req.user.teamId);
+  }
+  
 
   /**
    * Responds to: _GET(`/getassignedproblems`)_

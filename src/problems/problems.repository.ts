@@ -108,13 +108,12 @@ export class ProblemRepository extends Repository<Problems> {
     return query;
   }
 
-  async findLeastAssigned(difficulty, count) {
+  async findLeastAssigned(difficulty) {
     const query = await this.createQueryBuilder('problems')
       .leftJoin('problems.teams', 'teams')
+      .addSelect('teams')
       .where('problems.difficulty = :difficulty', { difficulty })
       .andWhere('problems.round2 = true')
-      .orderBy('LENGTH(problems.teams)', 'ASC')
-      .limit(count)
       .getMany();
 
     return query;

@@ -57,7 +57,7 @@ export class JudgeRepository extends Repository<JudgeSubmissions> {
       .where('submission.id = :id', { id })
       .getRawOne();
 
-    console.log(teamId, problemId);
+    //console.log(teamId, problemId);
 
     const query = await this.createQueryBuilder('submission')
       .innerJoin('submission.team', 'team')

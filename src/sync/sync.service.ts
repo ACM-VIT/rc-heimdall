@@ -84,7 +84,7 @@ export class SyncService {
 
       /** transform object into array */
       const problems = reply.data.payload;
-      console.log(problems);
+      //console.log(problems);
       this.logger.verbose('Displaying problem details');
 
       /** save problem details locally and return data as string object */
@@ -171,12 +171,12 @@ export class SyncService {
   //         this.logger.verbose(`${item.name} with ${item.team_id} is not qualified`);
   //       }
   //     } catch (e) {
-  //       console.log(e);
+  //       //console.log(e);
   //       this.logger.error(`Error adding ${item.name} / ${item.googleID}`);
   //     }
   //   });
   // } catch (e) {
-  //   // console.log(e);
+  //   // //console.log(e);
   //   this.logger.error('Error seeding participants');
   // }
   //}
@@ -219,7 +219,7 @@ export class SyncService {
       const testCases = Problem['test-cases'];
 
       this.logger.verbose(`Processing id:${keyArr[i]}`);
-      console.log(testCases);
+      //console.log(testCases);
       const inputRequest1 = this.http.get(testCases['test-case-1']['input.txt'], { responseType: 'text' }).toPromise();
       const inputRequest2 = this.http.get(testCases['test-case-2']['input.txt'], { responseType: 'text' }).toPromise();
       const inputRequest3 = this.http.get(testCases['test-case-3']['input.txt'], { responseType: 'text' }).toPromise();
