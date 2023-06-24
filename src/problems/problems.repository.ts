@@ -1,4 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { Problems } from './problem.entity';
 
@@ -9,8 +11,11 @@ import { Problems } from './problem.entity';
  *
  * @category Problems
  */
-@EntityRepository(Problems)
+@Injectable()
 export class ProblemRepository extends Repository<Problems> {
+  constructor(@InjectRepository(Problems) private repository: Repository<Problems>) {
+    super(repository.target, repository.manager, repository.queryRunner);
+  }
   /**
    * findAndFilter provides data to be passed to participants (clients). Since this response
    * need not contain the inputText or outputText, this is implemented as a custom query using
@@ -33,6 +38,26 @@ export class ProblemRepository extends Repository<Problems> {
       .from(Problems, 'problems')
       .andWhere('problems.id = :id', { id })
       .getOne();
+
+    return query;
+  }
+
+  async findAssigned(teamId) {
+    const query = await this.createQueryBuilder('problems')
+      .leftJoin('problems.teams', 'teams')
+      .select([
+        'problems.id',
+        'problems.name',
+        'problems.sampleInput',
+        'problems.sampleOutput',
+        'problems.maxPoints',
+        'problems.windowsFileURL',
+        'problems.objectFileURL',
+        'problems.macFileURL',
+        'problems.instructionsText',
+      ])
+      .where('teams.id = :teamId', { teamId })
+      .getMany();
 
     return query;
   }
@@ -80,6 +105,18 @@ export class ProblemRepository extends Repository<Problems> {
       ])
       .from(Problems, 'problems')
       .getMany();
+    return query;
+  }
+
+  async findLeastAssigned(difficulty, count) {
+    const query = await this.createQueryBuilder('problems')
+      .leftJoin('problems.teams', 'teams')
+      .where('problems.difficulty = :difficulty', { difficulty })
+      .andWhere('problems.round2 = true')
+      .orderBy('LENGTH(problems.teams)', 'ASC')
+      .limit(count)
+      .getMany();
+
     return query;
   }
 }

@@ -77,16 +77,9 @@ docker run -d \
 ```
 
 ## Open Source and Collaboration
-Heimdall is (part of) a [MIT licensed](LICENSE) open source project. If there's a feature that you'd like to add to be added, please open a [issue/feature request](https://github.com/YashKumarVerma/rc-heimdall/issues/new/choose) for the same. We'd be happy to ship more features as needed.
+Heimdall is (part of) a [MIT licensed](LICENSE) open source project. If there's a feature that you'd like to add to be added, please open a [issue/feature request](https://github.com/SwarupKharul/rc-heimdall/issues/new/choose) for the same. We'd be happy to ship more features as needed.
 
 ## Events
 If you are interested in organizing an event like Reverse Coding for your community / club / college / audience, feel free to reach out the author. To support events like these, we'd love to host the services free of cost for our fellow colleges. 
 
 
-
-## Stay in touch
-
-- [Yash Kumar Verma](https://github.com/yashkumarverma/)
-  - Twitter: [@yash_kr_verma](https://twitter.com/yash_kr_verma)
-  - Email: [yk.verma2000@gmail.com](mailto:yk.verma2000@gmail.com)
-  - Stack Overflow: [yash-kumar-verma](https://stackoverflow.com/users/5131640/yash-kumar-verma)

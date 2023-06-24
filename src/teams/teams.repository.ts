@@ -1,4 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateTeamDto } from './dto/create-team.dto';
 import { Team } from './team.entity';
@@ -10,8 +12,12 @@ import { Team } from './team.entity';
  *
  * @category Teams
  */
-@EntityRepository(Team)
+@Injectable()
 export class TeamRepository extends Repository<Team> {
+  constructor(@InjectRepository(Team) repository: Repository<Team>) {
+    super(repository.target, repository.manager, repository.queryRunner);
+  }
+
   /** to create a team  */
   async createWithJoins(createTeamDto: CreateTeamDto): Promise<Team> {
     const { name, id } = createTeamDto;
@@ -26,24 +32,26 @@ export class TeamRepository extends Repository<Team> {
   async getLeaderBoard() {
     // show top 10 teams based on points and timestamp
     const query = await this.createQueryBuilder('team')
-      .orderBy('team.pointsR2', 'DESC')
-      .addOrderBy('team.timestamp', 'DESC')
+      .orderBy('team.points', 'DESC')
+      .addOrderBy('team.timestamp', 'ASC')
       .select('team.name')
       .addSelect('team.id')
-      .addSelect('team.pointsR2')
+      .addSelect('team.points')
       .addSelect('team.timestamp')
-      // .limit(600)
       .getMany();
     return query;
   }
 
-  async getAssignedProblems(id: number) {
-    const query = await this.createQueryBuilder('team')
-      .leftJoinAndSelect('team.problems', 'problem')
-      // .andWhere('team.id = :id', { id })
-      .getMany();
-    return query;
-  }
+  // async getAssignedProblems(id: number) {
+  //   const query = await this.createQueryBuilder('team')
+  //     .leftJoin('team.problems', 'problem')
+  //     .select('problem.id')
+  //     .addSelect()
+  //     .addSelect('problem.difficulty')
+  //     .addSelect('')
+  //     .getMany();
+  //   return query;
+  // }
 
   /** to get team details with participants */
   async findWithParticipants(id: number): Promise<Team> {
@@ -56,9 +64,7 @@ export class TeamRepository extends Repository<Team> {
 
   /** to remove all teams */
   async removeAll() {
-    const query = await this.createQueryBuilder('team')
-      .delete()
-      .execute();
+    const query = await this.createQueryBuilder('team').delete().execute();
     return query;
   }
 }

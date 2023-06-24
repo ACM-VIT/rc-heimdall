@@ -9,6 +9,7 @@ typedoc
 config/default.yml
 config/qualifiedteams.json
 config/admins.json
+config/round.txt
 
 # Logs
 logs

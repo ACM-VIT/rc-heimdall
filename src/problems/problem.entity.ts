@@ -3,6 +3,12 @@ import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGe
 import { JudgeSubmissions } from '../judge/judge.entity';
 import { Team } from '../teams/team.entity';
 
+export enum Difficulty {
+  HARD = 'hard',
+  MEDIUM = 'medium',
+  EASY = 'easy',
+}
+
 /**
  * **Problems Entity**
  *
@@ -14,7 +20,7 @@ import { Team } from '../teams/team.entity';
  * @category Problems
  */
 @Entity()
-export class Problems extends BaseEntity {
+export class Problems {
   /** randomly generated uuid to avoid numeric questions ids that are predictable */
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -23,10 +29,7 @@ export class Problems extends BaseEntity {
    * Relationship to categorize all submissions made for a particular problem for insights.
    * The members of this property are of [[JudgeSubmissions]] type.
    */
-  @OneToMany(
-    () => JudgeSubmissions,
-    (submission) => submission.problem,
-  )
+  @OneToMany(() => JudgeSubmissions, (submission) => submission.problem)
   submissions: JudgeSubmissions[];
 
   /** human read-able string to identify a problem should be unique*/
@@ -117,12 +120,6 @@ export class Problems extends BaseEntity {
   @Column()
   instructionsText: string;
 
-  /** entity representing team which the question is assigned to */
-  // @Column({
-  //   default: [],
-  // })
-  // teamId: number[];
-
   /**
    * data to show, saved sample responses
    */
@@ -141,9 +138,17 @@ export class Problems extends BaseEntity {
   })
   multiplier: number;
 
-  // to tell if a problem is of round 1 or round 2
-  // @Column({
-  //   default: 1,
-  // })
-  // round: number;
+  /** to tell if a problem is of round 1 or round 2 */
+  @Column({
+    default: false,
+  })
+  round2: boolean;
+
+  /** entity representing team which the question is assigned to */
+  @ManyToMany(() => Team, (teams) => teams.problems)
+  teams: Team[];
+
+  @Column({ type: 'enum', enum: Difficulty, nullable: true })
+  difficulty: Difficulty;
 }
+

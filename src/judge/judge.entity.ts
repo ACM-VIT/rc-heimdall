@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Problems } from '../problems/problem.entity';
 import { Team } from '../teams/team.entity';
 import { TestCase } from 'src/testCase/testCase.entity';
@@ -14,24 +14,17 @@ import { TestCase } from 'src/testCase/testCase.entity';
  * @category Judge
  */
 @Entity()
-export class JudgeSubmissions extends BaseEntity {
+export class JudgeSubmissions {
   /** numeric, auto-increment id of submission */
   @PrimaryGeneratedColumn()
   id: number;
 
   /** details of [[Problems]] for which the submission is made */
-  @ManyToOne(
-    () => Problems,
-    (problem) => problem.submissions,
-    { eager: true },
-  )
+  @ManyToOne(() => Problems, (problem) => problem.submissions, { eager: true })
   problem: Problems;
 
   /** details of [[Team]] who made the submission */
-  @ManyToOne(
-    () => Team,
-    (team) => team.judgeSubmissions,
-  )
+  @ManyToOne(() => Team, (team) => team.judgeSubmissions)
   team: Team;
 
   /** numeric ID of the language in which the submission was made */
@@ -48,11 +41,7 @@ export class JudgeSubmissions extends BaseEntity {
   points: number;
 
   /** testcases for a particular submission */
-  @OneToMany(
-    () => TestCase,
-    (testCase) => testCase.submission,
-    { eager: true },
-  )
+  @OneToMany(() => TestCase, (testCase) => testCase.submission, { eager: true })
   testCase: TestCase[];
 
   /** get the number returned responses of all testcases from Judge0  */
@@ -68,4 +57,7 @@ export class JudgeSubmissions extends BaseEntity {
    */
   @Column()
   code: string;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
+  created_at: Date;
 }

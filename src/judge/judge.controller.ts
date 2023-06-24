@@ -1,25 +1,11 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Put,
-  Param,
-  Request,
-  UsePipes,
-  ValidationPipe,
-  Logger,
-  UseGuards,
-  UnauthorizedException,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Request, Logger, UseGuards, Req } from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { JwtToken } from '../auth/interface/auth.token.interface';
-import * as config from 'config';
+import { Throttle } from '@nestjs/throttler';
+import { DisableAfterRound1Guard } from 'src/auth/guards/disable.guard';
 
 /**
  * **Judge Controller**
@@ -34,6 +20,7 @@ import * as config from 'config';
  */
 @ApiTags('Judge')
 @ApiBearerAuth('access-token')
+@UseGuards(JwtAuthGuard)
 @Controller('judge')
 export class JudgeController {
   /** initialize the logger with judge context */
@@ -45,17 +32,13 @@ export class JudgeController {
    *
    * Creates a new submission based on data from [[CreateJudgeDto]].
    */
+  @UseGuards(DisableAfterRound1Guard)
+  @Throttle(3, 60)
   @Post()
-  @UseGuards(JwtAuthGuard)
-  @UsePipes(ValidationPipe)
-  async create(@Request() req, @Body() createJudgeDto: CreateJudgeDto) {
-    const user: JwtToken = req.user;
-    if (user.participant.team_id != createJudgeDto.teamID) {
-      return new UnauthorizedException('who art thou');
-    }
-
-    this.logger.verbose(`New submission from ${createJudgeDto.teamID}`);
-    return await this.judgeService.create(createJudgeDto);
+  async create(@Req() req, @Body() createJudgeDto: CreateJudgeDto) {
+    const teamId: number = req.user.teamId;
+    this.logger.verbose(`New submission from ${teamId}`);
+    return await this.judgeService.create(teamId, createJudgeDto);
   }
 
   /**
@@ -63,26 +46,25 @@ export class JudgeController {
    *
    * Returns list of all submissions
    */
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  findAll(@Request() req) {
-    const user: JwtToken = req.user;
-    if (config.get('application.assignProblemToTeams')) {
-      return this.judgeService.findAssignedSubmissions(user.participant.team_id);
-    }
-    return this.judgeService.findWithTeamID(user.participant.team_id);
-  }
+  // @Get()
+  // @UseGuards(JwtAuthGuard)
+  // findAll(@Request() req) {
+  //   const user: User = req.user;
+  //   if (config.get('application.assignProblemToTeams')) {
+  //     return this.judgeService.findAssignedSubmissions(user.teamId);
+  //   }
+  //   return this.judgeService.findWithTeamID(user.teamId);
+  // }
 
   /**
    * Responds to: _GET(`/:id`)_
    *
    * returns details of particular submission
    */
+  @Throttle(30, 15)
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  findOne(@Request() req, @Param('id') id: string) {
-    const user: JwtToken = req.user;
-    return this.judgeService.findOneByTeamAndID(id, user.participant.team_id);
+  findOne(@Req() req, @Param('id') id: string) {
+    return this.judgeService.findOneByTeamAndID(id, req.user.teamId);
   }
 
   /**
@@ -91,7 +73,6 @@ export class JudgeController {
    * To update individual submission particulars
    */
   @Put(':id')
-  @UsePipes(ValidationPipe)
   update(@Request() req, @Param('id') id: string, @Body() updateJudgeDto: UpdateJudgeDto) {
     return this.judgeService.update(+id, updateJudgeDto);
   }

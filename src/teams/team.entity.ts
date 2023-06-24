@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm';
 
 import { JudgeSubmissions } from '../judge/judge.entity';
-import { Participant } from '../participants/participant.entity';
+import { Participant } from '../participants/participants.entity';
 import { Problems } from '../problems/problem.entity';
 
 /**
@@ -36,10 +36,7 @@ export class Team extends BaseEntity {
   pointsR2: number;
 
   /** 1:N relation between [[Team]] and [[Participant]]. One team can include any number of participants */
-  @OneToMany(
-    () => Participant,
-    (participant) => participant.team,
-  )
+  @OneToMany(() => Participant, (participant) => participant.team)
   participants: Participant[];
 
   /** 1:N relation between [[Team]] and [[JudgeSubmissions]] made.*/
@@ -51,11 +48,9 @@ export class Team extends BaseEntity {
   judgeSubmissions: JudgeSubmissions[];
 
   /** store question details of problems assigned to participant */
-  @Column({
-    default: '',
-    nullable: true,
-  })
-  problems: string;
+  @ManyToMany(() => Problems, (problems) => problems.teams, { cascade: true })
+  @JoinTable()
+  problems: Problems[];
 
   /** store timestamp for tie-braking  */
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

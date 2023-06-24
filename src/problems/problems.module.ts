@@ -1,8 +1,11 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ProblemRepository } from './problems.repository';
 import { ProblemsController } from './problems.controller';
 import { ProblemsService } from './problems.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Problems } from './problem.entity';
+import { JudgeModule } from '../judge/judge.module';
+import { JudgeService } from 'src/judge/judge.service';
 
 /**
  * **Problems Module**
@@ -13,9 +16,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
  */
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProblemRepository])],
+  imports: [TypeOrmModule.forFeature([Problems]), forwardRef(() => JudgeModule)],
   controllers: [ProblemsController],
-  providers: [ProblemsService],
+  providers: [ProblemsService, ProblemRepository],
   exports: [ProblemsService],
 })
 export class ProblemsModule {}

@@ -1,7 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JudgeService } from 'src/judge/judge.service';
 import { MoreThanOrEqual } from 'typeorm';
 import { CreateProblemDto } from './dto/create-problem.dto';
+import { Difficulty } from './problem.entity';
 import { ProblemRepository } from './problems.repository';
 
 /**
@@ -20,6 +22,9 @@ export class ProblemsService {
     /** injecting [[ProblemRepository]] as a persistence layer */
     @InjectRepository(ProblemRepository)
     private readonly problemRepository: ProblemRepository,
+
+    @Inject(forwardRef(() => JudgeService))
+    private readonly judgeService: JudgeService,
   ) {}
 
   /** to create a new problem entry in databases based on data provided by [[CreateProblemDto]]  */
@@ -57,16 +62,50 @@ export class ProblemsService {
     return refinedProblems;
   }
 
+  async findAssigned(teamId: number) {
+    const problems = await this.problemRepository.findAssigned(teamId);
+    if (problems.length != 0) {
+      return problems;
+    } else {
+      throw new BadRequestException('No problems Assigned');
+    }
+  }
+
+  async findRound2(difficulty: Difficulty.HARD | Difficulty.EASY | Difficulty.MEDIUM, count: number) {
+    const problems = await this.problemRepository.findLeastAssigned(difficulty, count);
+    console.log(problems);
+    return problems;
+  }
+
   /**
    * to fetch details of a particular problem based on its uuid. Internally this calls the
    * [[findAndFilter]] method of [[ProblemRepository]] to hide sensitive details of the problem
    */
   async findOne(id: string) {
     try {
-    const problem = await this.problemRepository.findAndFilter(id);
-    return problem;
+      const problem = await this.problemRepository.findAndFilter(id);
+      return problem;
     } catch (e) {
       throw new NotFoundException(`Invalid QuestionID :${id}`);
+    }
+  }
+
+  async getProblem(teamId: number, id: string) {
+    try {
+      const submission = await this.judgeService.findOneWithMaxPoints(teamId, id);
+      if (submission.length === 0) {
+        const problem = await this.problemRepository.findOne({
+          where: { id },
+          select: { windowsFileURL: true, objectFileURL: true, macFileURL: true, instructionsText: true },
+        });
+        return { problem };
+      }
+      return submission[0];
+    } catch (err) {
+      if (err.code == '22P02') {
+        return { error: "Problem Doesn't exist", message: `Problem of id ${id} doesn't exist!` };
+      }
+      return err;
     }
   }
 
@@ -76,7 +115,7 @@ export class ProblemsService {
    */
   async getNameFromId(id: string): Promise<string> {
     try {
-      const problem = await this.problemRepository.findOne(id);
+      const problem = await this.problemRepository.findOneBy({ id });
       return problem.name;
     } catch (e) {
       throw new NotFoundException(`No Problems found with given id ${id}`);
@@ -89,7 +128,7 @@ export class ProblemsService {
    */
   async getNameDescriptionFromId(id: string) {
     try {
-      const problem = await this.problemRepository.findOne(id);
+      const problem = await this.problemRepository.findOneBy({ id });
       return { problem_name: problem.name, description: problem.instructionsText };
     } catch (e) {
       throw new NotFoundException(`No Problems found with given id ${id}`);
@@ -99,11 +138,7 @@ export class ProblemsService {
   /** To get problem ID's for all problems */
   async getProblemIDs() {
     const problemIDs = await this.problemRepository.find();
-    // filter with problem_name>15
-    const refinedProblems = problemIDs.filter((problem) => {
-      return problem.name > '15';
-    });
-    return refinedProblems.map((problem) => {
+    return problemIDs.map((problem) => {
       return problem.id;
     });
   }
@@ -115,10 +150,10 @@ export class ProblemsService {
    */
   async findOneForJudge(id: string) {
     try {
-    const problem = await this.problemRepository.findOneForJudge(id);
-    return problem;
+      const problem = await this.problemRepository.findOneForJudge(id);
+      return problem;
     } catch (e) {
-    throw new BadRequestException(`Invalid QuestionID :${id}`);
+      throw new BadRequestException(`Invalid QuestionID :${id}`);
     }
   }
 

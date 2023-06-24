@@ -1,6 +1,5 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request, Delete } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Req } from '@nestjs/common';
 import { ProblemsService } from './problems.service';
-import { CreateProblemDto } from './dto/create-problem.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
@@ -17,21 +16,10 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
  */
 @ApiTags('Problems')
 @ApiBearerAuth('access-token')
+@UseGuards(JwtAuthGuard)
 @Controller('problems')
 export class ProblemsController {
   constructor(private readonly problemsService: ProblemsService) {}
-
-  /**
-   * Responds to: _POST(`/`)_
-   *
-   * To create a new problem using [[CreateProblemDto]]
-   */
-  // @UseGuards(JwtAuthGuard)
-  // @Post()
-  // create(@Body() createProblemDto: CreateProblemDto) {
-  //   return this.problemsService.create(createProblemDto);
-  // return [];
-  // }
 
   /**
    * Responds to: _GET(`/`)_
@@ -39,39 +27,25 @@ export class ProblemsController {
    * To return list of all problems. This does not expose sensitive details
    * like inputText or outputText
    */
-  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(@Request() req) {
+  findAll() {
     return this.problemsService.findAll();
-    // return [];
   }
 
   /** Route to get round 2 problems */
-  @UseGuards(JwtAuthGuard)
   @Get('/round2')
-  getRound2() {
-    return this.problemsService.getRound2();
+  findAssigned(@Req() req) {
+    return this.problemsService.findAssigned(req.user.teamId);
   }
 
   /**
    * Responds to: _GET(`/:id`)_
    *
    * To return details of a particular problem. This does not expose sensitive details
-   * like inputText or outputText, but only download links and problem details
+   * like inputText or outputText, but only download links and problem details including Submision testCases
    */
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.problemsService.findOne(id);
+  findOne(@Req() req, @Param('id') id: string) {
+    return this.problemsService.getProblem(req.user.teamId, id);
   }
-
-  /**
-   * Responds to: _DELETE(`/:id`)_
-   *
-   * To delete a problem by ID
-   */
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.problemsService.remove(id);
-  // }
 }

@@ -1,15 +1,19 @@
-import { Controller, Post, UsePipes, ValidationPipe, Body } from '@nestjs/common';
+import { Controller,  UseGuards, Get, Redirect, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { TokenExchangeDTO } from './dto/token-exchange.dto';
+import { GoogleAuthGuard } from './guards/google-auth.guard';
 
-@Controller('auth')
+@UseGuards(GoogleAuthGuard)
+@Controller('auth/google')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-  //   @UseGuards(LocalAuthGuard)
-  @Post('token/exchange')
-  @UsePipes(ValidationPipe)
-  async login(@Body() tokenExchangeDTO: TokenExchangeDTO): Promise<any> {
-    return this.authService.tokenExchanger(tokenExchangeDTO);
+  @Get()
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async googleAuth() {}
+
+  @Get('redirect')
+  @Redirect()
+  googleAuthRedirect(@Req() req) {
+    return this.authService.googleLogin(req);
   }
 }

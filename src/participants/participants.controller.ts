@@ -1,43 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  UsePipes,
-  ValidationPipe,
-  Delete,
-  UseGuards,
-  Request,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { Participant } from './participant.entity';
+import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Participant } from './participants.entity';
 import { ParticipantsService } from './participants.service';
-import { CreateParticipantDto } from './dto/create-participant.dto';
-import { UpdateParticipantDto } from './dto/updateParticipantDto.dto';
+import { UpdateParticipantDto } from './dto/updateParticipant.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { JwtToken } from 'src/auth/interface/auth.token.interface';
-import * as Teams from '../../config/qualifiedteams.json';
-
-const qualifiedTeams = [
-  '921',
-  '1903',
-  '660',
-  '692',
-  '900',
-  '745',
-  '2256',
-  '2147',
-  '666',
-  '975',
-  '1942',
-  '1161',
-  '716',
-  '865',
-  '1197',
-  '1259',
-  '646',
-];
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { User } from '../auth/auth.interface';
 
 /**
  * **Participants Controller**
@@ -52,72 +19,28 @@ const qualifiedTeams = [
  */
 @ApiTags('Participants')
 @ApiBearerAuth('access-token')
-@Controller('participants')
+@UseGuards(JwtAuthGuard)
+@Controller('participant')
 export class ParticipantsController {
   constructor(private readonly participantsService: ParticipantsService) {}
 
   /**
    * Responds to: _POST(`/`)_
    *
-   * To create a new participant using [[CreateParticipantDto]]
-   */
-  // @UseGuards(JwtAuthGuard)
-  // @Post()
-  // @UsePipes(ValidationPipe)
-  // create(@Body() createParticipantDto: CreateParticipantDto): Promise<Participant> {
-  //   return this.participantsService.create(createParticipantDto);
-  // }
-
-  /**
-   * Responds to: _POST(`/`)_
-   *
    * To update a the details of participant
    */
-  @UseGuards(JwtAuthGuard)
   @Post('update')
-  @UsePipes(ValidationPipe)
-  updateParticipant(@Request() req, @Body() updateParticipantDto: UpdateParticipantDto): Promise<Participant> {
-    const user: JwtToken = req.user;
-    return this.participantsService.update(user.participant.googleID, updateParticipantDto);
+  async updateParticipant(@Request() req, @Body() updateParticipantDto: UpdateParticipantDto): Promise<Participant> {
+    return await this.participantsService.update(req.user.id, updateParticipantDto);
   }
 
   /**
    * Responds to: _GET(`/`)_
    *
-   * To list all the participants
-   */
-  // @UseGuards(JwtAuthGuard)
-  // @Get()
-  // findAll() {
-  //   return this.participantsService.findAll();
-  //   return [];
-  // }
-
-  /**
-   * Responds to: _GET(`/:id`)_
-   *
    * To display all details of particular participant
    */
-  @UseGuards(JwtAuthGuard)
   @Get()
-  findOne(@Request() req) {
-    const googleID: JwtToken = req.user.participant.googleID;
-    const user: JwtToken = req.user;
-    if (!qualifiedTeams.includes(user.participant.team_id.toString())) {
-      throw new UnauthorizedException(`Team not qualified!`);
-    }
-    return this.participantsService.findOneByEmailAndID(googleID.toString());
+  getParticipant(@Request() req) {
+    return this.participantsService.getParticipant(req.user.id);
   }
-
-  /**
-   * Responds to: _DELETE(`/`)_
-   *
-   * To delete all participants
-   *
-   */
-  // @UseGuards(JwtAuthGuard)
-  // @Delete()
-  // deleteAll() {
-  //   return this.participantsService.clear();
-  // }
 }

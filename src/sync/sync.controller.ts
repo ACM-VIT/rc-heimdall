@@ -57,13 +57,13 @@ export class SyncController {
     }
   }
 
-  @Get('/participants')
-  async seedParticipants() {
-    const sync = await readFileSync('sync.txt', 'utf8');
-    if (parseInt(sync) === 1) {
-      return this.syncService.syncWithParticipants();
-    } else {
-      return 'Sync is disabled';
-    }
-  }
+  // @Get('/participants')
+  // async seedParticipants() {
+  //   const sync = await readFileSync('sync.txt', 'utf8');
+  //   if (parseInt(sync) === 1) {
+  //     return this.syncService.syncWithParticipants();
+  //   } else {
+  //     return 'Sync is disabled';
+  //   }
+  // }
 }

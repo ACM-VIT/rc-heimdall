@@ -1,6 +1,7 @@
 import * as config from 'config';
 
-import { Dependencies, HttpService, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Dependencies, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 
 import { ExecuteCodeDto } from './dto/execute-code.dto';
 import { ProblemsService } from '../problems/problems.service';
@@ -58,8 +59,7 @@ export class RunnerService {
 
       // fetch question name by uuid
       const problemName = await this.problemService.getNameFromId(executeCode.id);
-      console.log(problemName);
-      if (problemName === undefined) {
+      if (problemName === null) {
         throw new NotFoundException(`Question ID Not found`);
       }
 

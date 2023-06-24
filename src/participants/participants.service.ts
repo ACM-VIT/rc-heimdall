@@ -1,11 +1,11 @@
 import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Logger } from 'typedoc/dist/lib/utils';
-import { MoreThanOrEqual } from 'typeorm';
+import { Repository } from 'typeorm';
 import { TeamsService } from '../teams/teams.service';
-import { CreateParticipantDto } from './dto/create-participant.dto';
-import { UpdateParticipantDto } from './dto/updateParticipantDto.dto';
-import { ParticipantRepository } from './participants.repository';
+import { UpdateParticipantDto } from './dto/updateParticipant.dto';
+import { Participant } from './participants.entity';
+import { JudgeService } from '../judge/judge.service';
+import { symbolName } from 'typescript';
 
 /**
  * **Participants Service**
@@ -20,33 +20,16 @@ import { ParticipantRepository } from './participants.repository';
 export class ParticipantsService {
   constructor(
     /** injecting [[ParticipantRepository]] as persistence layer */
-    @InjectRepository(ParticipantRepository)
-    private readonly participantRepository: ParticipantRepository,
+    @InjectRepository(Participant)
+    private readonly participantRepository: Repository<Participant>,
 
     /** injecting [[TeamsService]] to handle team creation and team joining operations */
     @Inject(TeamsService)
     private readonly teamService: TeamsService,
+    /** inject [[JudgeService]] to handle submission querying operations */
+    @Inject(JudgeService)
+    private readonly judgeService: JudgeService,
   ) {}
-
-  /**
-   * Creates a new participant and adds him/her to the team mentioned in [[CreateParticipantDto]].
-   * If the team does not exist, then it is created.
-   */
-  async create(createParticipantDto: CreateParticipantDto) {
-    const participantTeam = await this.teamService.findOne(createParticipantDto.team_id);
-    if (participantTeam === undefined) {
-      try {
-        const newTeam = await this.teamService.create({
-          name: createParticipantDto.team.name,
-          id: createParticipantDto.team_id,
-        });
-        return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, newTeam);
-      } catch (error) {
-        throw new BadRequestException('Team name already exists');
-      }
-    }
-    return this.participantRepository.createParticipantAndJoinTeam(createParticipantDto, participantTeam);
-  }
 
   /**
    * Update  participant and adds him/her details in the existing details using [[UpdateParticipantDto]]
@@ -54,11 +37,11 @@ export class ParticipantsService {
    */
   async update(id, updateParticipantDto: UpdateParticipantDto) {
     try {
-      const participant = await this.participantRepository.findOneByEmailAndGoogleID(id);
+      const participant = await this.participantRepository.findOne({ where: { id } });
       if (participant) {
-        participant.phoneNumber = updateParticipantDto.phoneNumber;
-        participant.registrationNumber = updateParticipantDto.registrationNumber;
-        participant.college = updateParticipantDto.college;
+        participant.phone = updateParticipantDto.phone;
+        participant.regNum = updateParticipantDto.regNum;
+        participant.uniName = updateParticipantDto.uniName;
         participant.fresher = updateParticipantDto.fresher;
         return await this.participantRepository.save(participant);
       }
@@ -71,31 +54,27 @@ export class ParticipantsService {
     }
   }
 
-  /**
-   * To return list of all participants
-   */
-  findAll() {
-    return this.participantRepository.find();
+  async getParticipant(id: number) {
+    const user = await this.participantRepository.findOne({ where: { id }, relations: { team: true } });
+    const team = await this.teamService.findOneByIdWithSubmissions(user.team.id);
+    const submissions = await this.judgeService.findWithTeamID(team.id);
+    const participants = team.participants.map((participant) => {
+      return participant.name;
+    });
+    const data = {
+      name: user.name,
+      team: team.name,
+      participants: participants,
+      score: team.points,
+      submissions: submissions,
+    };
+    return data;
   }
 
   /**
    * To return details of particular participant by email
    */
-  async findOneByEmailAndID(googleID: string) {
-    return this.participantRepository.findOneByEmailAndGoogleID(googleID);
-  }
-
-  /**
-   * To Delete a participant by ID
-   */
-  remove(id: number) {
-    return this.participantRepository.delete({ id });
-  }
-
-  /**
-   * clear the participant storages
-   */
-  clear() {
-    return this.participantRepository.delete({ id: MoreThanOrEqual(0) });
+  async findOneByEmail(email: string) {
+    return await this.participantRepository.findOne({ where: { email }, relations: { team: true } });
   }
 }

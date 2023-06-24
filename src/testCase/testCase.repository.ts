@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
-
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { TestCase } from './testCase.entity';
 
 /**
@@ -9,8 +10,11 @@ import { TestCase } from './testCase.entity';
  *
  * @category Problems
  */
-@EntityRepository(TestCase)
+@Injectable()
 export class TestCaseRepository extends Repository<TestCase> {
+  constructor(@InjectRepository(TestCase) repository: Repository<TestCase>) {
+    super(repository.target, repository.manager, repository.queryRunner);
+  }
   async fetchDetailsByToken(token: string) {
     const query = await this.createQueryBuilder('testcase')
       .andWhere('testcase.token = :token', { token })

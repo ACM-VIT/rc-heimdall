@@ -7,12 +7,14 @@ import {
   BadRequestException,
   Dependencies,
   ForbiddenException,
-  HttpService,
   Inject,
   Injectable,
   Logger,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
+
+import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateJudgeDto } from './dto/create-judge.dto';
@@ -23,6 +25,7 @@ import { JudgeRepository } from './judge.repository';
 import { mapLanguageStringToObject } from './minions/language';
 import { MoreThanOrEqual } from 'typeorm';
 import { TestCaseService } from 'src/testCase/testCase.service';
+import { lastValueFrom } from 'rxjs';
 // import { TestCaseService } from 'src/testCase/testCase.service';
 /**
  * **Judge Service**
@@ -48,7 +51,7 @@ export class JudgeService {
     private readonly logger = new Logger('judge'),
 
     /** injecting [[TestCasesService]] to perform operations on TestCases */
-    @Inject(TestCaseService)
+    @Inject(forwardRef(() => TestCaseService))
     private readonly testCaseService: TestCaseService,
 
     /** injecting [[JudgeRepository]] as a persistence layer */
@@ -56,7 +59,7 @@ export class JudgeService {
     private readonly judgeRepository: JudgeRepository,
 
     /** injecting [[ProblemsService]] to perform operations on Problems */
-    @Inject(ProblemsService)
+    @Inject(forwardRef(() => ProblemsService))
     private readonly problemService: ProblemsService,
 
     /** injecting [[TeamsService]] to perform operations on Teams */
@@ -83,14 +86,15 @@ export class JudgeService {
    * - Persist the response from Judge0 into [[JudgeRepository]]
    * - Return submission details back to client with Judge0 token to ping for results
    */
-  async create(createJudgeDto: CreateJudgeDto) {
-    const { code, language, problemID, teamID } = createJudgeDto;
-    this.logger.setContext(`judge.create.team.${teamID}`);
+  async create(teamId: number, createJudgeDto: CreateJudgeDto) {
+    const { code, language, problemID } = createJudgeDto;
+    //this.logger.setContext(`judge.create.team.${teamID}`);
 
     /**
      * Check if code size is less than 5KB
+     * use 6828 since 5KB characters generate a base64 string of 6828
      */
-    if (code.length > 5000) {
+    if (code.length > 6828) {
       throw new BadRequestException('Code size is more than 5KB');
     }
 
@@ -105,22 +109,16 @@ export class JudgeService {
 
     /** fetch question details about question for which the submission is made */
     const problem = await this.problemService.findOneForJudge(problemID);
-    if (problem === undefined) {
+    if (problem === null) {
       this.logger.verbose(`sent invalid problem id ${problemID}`);
       throw new BadRequestException(`No problem with id:${problemID}`);
     }
 
     /** fetch details of the team who made the submission */
-    const team = await this.teamService.findOneById(teamID);
-    if (team === undefined) {
+    const team = await this.teamService.findOneById(teamId);
+    if (team === null) {
       this.logger.verbose(`is an invalid team ID`);
-      throw new BadRequestException(`No team with id:${teamID}`);
-    }
-
-    /** only allow assigned teams to run problems */
-    const isAssigned = await this.teamService.isProblemAssignedTo(team, problem);
-    if (isAssigned === false) {
-      throw new ForbiddenException(`You are not assigned with this problem`);
+      throw new BadRequestException(`No team with id:${teamId}`);
     }
 
     /** prepare postBody to send to Judge0  */
@@ -165,7 +163,7 @@ export class JudgeService {
     const body = {
       submissions: [postBody1, postBody2, postBody3, postBody4, postBody5],
     };
-    const { data } = await this.http.post(this.endpoint, body).toPromise();
+    const { data } = await lastValueFrom(this.http.post(this.endpoint, body));
     // console.log(data);
 
     this.logger.verbose(`made submission, judge0 token`);
@@ -175,7 +173,6 @@ export class JudgeService {
       problem,
       team,
       language: codeLanguage.id,
-      points: 0,
       code,
     });
     this.logger.verbose(` submission saved into database`);
@@ -194,49 +191,43 @@ export class JudgeService {
     for (let i = 0; i < problem_ids.length; i++) {
       const problem_id = problem_ids[i];
       const highest = await this.judgeRepository.getHighestPointsFor(problem_id, team_id);
-      highest.problem_id = problem_id;
-      const problem = await this.problemService.getNameDescriptionFromId(problem_id);
-      highest.problem_name = problem.problem_name;
-      highest.instructionsText = problem.description;
-      top_submissions.push(highest);
+      if (highest.points != null) {
+        highest.problem_id = problem_id;
+        const problem = await this.problemService.getNameDescriptionFromId(problem_id);
+        highest.problem_name = problem.problem_name;
+        highest.instructionsText = problem.description;
+        top_submissions.push(highest);
+      }
     }
-    // get team and update the points
-    const team = await this.teamService.findOneById(team_id);
-    const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
-    if (team.pointsR2 < points) {
-      team.timestamp = new Date();
-      team.pointsR2 = points;
-    }
-    await team.save();
     return top_submissions;
   }
 
   /** To find details of all assigned submissions */
-  async findAssignedSubmissions(team_id) {
-    // problem ids of all problems
-    const top_submissions = [];
-    const problems = await this.teamService.getAssignedProblems(team_id);
-    const problem_ids = [];
-    problems.map((problem) => problem_ids.push(problem.id));
-    for (let i = 0; i < problem_ids.length; i++) {
-      const problem_id = problem_ids[i];
-      const highest = await this.judgeRepository.getHighestPointsFor(problem_id, team_id);
-      highest.problem_id = problem_id;
-      const problem = await this.problemService.getNameDescriptionFromId(problem_id);
-      highest.problem_name = problem.problem_name;
-      highest.instructionsText = problem.description;
-      top_submissions.push(highest);
-    }
-    // get team and update the points
-    const team = await this.teamService.findOneById(team_id);
-    const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
-    if (team.pointsR2 < points) {
-      team.timestamp = new Date();
-      team.pointsR2 = points;
-    }
-    await team.save();
-    return top_submissions;
-  }
+  // async findAssignedSubmissions(team_id) {
+  //   // problem ids of all problems
+  //   const top_submissions = [];
+  //   const problems = await this.teamService.getAssignedProblems(team_id);
+  //   const problem_ids = [];
+  //   problems.map((problem) => problem_ids.push(problem.id));
+  //   for (let i = 0; i < problem_ids.length; i++) {
+  //     const problem_id = problem_ids[i];
+  //     const highest = await this.judgeRepository.getHighestPointsFor(problem_id, team_id);
+  //     highest.problem_id = problem_id;
+  //     const problem = await this.problemService.getNameDescriptionFromId(problem_id);
+  //     highest.problem_name = problem.problem_name;
+  //     highest.instructionsText = problem.description;
+  //     top_submissions.push(highest);
+  //   }
+  //   // get team and update the points
+  //   const team = await this.teamService.findOneById(team_id);
+  //   const points = top_submissions.reduce((acc, curr) => acc + curr.points, 0);
+  //   if (team.pointsR2 < points) {
+  //     team.timestamp = new Date();
+  //     team.pointsR2 = points;
+  //   }
+  //   await team.save();
+  //   return top_submissions;
+  // }
 
   /**
    * To fetch details of submission made by Judge0 Token.
@@ -246,7 +237,7 @@ export class JudgeService {
    */
   async findOne(id: string) {
     const query = await this.judgeRepository.findOneForClientByJudge0Token(id);
-    if (query === undefined) {
+    if (query === null) {
       throw new NotFoundException(`No submission for token ${id}`);
     }
     return query;
@@ -255,21 +246,26 @@ export class JudgeService {
   /** To fetch details by team and ID */
   async findOneByTeamAndID(id, team_id) {
     const judgeSubmission = await this.judgeRepository.findOneByTeamAndID(id, team_id);
-    let points = 0;
-    judgeSubmission.testCase.map((testCase) => {
-      if (testCase.state === 3) {
-        points += 20;
-      }
-      if (testCase.state >= 3) {
-        judgeSubmission.returned_testcases += 1;
-      }
-    });
-    judgeSubmission.points = points;
-    await this.judgeRepository.save(judgeSubmission);
-    if (judgeSubmission === undefined) {
-      throw new NotFoundException(`No submission for token ${id}`);
+    if (judgeSubmission === null) {
+      throw new NotFoundException(`No submission for token ${id} by this team`);
     }
     return judgeSubmission;
+  }
+
+  async findOneWithMaxPoints(teamId: number, problemId: string) {
+    return await this.judgeRepository.findOneWithMaxPoints(teamId, problemId);
+  }
+
+  async savePointsForTeam(id: number, newPoints: number) {
+    console.log(await this.judgeRepository.findTeamIdAndMaxPoints(id));
+    const { points, created_at, team } = await this.judgeRepository.findTeamIdAndMaxPoints(id);
+    if (newPoints > points) {
+      team.points += newPoints - points;
+      team.timestamp = created_at;
+      team.save();
+      //this.teamService.updatePoints(team);
+    }
+    return await this.judgeRepository.findOne({ where: { id } });
   }
 
   /**
